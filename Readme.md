@@ -4,7 +4,7 @@
 
 ![demo img](demo.png)
 
-```
+```swift
 self.view.arrangeViews {
     UIScrollView(.vertical) {
         for row in 0..<10 {
