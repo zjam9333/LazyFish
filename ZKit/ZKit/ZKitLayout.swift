@@ -9,6 +9,24 @@ import Foundation
 import UIKit
 
 extension UIView {
+    
+    func onAppear(_ action: @escaping OnAppearBlock) -> Self {
+        self.zk_onAppearBlock = action
+        return self
+    }
+    
+    typealias OnAppearBlock = (UIView) -> Void
+    var zk_onAppearBlock: OnAppearBlock? {
+        set {
+            let n = newValue
+            objc_setAssociatedObject(self, &ZKit.AssociatedKey.onAppearKey, n, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            let n = objc_getAssociatedObject(self, &ZKit.AssociatedKey.onAppearKey)
+            return n as? OnAppearBlock
+        }
+    }
+    
     private var zk_attribute: ZKit.Attribute {
         set {
             let obj = newValue
@@ -41,8 +59,9 @@ extension UIView {
         return self
     }
 
-    @discardableResult func arrangeViews(@ZKitResultBuilder _ content: () -> [UIView]) -> Self {
+    @discardableResult func arrangeViews(@ZKitResultBuilder _ content: ZKitResultBuilder.ContentBlock) -> Self {
         let views = content()
+        
         for view in views {
             let attribute = view.zk_attribute
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -97,12 +116,12 @@ extension UIView {
             } else if attribute.filledHeight {
                 container.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
             }
-            
-            // on appear
-            if let onapp = view.zk_onAppearBlock {
-                DispatchQueue.main.async { // [weak view] in
-                    onapp()
-                }
+        }
+        
+        // on appear
+        DispatchQueue.main.async { // [weak view] in
+            for view in views {
+                view.zk_onAppearBlock?(view)
             }
         }
         return self

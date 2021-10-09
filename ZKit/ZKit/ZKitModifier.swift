@@ -8,13 +8,16 @@
 import Foundation
 import UIKit
 
+///
+///
+///摘抄了一些常用属性，修改后返回self，达到链式调用的效果
+///
+
 extension UIView {
     typealias ActionBlock = () -> Void
     
     fileprivate enum AssociatedKey {
         static var blockKey: Int = 0
-        static var onAppearKey: Int = 0
-        static var onDisapperaKey: Int = 0
     }
     
     func backgroundColor(_ color: UIColor) -> Self {
@@ -32,27 +35,20 @@ extension UIView {
         return self
     }
     
+    func borderColor(_ color: UIColor) -> Self {
+        self.layer.borderColor = color.cgColor
+        return self
+    }
+    
+    func borderWidth(_ width: CGFloat) -> Self {
+        self.layer.borderWidth = width >= 0 ? width : 0
+        return self
+    }
+    
 //    func store(in view: inout UIView?) -> Self {
 //        view = self
 //        return self
 //    }
-    
-    func onAppear(_ action: @escaping () -> Void) -> Self {
-        self.zk_onAppearBlock = action
-        return self
-    }
-    
-    typealias OnAppearBlock = () -> Void
-    var zk_onAppearBlock: OnAppearBlock? {
-        set {
-            let n = newValue
-            objc_setAssociatedObject(self, &AssociatedKey.onAppearKey, n, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            let n = objc_getAssociatedObject(self, &AssociatedKey.onAppearKey)
-            return n as? OnAppearBlock
-        }
-    }
 }
 
 extension UILabel {
@@ -134,4 +130,13 @@ extension UIButton {
     }
 }
 
-
+extension UIScrollView {
+    func bounce(_ axis: NSLayoutConstraint.Axis) -> Self {
+        if axis == .vertical {
+            self.alwaysBounceVertical = true
+        } else if axis == .horizontal {
+            self.alwaysBounceHorizontal = true
+        }
+        return self
+    }
+}

@@ -44,6 +44,8 @@ enum ZKit {
     
     enum AssociatedKey {
         static var attributeKey: Int = 0
+        static var onAppearKey: Int = 0
+        static var onDisappearKey: Int = 0
     }
 }
 

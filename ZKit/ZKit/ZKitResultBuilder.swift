@@ -10,6 +10,8 @@ import UIKit
 
 @resultBuilder
 enum ZKitResultBuilder {
+    typealias ContentBlock = () -> [UIView]
+    
     static func buildBlock(_ components: [UIView]...) -> [UIView] {
         let res = components.flatMap { r in
             return r

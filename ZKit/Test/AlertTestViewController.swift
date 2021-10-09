@@ -13,7 +13,7 @@ fileprivate class TestAlertView: UIView {
     var alertContent: UIView? = nil
     
     deinit {
-        print("deinit", self)
+        print("deinit alert")
     }
 
     func testShow() -> Self? {
@@ -74,7 +74,7 @@ fileprivate class TestAlertView: UIView {
             .backgroundColor(.white)
             .cornerRadius(10).clipped()
             .frame(width: 300, alignment: .center)
-            .onAppear { [weak self] in
+            .onAppear { [weak self] someview in
                 print("apppp")
                 self?.alertView?.alpha = 0
                 self?.alertContent?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)

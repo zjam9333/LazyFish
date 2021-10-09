@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UIStackView {
-    convenience init(axis: NSLayoutConstraint.Axis = .horizontal, distribution: Distribution = .fill, alignment: Alignment = .center, spacing: CGFloat = 0, @ZKitResultBuilder content: (() -> [UIView])) {
+    convenience init(axis: NSLayoutConstraint.Axis, distribution: Distribution = .fill, alignment: Alignment = .fill, spacing: CGFloat = 0, @ZKitResultBuilder content: ZKitResultBuilder.ContentBlock) {
         self.init()
         self.axis = axis
         self.distribution = distribution
@@ -20,19 +20,14 @@ extension UIStackView {
 }
 
 extension UIView {
-    convenience init(_ comment: String = "nothing", @ZKitResultBuilder content: (() -> [UIView])) {
+    convenience init(_ comment: String = "nothing", @ZKitResultBuilder content: ZKitResultBuilder.ContentBlock) {
         self.init()
         self.arrangeViews(content)
     }
 }
 
 extension UIScrollView {
-    enum Direction {
-        case vertical
-        case horizontal
-    }
-    
-    convenience init(_ direction: Direction = .vertical, @ZKitResultBuilder content: (() -> [UIView])) {
+    convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, @ZKitResultBuilder content: ZKitResultBuilder.ContentBlock) {
         self.init()
         
         self.arrangeViews { [weak self] in

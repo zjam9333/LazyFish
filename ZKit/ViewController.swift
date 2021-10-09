@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         let testClasses: [(String, UIViewController.Type)] = [
             ("Alert View Test", AlertTestViewController.self),
             ("Stack Test", StackTestViewController.self),
-            ("Padding Test", PaddingTestViewController.self),
+            ("Margin Test", MarginTestViewController.self),
         ]
         
         self.view.arrangeViews {
@@ -26,19 +26,23 @@ class ViewController: UIViewController {
                         UIButton()
                             .text(title)
                             .textColor(.black)
+                            .textColor(.red, for: .highlighted)
                             .font(UIFont.systemFont(ofSize: 20, weight: .bold))
                             .backgroundColor(.lightGray)
+                            .frame(height: 50, alignment: .allEdges)
+                            .borderWidth(1).borderColor(.black)
                             .action { [weak self] in
                                 let vc = val.init()
                                 vc.view.backgroundColor = .white
                                 vc.navigationItem.title = title
                                 self?.navigationController?.pushViewController(vc, animated: true)
                             }
-                            .frame(height: 50, alignment: .allEdges)
                     }
                 }
                 .margin(top: 10, leading: 10, bottom: 10, trailing: 10)
-            }.frame(alignment: .allEdges)
+            }
+            .frame(alignment: .allEdges)
+            .bounce(.vertical)//.bounce(.horizontal)
         }
     }
 }
