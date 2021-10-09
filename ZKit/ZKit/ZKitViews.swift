@@ -1,0 +1,52 @@
+//
+//  ZKitViews.swift
+//  ZKit
+//
+//  Created by zjj on 2021/10/8.
+//
+
+import Foundation
+import UIKit
+
+extension UIStackView {
+    convenience init(axis: NSLayoutConstraint.Axis = .horizontal, distribution: Distribution = .fill, alignment: Alignment = .center, spacing: CGFloat = 0, @ZKitResultBuilder content: (() -> [UIView])) {
+        self.init()
+        self.axis = axis
+        self.distribution = distribution
+        self.alignment = alignment
+        self.spacing = spacing
+        self.arrangeViews(content)
+    }
+}
+
+extension UIView {
+    convenience init(_ comment: String = "nothing", @ZKitResultBuilder content: (() -> [UIView])) {
+        self.init()
+        self.arrangeViews(content)
+    }
+}
+
+extension UIScrollView {
+    enum Direction {
+        case vertical
+        case horizontal
+    }
+    
+    convenience init(_ direction: Direction = .vertical, @ZKitResultBuilder content: (() -> [UIView])) {
+        self.init()
+        
+        self.arrangeViews { [weak self] in
+            if direction == .vertical {
+                self?.showsHorizontalScrollIndicator = false
+                let stack = UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0, content: content)
+                    .frame(filledWidth: true, alignment: .allEdges)
+                stack
+            } else {
+                self?.showsVerticalScrollIndicator = false
+                let stack = UIStackView(axis: .horizontal, distribution: .fill, alignment: .fill, spacing: 0, content: content)
+                    .frame(filledHeight: true, alignment: .allEdges)
+                stack
+            }
+        }
+    }
+}
