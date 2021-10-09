@@ -16,6 +16,7 @@ class ViewController: UIViewController {
             ("Alert View Test", AlertTestViewController.self),
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
+            ("Demo Test", DemoTestViewController.self),
         ]
         
         self.view.arrangeViews {

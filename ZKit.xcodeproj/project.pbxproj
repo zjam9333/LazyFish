@@ -21,6 +21,7 @@
 		1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */; };
 		1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */; };
 		1CD8FE2D27102EE100FE41E8 /* ZKitViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */; };
+		1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,9 @@
 		1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarginTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitViews.swift; sourceTree = "<group>"; };
+		1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTestViewController.swift; sourceTree = "<group>"; };
+		1CD8FE302711900D00FE41E8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
+		1CD8FE32271190F100FE41E8 /* demo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demo.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +84,8 @@
 		1C04FFFB27041212008F025B = {
 			isa = PBXGroup;
 			children = (
+				1CD8FE302711900D00FE41E8 /* Readme.md */,
+				1CD8FE32271190F100FE41E8 /* demo.png */,
 				1C04000627041212008F025B /* ZKit */,
 				1C04000527041212008F025B /* Products */,
 			);
@@ -103,6 +109,7 @@
 				1CD8FE2627102C6400FE41E8 /* StackTestViewController.swift */,
 				1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */,
 				1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */,
+				1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -181,6 +188,7 @@
 				1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */,
 				1C04000C27041212008F025B /* ViewController.swift in Sources */,
 				1C04000827041212008F025B /* AppDelegate.swift in Sources */,
+				1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */,
 				1CD8FE1F270FEC7400FE41E8 /* ZKitModifier.swift in Sources */,
 				1CD8FE1D270FE71F00FE41E8 /* ZKitResultBuilder.swift in Sources */,
 				1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */,
