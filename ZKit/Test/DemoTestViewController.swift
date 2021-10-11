@@ -11,6 +11,11 @@ class DemoTestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let randomColor: () -> UIColor = {
+            let color = UIColor(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1, alpha: 1)
+            return color
+        }
 
         self.view.arrangeViews {
             UIScrollView(.vertical) {
@@ -18,16 +23,16 @@ class DemoTestViewController: UIViewController {
                     UIView {
                         UIStackView(axis: .horizontal, alignment: .center, spacing: 10) {
                             UIView()
-                                .backgroundColor(UIColor(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
+                                .backgroundColor(randomColor())
                                 .cornerRadius(4)
                                 .frame(width: 40, height: 40)
                             
                             UIStackView(axis: .vertical, alignment: .leading) {
                                 UILabel().text("Title text \(row)")
-                                    .textColor(.label)
+                                    .textColor(randomColor())
                                     .font(.systemFont(ofSize: 17, weight: .semibold))
                                 UILabel().text("Detail text Detail text Detail text \(row)")
-                                    .textColor(.lightGray)
+                                    .textColor(randomColor())
                                     .font(.systemFont(ofSize: 14, weight: .regular))
                             }
                         }
