@@ -33,19 +33,26 @@ extension UIView {
             objc_setAssociatedObject(self, &ZKit.AssociatedKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            let obj = objc_getAssociatedObject(self, &ZKit.AssociatedKey.attributeKey) as? ZKit.Attribute ?? ZKit.Attribute()
-            self.zk_attribute = obj
-            return obj
+            if let obj = objc_getAssociatedObject(self, &ZKit.AssociatedKey.attributeKey) as? ZKit.Attribute {
+                return obj
+            }
+            let newone = ZKit.Attribute()
+            self.zk_attribute = newone
+            return newone
         }
     }
     
-    func frame(width: CGFloat? = nil, height: CGFloat? = nil, filledWidth: Bool = false, filledHeight: Bool = false, alignment: ZKit.Alignment? = .allEdges) -> Self {
+    func frame(width: CGFloat? = nil, height: CGFloat? = nil, filledWidth: Bool = false, filledHeight: Bool = false) -> Self {
         let att = self.zk_attribute
         att.width = width
         att.height = height
-        att.alignment = alignment
         att.filledWidth = filledWidth
         att.filledHeight = filledHeight
+        return self
+    }
+    
+    func alignment(_ alignment: ZKit.Alignment? = .allEdges) -> Self {
+        self.zk_attribute.alignment = alignment
         return self
     }
     
@@ -83,26 +90,25 @@ extension UIView {
             } else {
                 self.addSubview(container)
                 
-                if let alignment = attribute.alignment {
-                    // 对齐
-                    if alignment.contains(.centerY) {
-                        container.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-                    }
-                    if alignment.contains(.centerX) {
-                        container.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-                    }
-                    if alignment.contains(.leading) {
-                        container.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-                    }
-                    if alignment.contains(.trailing) {
-                        container.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-                    }
-                    if alignment.contains(.top) {
-                        container.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-                    }
-                    if alignment.contains(.bottom) {
-                        container.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-                    }
+                let alignment = attribute.alignment ?? .allEdges
+                // 对齐
+                if alignment.contains(.centerY) {
+                    container.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+                }
+                if alignment.contains(.centerX) {
+                    container.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+                }
+                if alignment.contains(.leading) {
+                    container.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+                }
+                if alignment.contains(.trailing) {
+                    container.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+                }
+                if alignment.contains(.top) {
+                    container.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+                }
+                if alignment.contains(.bottom) {
+                    container.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
                 }
             }
             

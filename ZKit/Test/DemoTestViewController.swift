@@ -13,7 +13,7 @@ class DemoTestViewController: UIViewController {
         super.viewDidLoad()
         
         let randomColor: () -> UIColor = {
-            let color = UIColor(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1, alpha: 1)
+            let color = UIColor(hue: CGFloat.random(in: 0...1), saturation: CGFloat.random(in: 0...1), brightness: CGFloat.random(in: 0...1), alpha: 1)
             return color
         }
 
@@ -26,7 +26,7 @@ class DemoTestViewController: UIViewController {
                                 .backgroundColor(randomColor())
                                 .cornerRadius(4)
                                 .frame(width: 40, height: 40)
-                            
+
                             UIStackView(axis: .vertical, alignment: .leading) {
                                 UILabel().text("Title text \(row)")
                                     .textColor(randomColor())
@@ -36,18 +36,19 @@ class DemoTestViewController: UIViewController {
                                     .font(.systemFont(ofSize: 14, weight: .regular))
                             }
                         }
-                        .frame(alignment: [.leading, .centerY])
+                        .alignment([.leading, .centerY])
                         .margin(leading: 12)
-                        
+
                         UIView()
                             .backgroundColor(.lightGray)
-                            .frame(height: 0.5, alignment: [.leading, .bottom, .trailing])
+                            .frame(height: 0.5)
+                            .alignment([.leading, .bottom, .trailing])
                             .margin(leading: 12)
-                    }.frame(height: 60)
-                    
+                    }
+                    .frame(height: 60)
                 }
             }
-            .frame(alignment: .allEdges)
+            .alignment(.allEdges)
             .bounce(.vertical)
         }
         

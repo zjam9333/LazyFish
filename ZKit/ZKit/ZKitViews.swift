@@ -34,12 +34,14 @@ extension UIScrollView {
             if direction == .vertical {
                 self?.showsHorizontalScrollIndicator = false
                 let stack = UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0, content: content)
-                    .frame(filledWidth: true, alignment: .allEdges)
+                    .frame(filledWidth: true)
+                    .alignment(.allEdges)
                 stack
             } else {
                 self?.showsVerticalScrollIndicator = false
                 let stack = UIStackView(axis: .horizontal, distribution: .fill, alignment: .fill, spacing: 0, content: content)
-                    .frame(filledHeight: true, alignment: .allEdges)
+                    .frame(filledHeight: true)
+                    .alignment(.allEdges)
                 stack
             }
         }

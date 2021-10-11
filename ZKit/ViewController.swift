@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.title = "Some Tests"
+        
         let testClasses: [(String, UIViewController.Type)] = [
             ("Alert View Test", AlertTestViewController.self),
             ("Stack Test", StackTestViewController.self),
@@ -30,7 +32,6 @@ class ViewController: UIViewController {
                             .textColor(.red, for: .highlighted)
                             .font(UIFont.systemFont(ofSize: 20, weight: .bold))
                             .backgroundColor(.lightGray)
-                            .frame(height: 50, alignment: .allEdges)
                             .borderWidth(1).borderColor(.black)
                             .action { [weak self] in
                                 let vc = val.init()
@@ -38,11 +39,13 @@ class ViewController: UIViewController {
                                 vc.navigationItem.title = title
                                 self?.navigationController?.pushViewController(vc, animated: true)
                             }
+                            .frame(height: 50)
+                            .alignment(.allEdges)
                     }
                 }
                 .margin(top: 10, leading: 10, bottom: 10, trailing: 10)
             }
-            .frame(alignment: .allEdges)
+            .alignment(.allEdges)
             .bounce(.vertical)//.bounce(.horizontal)
         }
     }

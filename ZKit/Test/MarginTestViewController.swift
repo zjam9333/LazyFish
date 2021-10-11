@@ -24,16 +24,16 @@ class MarginTestViewController: UIViewController {
                             }
                         }
                         .margin(leading: 10, trailing: 10)
-                        .frame(alignment: .allEdges)
+                        .alignment(.allEdges)
                     }
                     .backgroundColor(.green)
-                    .margin(top: 40, leading: 40, bottom: 40, trailing: 40).frame(alignment: .allEdges)
+                    .margin(top: 40, leading: 40, bottom: 40, trailing: 40).alignment(.allEdges)
                 }
                 .backgroundColor(.systemRed)
-                .margin(top: 40, leading: 40, bottom: 40, trailing: 40).frame(alignment: .allEdges)
+                .margin(top: 40, leading: 40, bottom: 40, trailing: 40).alignment(.allEdges)
             }
             .backgroundColor(.systemBlue)
-            .margin(top: 40, leading: 40, bottom: 40, trailing: 40).frame(alignment: .allEdges)
+            .margin(top: 40, leading: 40, bottom: 40, trailing: 40).alignment(.allEdges)
         }
     }
 }

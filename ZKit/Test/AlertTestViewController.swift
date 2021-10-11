@@ -40,7 +40,7 @@ fileprivate class TestAlertView: UIView {
                             .textColor(.darkGray)
                             .font(UIFont.systemFont(ofSize: 14, weight: .regular))
                     }
-                    .frame(alignment: .allEdges)
+                    .alignment(.allEdges)
                     .margin(top: 20, leading: 20, bottom: 20, trailing: 20)
                     
                     UIView()
@@ -69,11 +69,12 @@ fileprivate class TestAlertView: UIView {
                             }
                     }.frame(height: 48)
                 }
-                .frame(alignment: .allEdges)
+                .alignment(.allEdges)
             }
             .backgroundColor(.white)
             .cornerRadius(10).clipped()
-            .frame(width: 300, alignment: .center)
+            .frame(width: 300)
+            .alignment(.center)
             .onAppear { [weak self] someview in
                 print("apppp")
                 self?.alertView?.alpha = 0
@@ -85,13 +86,12 @@ fileprivate class TestAlertView: UIView {
             }
             self?.alertContent
         }
-        .frame(alignment: .allEdges)
         .backgroundColor(.gray)
         
         self.arrangeViews {
-            self.alertView?.frame(alignment: .allEdges)
+            self.alertView
         }
-        return self.frame(alignment: .allEdges)
+        return self.alignment(.allEdges)
     }
 }
 
@@ -107,7 +107,7 @@ class AlertTestViewController: UIViewController {
                 .font(UIFont.systemFont(ofSize: 28, weight: .black))
                 .margin(top: 10, leading: 10, bottom: 10, trailing: 10)
                 .backgroundColor(.gray)
-                .frame(alignment: .center)
+                .alignment(.center)
                 .action { [weak self] in
                     
                 self?.view.arrangeViews {
