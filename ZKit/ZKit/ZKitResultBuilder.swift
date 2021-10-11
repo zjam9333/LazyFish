@@ -8,51 +8,79 @@
 import Foundation
 import UIKit
 
-@resultBuilder
-enum ZKitResultBuilder {
-    typealias ContentBlock = () -> [UIView]
+extension ZKit {
+    @resultBuilder
+    enum ViewBuilder: ZKitResultBuilderProtocol {
+        typealias MyReturnType = UIView
+        typealias ContentBlock = () -> [MyReturnType]
+    }
     
-    static func buildBlock(_ components: [UIView]...) -> [UIView] {
+    @resultBuilder
+    enum LayoutBuilder: ZKitResultBuilderProtocol {
+        typealias MyReturnType = NSLayoutConstraint
+        typealias ContentBlock = () -> [MyReturnType]
+    }
+}
+
+protocol ZKitResultBuilderProtocol {
+    associatedtype MyReturnType
+}
+
+extension ZKitResultBuilderProtocol {
+    // MARK: 组合全部表达式的返回值
+    static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
         let res = components.flatMap { r in
             return r
         }
         return res
     }
     
-    static func buildOptional<T>(_ component: [T]?) -> [UIView] {
+    // MARK: 处理空白block
+    static func buildOptional<T>(_ component: [T]?) -> [MyReturnType] {
         return []
     }
     
-    static func buildExpression(_ expression: UIView) -> [UIView] {
+    // MARK: 处理不包含else的if语句
+    static func buildOptional(_ component: [MyReturnType]?) -> [MyReturnType] {
+        if let v = component {
+            return v
+        }
+        return []
+    }
+    
+    // MARK: 处理每一行表达式的返回值
+    static func buildExpression(_ expression: MyReturnType) -> [MyReturnType] {
         return [expression]
     }
     
-    static func buildExpression(_ expression: UIView?) -> [UIView] {
+    static func buildExpression(_ expression: MyReturnType?) -> [MyReturnType] {
         if let v = expression {
             return [v]
         }
         return []
     }
     
-    static func buildExpression(_ expression: Void) -> [UIView] {
+    static func buildExpression(_ expression: Void) -> [MyReturnType] {
         return []
     }
-    static func buildExpression(_ expression: Void?) -> [UIView] {
+    static func buildExpression(_ expression: Void?) -> [MyReturnType] {
         return []
     }
     
-    static func buildArray(_ components: [[UIView]]) -> [UIView] {
+    // MARK: 处理for循环
+    static func buildArray(_ components: [[MyReturnType]]) -> [MyReturnType] {
         let res = components.flatMap { r in
             return r
         }
         return res
     }
     
-    static func buildEither(first component: [UIView]) -> [UIView] {
+    // MARK: 处理if...else...（必须包含else)
+    static func buildEither(first component: [MyReturnType]) -> [MyReturnType] {
         return component
     }
     
-    static func buildEither(second component: [UIView]) -> [UIView] {
+    static func buildEither(second component: [MyReturnType]) -> [MyReturnType] {
         return component
     }
 }

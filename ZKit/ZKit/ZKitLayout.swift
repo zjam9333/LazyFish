@@ -66,7 +66,7 @@ extension UIView {
         return self
     }
 
-    @discardableResult func arrangeViews(@ZKitResultBuilder _ content: ZKitResultBuilder.ContentBlock) -> Self {
+    @discardableResult func arrangeViews(@ZKit.ViewBuilder _ content: ZKit.ViewBuilder.ContentBlock) -> Self {
         let views = content()
         
         for view in views {
