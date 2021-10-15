@@ -129,3 +129,43 @@ extension UIView {
         return self
     }
 }
+
+extension ZKit {
+    class PaddingContainerView: UIView {
+        func addContentView(_ content: UIView, padding: [Edges: CGFloat]) {
+            self.addSubview(content)
+            self.contentView = content
+            if let paView = contentView?.superview as? PaddingContainerView {
+                paView.removeFromSuperview()
+            }
+            
+            content.translatesAutoresizingMaskIntoConstraints = false
+            content.topAnchor.constraint(equalTo: self.topAnchor, constant: padding[.top] ?? 0).isActive = true
+            content.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -(padding[.bottom] ?? 0)).isActive = true
+            content.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding[.leading] ?? 0).isActive = true
+            content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -(padding[.trailing] ?? 0)).isActive = true
+            
+            self.resetContentKeyPathObservations {
+                self.observe(obj: content, keyPath: \.isHidden)
+            }
+        }
+        
+        private weak var contentView: UIView? = nil
+        private var observeTokens = [NSKeyValueObservation]()
+        private typealias KVOResultBuilder = ResultBuilder<NSKeyValueObservation>
+        private func resetContentKeyPathObservations(@KVOResultBuilder _ content: KVOResultBuilder.ContentBlock) {
+            self.observeTokens.removeAll()
+            let kvo = content()
+            observeTokens.append(contentsOf: kvo)
+        }
+        
+        private func observe<T: UIView, Value>(obj: T, keyPath: WritableKeyPath<T, Value>) -> NSKeyValueObservation {
+            let obs = obj.observe(keyPath, options: .new) { [weak self] view, change in
+                if let newValue = change.newValue, var myself = self as? T {
+                    myself[keyPath: keyPath] = newValue
+                }
+            }
+            return obs
+        }
+    }
+}
