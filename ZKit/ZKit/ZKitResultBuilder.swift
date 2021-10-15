@@ -9,31 +9,23 @@ import Foundation
 import UIKit
 
 extension ZKit {
-    @resultBuilder
-    enum ViewBuilder: ZKitResultBuilderProtocol {
-        typealias MyReturnType = UIView
-        typealias ContentBlock = () -> [MyReturnType]
-    }
+    typealias ViewBuilder = ResultBuilder<UIView>
+    typealias LayoutBuilder = ResultBuilder<NSLayoutConstraint>
     
     @resultBuilder
-    enum LayoutBuilder: ZKitResultBuilderProtocol {
-        typealias MyReturnType = NSLayoutConstraint
+    struct ResultBuilder<MyReturnType> {
         typealias ContentBlock = () -> [MyReturnType]
-    }
-}
-
-protocol ZKitResultBuilderProtocol {
-    associatedtype MyReturnType
-}
-
-extension ZKitResultBuilderProtocol {
-    // MARK: 组合全部表达式的返回值
-    static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
-        let res = components.flatMap { r in
-            return r
+        // MARK: 组合全部表达式的返回值
+        static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
+            let res = components.flatMap { r in
+                return r
+            }
+            return res
         }
-        return res
     }
+}
+    
+extension ZKit.ResultBuilder {
     
     // MARK: 处理空白block
     static func buildOptional<T>(_ component: [T]?) -> [MyReturnType] {
@@ -65,6 +57,10 @@ extension ZKitResultBuilderProtocol {
     }
     static func buildExpression(_ expression: Void?) -> [MyReturnType] {
         return []
+    }
+    
+    static func buildExpression(_ expression: [MyReturnType]) -> [MyReturnType] {
+        return expression
     }
     
     // MARK: 处理for循环

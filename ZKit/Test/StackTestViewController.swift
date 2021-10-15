@@ -21,18 +21,24 @@ class StackTestViewController: UIViewController {
 
             lab
             
-            let view = UIView()
-            view.backgroundColor = .black
-            view.frame(width: 2, height: 18)
+            var centerViews = [UIView]()
+            let colors: [UIColor] = [.brown, .black, .blue]
+            for i in 0...2 {
+                let view = UIView().backgroundColor(colors[i]).frame(width: 40, height: 40).margin(top: 10, leading: 10, bottom: 10, trailing: 10)
+                view
+                centerViews.append(view)
+            }
             
             UIStackView(axis: .vertical) {
                 for i in 0...2 {
                     let but = UIButton()
-                    but.setTitle("button\(i)", for: .normal)
+                    but.setTitle("toggle hide center rect \(i)", for: .normal)
                     but.setTitleColor(.brown, for: .normal)
                     but.setTitleColor(.green, for: .highlighted)
                     but.backgroundColor = .yellow
-                    but
+                    but.action {
+                        centerViews[i].isHidden.toggle()
+                    }
                 }
                 
                 if Bool.random() {

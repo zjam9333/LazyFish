@@ -8,10 +8,6 @@
 import UIKit
 
 enum ZKit {
-    class PaddingContainerView: UIView {
-        
-    }
-    
     class Attribute {
         var margin: [Edges: CGFloat]?
         
@@ -46,6 +42,37 @@ enum ZKit {
         static var attributeKey: Int = 0
         static var onAppearKey: Int = 0
         static var onDisappearKey: Int = 0
+    }
+    
+    class PaddingContainerView: UIView {
+        private enum KeyPath: String {
+            case hidden
+        }
+        private weak var contentView: UIView? = nil
+        
+        func addContentView(_ content: UIView, padding: [Edges: CGFloat]) {
+            self.addSubview(content)
+            self.contentView = content
+            
+            content.translatesAutoresizingMaskIntoConstraints = false
+            content.topAnchor.constraint(equalTo: self.topAnchor, constant: padding[.top] ?? 0).isActive = true
+            content.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -(padding[.bottom] ?? 0)).isActive = true
+            content.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding[.leading] ?? 0).isActive = true
+            content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -(padding[.trailing] ?? 0)).isActive = true
+            
+            content.addObserver(self, forKeyPath: KeyPath.hidden.rawValue, options: .new, context: nil)
+        }
+        
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+            if (object as? UIView) == self.contentView {
+                let newVal = change?[.newKey]
+                if keyPath == KeyPath.hidden.rawValue {
+                    if let isHidden = newVal as? Bool {
+                        self.isHidden = isHidden
+                    }
+                }
+            }
+        }
     }
 }
 

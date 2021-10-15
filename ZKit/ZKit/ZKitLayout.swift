@@ -74,13 +74,9 @@ extension UIView {
             view.translatesAutoresizingMaskIntoConstraints = false
             var container = view
             if let pad = attribute.margin {
-                container = ZKit.PaddingContainerView()
-                container.addSubview(view)
-                
-                view.topAnchor.constraint(equalTo: container.topAnchor, constant: pad[.top] ?? 0).isActive = true
-                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -(pad[.bottom] ?? 0)).isActive = true
-                view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: pad[.leading] ?? 0).isActive = true
-                view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -(pad[.trailing] ?? 0)).isActive = true
+                let paddingContainer = ZKit.PaddingContainerView()
+                paddingContainer.addContentView(view, padding: pad)
+                container = paddingContainer
             }
             
             container.translatesAutoresizingMaskIntoConstraints = false
