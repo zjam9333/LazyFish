@@ -37,13 +37,13 @@ class DemoTestViewController: UIViewController {
                             }
                         }
                         .alignment([.leading, .centerY])
-                        .margin(leading: 12)
+                        .padding(leading: 12)
 
                         UIView()
                             .backgroundColor(.lightGray)
                             .frame(height: 0.5)
                             .alignment([.leading, .bottom, .trailing])
-                            .margin(leading: 12)
+                            .padding(leading: 12)
                     }
                     .frame(height: 60)
                 }

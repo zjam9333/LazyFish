@@ -43,7 +43,7 @@ class ViewController: UIViewController {
                             .alignment(.allEdges)
                     }
                 }
-                .margin(top: 10, leading: 10, bottom: 10, trailing: 10)
+                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
             }
             .alignment(.allEdges)
             .bounce(.vertical)//.bounce(.horizontal)

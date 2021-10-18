@@ -9,7 +9,8 @@ import UIKit
 
 enum ZKit {
     class Attribute {
-        var margin: [Edges: CGFloat]?
+        var padding: [Edges: CGFloat]?
+        var offset: CGPoint = .zero
         
         var alignment: Alignment?
         var width: CGFloat?
@@ -17,7 +18,10 @@ enum ZKit {
         
         var filledWidth: Bool = false
         var filledHeight: Bool = false
+        var onAppear: OnAppearBlock?
     }
+    
+    typealias OnAppearBlock = (UIView) -> Void
     
     struct Alignment: OptionSet {
         typealias RawValue = Int
@@ -40,8 +44,6 @@ enum ZKit {
     
     enum AssociatedKey {
         static var attributeKey: Int = 0
-        static var onAppearKey: Int = 0
-        static var onDisappearKey: Int = 0
     }
 }
 

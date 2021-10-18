@@ -41,7 +41,7 @@ fileprivate class TestAlertView: UIView {
                             .font(UIFont.systemFont(ofSize: 14, weight: .regular))
                     }
                     .alignment(.allEdges)
-                    .margin(top: 20, leading: 20, bottom: 20, trailing: 20)
+                    .padding(top: 20, leading: 20, bottom: 20, trailing: 20)
                     
                     UIView()
                         .backgroundColor(.lightGray)
@@ -105,7 +105,7 @@ class AlertTestViewController: UIViewController {
                 .text("Show an Alert", for: .normal)
                 .textColor(.black)
                 .font(UIFont.systemFont(ofSize: 28, weight: .black))
-                .margin(top: 10, leading: 10, bottom: 10, trailing: 10)
+                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
                 .backgroundColor(.gray)
                 .alignment(.center)
                 .action { [weak self] in

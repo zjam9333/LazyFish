@@ -14,11 +14,6 @@ import UIKit
 ///
 
 extension UIView {
-    typealias ActionBlock = () -> Void
-    
-    fileprivate enum AssociatedKey {
-        static var blockKey: Int = 0
-    }
     
     func backgroundColor(_ color: UIColor) -> Self {
         self.backgroundColor = color
@@ -80,6 +75,12 @@ extension UILabel {
 
 extension UIControl {
     
+    typealias ActionBlock = () -> Void
+    
+    fileprivate enum AssociatedKey {
+        static var blockKey: Int = 0
+    }
+    
     func action(for event: Event = .touchUpInside, _ action: @escaping ActionBlock) -> Self {
         self.zk_actionBlock = action
         self.addTarget(self, action: #selector(zk_selfTapAction), for: event)
@@ -99,6 +100,11 @@ extension UIControl {
     
     @objc private func zk_selfTapAction() {
         self.zk_actionBlock?()
+    }
+    
+    func textAlignment(_ alignment: ContentHorizontalAlignment) -> Self {
+        self.contentHorizontalAlignment = alignment
+        return self
     }
 }
 

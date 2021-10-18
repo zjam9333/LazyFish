@@ -10,21 +10,9 @@ import UIKit
 
 extension UIView {
     
-    func onAppear(_ action: @escaping OnAppearBlock) -> Self {
-        self.zk_onAppearBlock = action
+    func onAppear(_ action: @escaping ZKit.OnAppearBlock) -> Self {
+        self.zk_attribute.onAppear = action
         return self
-    }
-    
-    typealias OnAppearBlock = (UIView) -> Void
-    var zk_onAppearBlock: OnAppearBlock? {
-        set {
-            let n = newValue
-            objc_setAssociatedObject(self, &ZKit.AssociatedKey.onAppearKey, n, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            let n = objc_getAssociatedObject(self, &ZKit.AssociatedKey.onAppearKey)
-            return n as? OnAppearBlock
-        }
     }
     
     private var zk_attribute: ZKit.Attribute {
@@ -56,13 +44,18 @@ extension UIView {
         return self
     }
     
-    func margin(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
+    func offset(x: CGFloat, y: CGFloat) -> Self {
+        self.zk_attribute.offset = CGPoint(x: x, y: y)
+        return self
+    }
+    
+    func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
         var mar = [ZKit.Edges: CGFloat]()
         mar[.top] = top
         mar[.leading] = leading
         mar[.bottom] = bottom
         mar[.trailing] = trailing
-        self.zk_attribute.margin = mar
+        self.zk_attribute.padding = mar
         return self
     }
 
@@ -73,9 +66,9 @@ extension UIView {
             let attribute = view.zk_attribute
             view.translatesAutoresizingMaskIntoConstraints = false
             var container = view
-            if let pad = attribute.margin {
+            if attribute.padding != nil || !attribute.offset.equalTo(.zero) {
                 let paddingContainer = ZKit.PaddingContainerView()
-                paddingContainer.addContentView(view, padding: pad)
+                paddingContainer.addContentView(view, padding: attribute.padding ?? [:], offset: attribute.offset)
                 container = paddingContainer
             }
             
@@ -123,7 +116,7 @@ extension UIView {
         // on appear
         DispatchQueue.main.async { // [weak view] in
             for view in views {
-                view.zk_onAppearBlock?(view)
+                view.zk_attribute.onAppear?(view)
             }
         }
         return self
@@ -132,7 +125,8 @@ extension UIView {
 
 extension ZKit {
     class PaddingContainerView: UIView {
-        func addContentView(_ content: UIView, padding: [Edges: CGFloat]) {
+        func addContentView(_ content: UIView, padding: [Edges: CGFloat], offset: CGPoint = .zero) {
+            self.contentOffset = offset
             self.addSubview(content)
             self.contentView = content
             if let paView = contentView?.superview as? PaddingContainerView {
@@ -140,16 +134,24 @@ extension ZKit {
             }
             
             content.translatesAutoresizingMaskIntoConstraints = false
-            content.topAnchor.constraint(equalTo: self.topAnchor, constant: padding[.top] ?? 0).isActive = true
-            content.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -(padding[.bottom] ?? 0)).isActive = true
-            content.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding[.leading] ?? 0).isActive = true
-            content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -(padding[.trailing] ?? 0)).isActive = true
+            
+            let offset: CGPoint = self.contentOffset
+            let top = offset.y + (padding[.top] ?? 0)
+            let bottom = offset.y - (padding[.bottom] ?? 0)
+            let leading = offset.x + (padding[.leading] ?? 0)
+            let trailing = offset.x - (padding[.bottom] ?? 0)
+            
+            content.topAnchor.constraint(equalTo: self.topAnchor, constant: top).isActive = true
+            content.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottom).isActive = true
+            content.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leading).isActive = true
+            content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: trailing).isActive = true
             
             self.resetContentKeyPathObservations {
                 self.observe(obj: content, keyPath: \.isHidden)
             }
         }
         
+        private var contentOffset: CGPoint = .zero
         private weak var contentView: UIView? = nil
         private var observeTokens = [NSKeyValueObservation]()
         private typealias KVOResultBuilder = ResultBuilder<NSKeyValueObservation>
