@@ -139,7 +139,7 @@ extension ZKit {
             let top = offset.y + (padding[.top] ?? 0)
             let bottom = offset.y - (padding[.bottom] ?? 0)
             let leading = offset.x + (padding[.leading] ?? 0)
-            let trailing = offset.x - (padding[.bottom] ?? 0)
+            let trailing = offset.x - (padding[.trailing] ?? 0)
             
             content.topAnchor.constraint(equalTo: self.topAnchor, constant: top).isActive = true
             content.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottom).isActive = true

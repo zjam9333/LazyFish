@@ -63,6 +63,12 @@ extension ZKit.ResultBuilder {
         return expression
     }
     
+    // MARK: Available API
+    // 好像不写也可以支持 if #available(iOS xxxx, *)
+//    static func buildLimitedAvailability(_ component: [MyReturnType]) -> [MyReturnType] {
+//        return component
+//    }
+    
     // MARK: 处理for循环
     static func buildArray(_ components: [[MyReturnType]]) -> [MyReturnType] {
         let res = components.flatMap { r in

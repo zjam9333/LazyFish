@@ -19,6 +19,7 @@ class ViewController: UIViewController {
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
             ("Demo Test", DemoTestViewController.self),
+            ("If Block Test", IfBlockTestViewController.self)
         ]
         
         self.view.arrangeViews {

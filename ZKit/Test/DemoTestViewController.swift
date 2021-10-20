@@ -44,6 +44,21 @@ class DemoTestViewController: UIViewController {
                             .frame(height: 0.5)
                             .alignment([.leading, .bottom, .trailing])
                             .padding(leading: 12)
+                        
+                        if #available(iOS 13.0, *) {
+                            UIImageView(image: UIImage(systemName: "chevron.right"))
+                                .alignment([.trailing, .centerY])
+                                .offset(x: -10, y: 0)
+                        }
+                        
+                        UIControl()
+                            .alignment(.allEdges)
+                            .action { [weak self] in
+                                let vc = UIViewController()
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                                vc.navigationItem.title = "nothing title"
+                                vc.view.backgroundColor = randomColor()
+                            }
                     }
                     .frame(height: 60)
                 }
