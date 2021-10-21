@@ -15,11 +15,11 @@ class ViewController: UIViewController {
         self.navigationItem.title = "Some Tests"
         
         let testClasses: [(String, UIViewController.Type)] = [
-            ("Alert View Test", AlertTestViewController.self),
+            ("Alert Test", AlertTestViewController.self),
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
             ("Demo Test", DemoTestViewController.self),
-            ("If Block Test", IfBlockTestViewController.self)
+            ("State Test", StateTestViewController.self)
         ]
         
         self.view.arrangeViews {

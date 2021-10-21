@@ -8,46 +8,25 @@
 import Foundation
 import UIKit
 
-extension ZKit {
-    @propertyWrapper class State<T> {
-        var wrappedValue: T {
-            didSet {
-                let newValue = wrappedValue
-                let oldValue = oldValue
-                for obs in self.observers {
-                    let changed = Changed(old: oldValue, new: newValue)
-                    obs(changed)
-                }
-            }
-        }
-        
-        init(wrappedValue: T) {
-            self.wrappedValue = wrappedValue
-        }
-        
-        typealias ObserverHandler = (Changed<T>) -> Void
-        private var observers = [ObserverHandler]()
-        
-        func addObserver(observer: @escaping ObserverHandler) {
-            self.observers.append(observer)
-            let changed = Changed(old: wrappedValue, new: wrappedValue)
-            observer(changed)
-        }
-        
-        struct Changed<T> {
-            let old: T
-            let new: T
-        }
-    }
-    
+func IfBlock(_ present: ZKit.State<Bool>, @ZKit.ViewBuilder content: ZKit.ViewBuilder.ContentBlock, contentElse: ZKit.ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+    IfBlock(present, map: { a in
+        return a
+    }, contentIf: content, contentElse: contentElse)
 }
 
-func IfBlock(_ present: ZKit.State<Bool>, @ZKit.ViewBuilder content: ZKit.ViewBuilder.ContentBlock) -> [UIView] {
-    let views = content()
-    for i in views {
-        present.addObserver { [weak i] boo in
-            i?.isHidden = !(boo.new)
+func IfBlock<T>(_ observe: ZKit.State<T>, map: @escaping (T) -> Bool, @ZKit.ViewBuilder contentIf: ZKit.ViewBuilder.ContentBlock, @ZKit.ViewBuilder contentElse: ZKit.ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+    let viewsIf = contentIf()
+    let viewsElse = contentElse()
+    let all = viewsIf + viewsElse
+    let allCount = all.count
+    let ifCount = viewsIf.count
+    for i in 0..<allCount {
+        let vi = all[i]
+        let isIf = i < ifCount
+        observe.addObserver { [weak vi] changed in
+            let present = map(changed.new)
+            vi?.isHidden = isIf ? !present : present
         }
     }
-    return views
+    return all
 }

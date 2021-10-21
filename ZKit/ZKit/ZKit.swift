@@ -45,5 +45,36 @@ enum ZKit {
     enum AssociatedKey {
         static var attributeKey: Int = 0
     }
+    
+    @propertyWrapper class State<T> {
+        var wrappedValue: T {
+            didSet {
+                let newValue = wrappedValue
+                let oldValue = oldValue
+                for obs in self.observers {
+                    let changed = Changed(old: oldValue, new: newValue)
+                    obs(changed)
+                }
+            }
+        }
+        
+        init(wrappedValue: T) {
+            self.wrappedValue = wrappedValue
+        }
+        
+        typealias ObserverHandler = (Changed<T>) -> Void
+        private var observers = [ObserverHandler]()
+        
+        func addObserver(observer: @escaping ObserverHandler) {
+            self.observers.append(observer)
+            let changed = Changed(old: wrappedValue, new: wrappedValue)
+            observer(changed)
+        }
+        
+        struct Changed<T> {
+            let old: T
+            let new: T
+        }
+    }
 }
 

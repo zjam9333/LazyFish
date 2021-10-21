@@ -109,28 +109,18 @@ extension UIControl {
 }
 
 extension UIButton {
-    func text(_ text: String) -> Self {
-        self.setTitle(text, for: .normal)
-        return self
-    }
-    
-    func textColor(_ color: UIColor) -> Self {
-        self.setTitleColor(color, for: .normal)
-        return self
-    }
-    
     func font(_ font: UIFont) -> Self {
         self.titleLabel?.font = font
         return self
     }
     
     // states
-    func text(_ text: String, for state: UIControl.State) -> Self {
+    func text(_ text: String, for state: UIControl.State = .normal) -> Self {
         self.setTitle(text, for: state)
         return self
     }
     
-    func textColor(_ color: UIColor, for state: UIControl.State) -> Self {
+    func textColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
         self.setTitleColor(color, for: state)
         return self
     }
@@ -142,6 +132,27 @@ extension UIScrollView {
             self.alwaysBounceVertical = true
         } else if axis == .horizontal {
             self.alwaysBounceHorizontal = true
+        }
+        return self
+    }
+}
+
+// MARK: State Observing
+
+extension UILabel {
+    // stateText
+    func text(_ stateText: ZKit.State<String>) -> Self {
+        stateText.addObserver { [weak self] changed in
+            self?.text = changed.new
+        }
+        return self
+    }
+}
+
+extension UIButton {
+    func text(_ stateText: ZKit.State<String>, for state: UIControl.State = .normal) -> Self {
+        stateText.addObserver { [weak self] changed in
+            self?.setTitle(changed.new, for: state)
         }
         return self
     }
