@@ -13,6 +13,8 @@
 		1C04000F27041212008F025B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04000D27041212008F025B /* Main.storyboard */; };
 		1C04001127041213008F025B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001027041213008F025B /* Assets.xcassets */; };
 		1C04001427041213008F025B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001227041213008F025B /* LaunchScreen.storyboard */; };
+		1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF527229408009CFCDD /* InputTestViewController.swift */; };
+		1CAD9CF82722B3BF009CFCDD /* ZKitObserve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF72722B3BF009CFCDD /* ZKitObserve.swift */; };
 		1CB1EF7927041776007CE1F3 /* ZKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1EF7827041776007CE1F3 /* ZKit.swift */; };
 		1CD8FE1D270FE71F00FE41E8 /* ZKitResultBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1C270FE71F00FE41E8 /* ZKitResultBuilder.swift */; };
 		1CD8FE1F270FEC7400FE41E8 /* ZKitModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* ZKitModifier.swift */; };
@@ -35,6 +37,9 @@
 		1C04001027041213008F025B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C04001327041213008F025B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C04001527041213008F025B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1CAD9CF527229408009CFCDD /* InputTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTestViewController.swift; sourceTree = "<group>"; };
+		1CAD9CF72722B3BF009CFCDD /* ZKitObserve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitObserve.swift; sourceTree = "<group>"; };
+		1CAD9CF92722B9D6009CFCDD /* textinput.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textinput.png; sourceTree = "<group>"; };
 		1CB1EF7827041776007CE1F3 /* ZKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKit.swift; sourceTree = "<group>"; };
 		1CD8FE1C270FE71F00FE41E8 /* ZKitResultBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitResultBuilder.swift; sourceTree = "<group>"; };
 		1CD8FE1E270FEC7400FE41E8 /* ZKitModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitModifier.swift; sourceTree = "<group>"; };
@@ -45,7 +50,7 @@
 		1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitViews.swift; sourceTree = "<group>"; };
 		1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE302711900D00FE41E8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
-		1CD8FE32271190F100FE41E8 /* demo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = demo.png; sourceTree = "<group>"; };
+		1CD8FE32271190F100FE41E8 /* scrollview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrollview.png; sourceTree = "<group>"; };
 		1CD8FE7F2720177600FE41E8 /* ZKitIfBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitIfBlock.swift; sourceTree = "<group>"; };
 		1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -89,7 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				1CD8FE302711900D00FE41E8 /* Readme.md */,
-				1CD8FE32271190F100FE41E8 /* demo.png */,
+				1CAD9CF92722B9D6009CFCDD /* textinput.png */,
+				1CD8FE32271190F100FE41E8 /* scrollview.png */,
 				1C04000627041212008F025B /* ZKit */,
 				1C04000527041212008F025B /* Products */,
 			);
@@ -104,6 +110,7 @@
 				1CD8FE1E270FEC7400FE41E8 /* ZKitModifier.swift */,
 				1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */,
 				1CD8FE7F2720177600FE41E8 /* ZKitIfBlock.swift */,
+				1CAD9CF72722B3BF009CFCDD /* ZKitObserve.swift */,
 			);
 			path = ZKit;
 			sourceTree = "<group>";
@@ -116,6 +123,7 @@
 				1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */,
 				1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */,
 				1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */,
+				1CAD9CF527229408009CFCDD /* InputTestViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -191,9 +199,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */,
 				1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */,
 				1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */,
 				1C04000C27041212008F025B /* ViewController.swift in Sources */,
+				1CAD9CF82722B3BF009CFCDD /* ZKitObserve.swift in Sources */,
 				1C04000827041212008F025B /* AppDelegate.swift in Sources */,
 				1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */,
 				1CD8FE1F270FEC7400FE41E8 /* ZKitModifier.swift in Sources */,

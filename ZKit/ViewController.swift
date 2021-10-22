@@ -19,7 +19,8 @@ class ViewController: UIViewController {
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
             ("Demo Test", DemoTestViewController.self),
-            ("State Test", StateTestViewController.self)
+            ("State Test", StateTestViewController.self),
+            ("Input Test", InputTestViewController.self)
         ]
         
         self.view.arrangeViews {

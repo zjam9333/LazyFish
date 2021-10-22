@@ -24,13 +24,13 @@ class StateTestViewController: UIViewController {
         self.view.arrangeViews {
             UIStackView(axis: .vertical, alignment: .center) {
                 foodForTitle("Tea 🍵")
-                IfBlock(_showCake) {
+                IfBlock($showCake) {
                     foodForTitle("Cake 🍰")
                         .borderColor(.blue).borderWidth(1)
                 }
                 foodForTitle("Pizza 🍕")
                 
-                IfBlock(_showAnimals) {
+                IfBlock($showAnimals) {
                     for i in animalNames {
                         foodForTitle(i)
                             .borderColor(.lightGray).borderWidth(1)
@@ -39,7 +39,7 @@ class StateTestViewController: UIViewController {
                 
                 UIStackView(axis: .horizontal) {
                     UILabel().text("label with bool state: ")
-                    IfBlock(_addNum) { i in
+                    IfBlock($addNum) { i in
                         i % 2 == 0
                     } contentIf: {
                         foodForTitle("Hello!")
@@ -52,7 +52,7 @@ class StateTestViewController: UIViewController {
                 
                 UIStackView(axis: .horizontal) {
                     UILabel().text("text with string state: ")
-                    UILabel().text(_sayWhat).font(.systemFont(ofSize: 30, weight: .black)).textColor(.brown)
+                    UILabel().text($sayWhat).font(.systemFont(ofSize: 30, weight: .black)).textColor(.brown)
                 }
             }.alignment(.center)
             
@@ -63,7 +63,7 @@ class StateTestViewController: UIViewController {
                 buttonForTitle("Toggle Animals 🙊") { [weak self] in
                     self?.showAnimals.toggle()
                 }
-                buttonForTitle(_sayWhat) { [weak self] in
+                buttonForTitle($sayWhat) { [weak self] in
                     self?.addNum += 1
                     if self?.sayWhat == "Hello" {
                         self?.sayWhat = "World"
@@ -89,7 +89,7 @@ class StateTestViewController: UIViewController {
             }
     }
     
-    func buttonForTitle(_ str: ZKit.State<String>, action: @escaping () -> Void) -> UIButton {
+    func buttonForTitle(_ str: ZKit.Binding<String>, action: @escaping () -> Void) -> UIButton {
         UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
             .textColor(.black)
             .textColor(.gray, for: .highlighted)

@@ -40,6 +40,10 @@ extension UIView {
         return self
     }
     
+    func border(width: CGFloat, color: UIColor) -> Self {
+        return self.borderWidth(width).borderColor(color)
+    }
+    
 //    func store(in view: inout UIView?) -> Self {
 //        view = self
 //        return self
@@ -77,7 +81,7 @@ extension UIControl {
     
     typealias ActionBlock = () -> Void
     
-    fileprivate enum AssociatedKey {
+    private enum AssociatedKey {
         static var blockKey: Int = 0
     }
     
@@ -137,12 +141,29 @@ extension UIScrollView {
     }
 }
 
+extension UITextField {
+    func textColor(_ color: UIColor) -> Self {
+        self.textColor = color
+        return self
+    }
+    
+    func textAlignment(_ alignment: NSTextAlignment) -> Self {
+        self.textAlignment = alignment
+        return self
+    }
+    
+    func font(_ font: UIFont) -> Self {
+        self.font = font
+        return self
+    }
+}
+
 // MARK: State Observing
 
 extension UILabel {
     // stateText
-    func text(_ stateText: ZKit.State<String>) -> Self {
-        stateText.addObserver { [weak self] changed in
+    func text(_ stateText: ZKit.Binding<String>) -> Self {
+        stateText.wrapper.addObserver { [weak self] changed in
             self?.text = changed.new
         }
         return self
@@ -150,10 +171,55 @@ extension UILabel {
 }
 
 extension UIButton {
-    func text(_ stateText: ZKit.State<String>, for state: UIControl.State = .normal) -> Self {
-        stateText.addObserver { [weak self] changed in
+    func text(_ stateText: ZKit.Binding<String>, for state: UIControl.State = .normal) -> Self {
+        stateText.wrapper.addObserver { [weak self] changed in
             self?.setTitle(changed.new, for: state)
         }
+        return self
+    }
+}
+
+extension UITextField {
+    private typealias EditChangedBlock = (String) -> Void
+    
+    private enum AssociatedKey {
+        static var editKey: Int = 0
+    }
+    
+    private var zk_textBlock: EditChangedBlock? {
+        set {
+            let n = newValue
+            objc_setAssociatedObject(self, &AssociatedKey.editKey, n, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            let n = objc_getAssociatedObject(self, &AssociatedKey.editKey)
+            return n as? EditChangedBlock
+        }
+    }
+    
+    @objc private func selfTextDidChanged() {
+        self.zk_textBlock?(self.text ?? "")
+    }
+    
+    func text(_ text: ZKit.Binding<String>) -> Self {
+        self.addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
+        let state = text.wrapper
+        var shouldObserve = true
+        self.zk_textBlock = { [weak state] text in
+            shouldObserve = false
+            state?.wrappedValue = text
+            shouldObserve = true
+        }
+        state.addObserver { [weak self] changed in
+            if shouldObserve {
+                self?.text = changed.new
+            }
+        }
+        return self
+    }
+    
+    func borderStyle(_ style: BorderStyle) -> Self {
+        self.borderStyle = style
         return self
     }
 }
