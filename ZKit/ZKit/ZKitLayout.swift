@@ -30,27 +30,66 @@ extension UIView {
         }
     }
     
-    func frame(width: CGFloat? = nil, height: CGFloat? = nil, filledWidth: Bool = false, filledHeight: Bool = false) -> Self {
+    func frame(filledWidth: Bool? = false, filledHeight: Bool? = false) -> Self {
+        if let w = filledWidth, w == true {
+            _ = self.frame(width: .fillParent)
+        }
+        if let h = filledHeight, h == true {
+            _ = self.frame(height: .fillParent)
+        }
+        return self
+    }
+    
+    func frame(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
+        if let w = width {
+            _ = self.frame(width: .equalTo(w))
+        }
+        if let h = height {
+            _ = self.frame(height: .equalTo(h))
+        }
+        return self
+    }
+    
+    func frame(width: ZKit.SizeFill? = nil, height: ZKit.SizeFill? = nil) -> Self {
         let att = self.zk_attribute
-        att.width = width
-        att.height = height
-        att.filledWidth = filledWidth
-        att.filledHeight = filledHeight
+        att.width = width ?? att.width
+        att.height = height ?? att.height
         return self
     }
     
-    func alignment(_ alignment: ZKit.Alignment? = .allEdges) -> Self {
-        self.zk_attribute.alignment = alignment
+    func alignment(_ edges: ZKit.Alignment, value: CGFloat? = 0) -> Self {
+        var align = self.zk_attribute.alignment ?? [:]
+        if edges.contains(.centerY) {
+            align[.centerY] = value
+        }
+        if edges.contains(.centerX) {
+            align[.centerX] = value
+        }
+        if edges.contains(.leading) {
+            align[.leading] = value
+        }
+        if edges.contains(.trailing) {
+            align[.trailing] = value
+        }
+        if edges.contains(.top) {
+            align[.top] = value
+        }
+        if edges.contains(.bottom) {
+            align[.bottom] = value
+        }
+        self.zk_attribute.alignment = align
         return self
     }
     
+    // 未完善
     func offset(x: CGFloat, y: CGFloat) -> Self {
         self.zk_attribute.offset = CGPoint(x: x, y: y)
         return self
     }
     
+    // padding将封装一个containerview
     func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
-        var mar = [ZKit.Edges: CGFloat]()
+        var mar = [ZKit.Edge: CGFloat]()
         mar[.top] = top
         mar[.leading] = leading
         mar[.bottom] = bottom
@@ -79,37 +118,41 @@ extension UIView {
             } else {
                 self.addSubview(container)
                 
-                let alignment = attribute.alignment ?? .allEdges
+                let alignment = attribute.alignment ?? [:] // 不提供默认值，让外面传入
                 // 对齐
-                if alignment.contains(.centerY) {
-                    container.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+                if let const = alignment[.centerY] {
+                    container.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: const).isActive = true
                 }
-                if alignment.contains(.centerX) {
-                    container.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+                if let const = alignment[.centerX] {
+                    container.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: const).isActive = true
                 }
-                if alignment.contains(.leading) {
-                    container.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+                if let const = alignment[.leading] {
+                    container.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: const).isActive = true
                 }
-                if alignment.contains(.trailing) {
-                    container.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+                if let const = alignment[.trailing] {
+                    container.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: const).isActive = true
                 }
-                if alignment.contains(.top) {
-                    container.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+                if let const = alignment[.top] {
+                    container.topAnchor.constraint(equalTo: self.topAnchor, constant: const).isActive = true
                 }
-                if alignment.contains(.bottom) {
-                    container.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+                if let const = alignment[.bottom] {
+                    container.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: const).isActive = true
                 }
             }
             
-            if let width = attribute.width {
-                container.widthAnchor.constraint(equalToConstant: width).isActive = true
-            } else if attribute.filledWidth {
-                container.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+            if let si = attribute.width {
+                if case .equalTo(let size) = si {
+                    container.widthAnchor.constraint(equalToConstant: size).isActive = true
+                } else if case .fillParent = si {
+                    container.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+                }
             }
-            if let height = attribute.height {
-                container.heightAnchor.constraint(equalToConstant: height).isActive = true
-            } else if attribute.filledHeight {
-                container.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+            if let si = attribute.height {
+                if case .equalTo(let size) = si {
+                    container.heightAnchor.constraint(equalToConstant: size).isActive = true
+                } else if case .fillParent = si {
+                    container.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+                }
             }
         }
         
@@ -125,7 +168,7 @@ extension UIView {
 
 extension ZKit {
     class PaddingContainerView: UIView {
-        func addContentView(_ content: UIView, padding: [Edges: CGFloat], offset: CGPoint = .zero) {
+        func addContentView(_ content: UIView, padding: [Edge: CGFloat], offset: CGPoint = .zero) {
             self.contentOffset = offset
             self.addSubview(content)
             self.contentView = content

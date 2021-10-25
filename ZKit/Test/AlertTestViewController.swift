@@ -86,10 +86,11 @@ fileprivate class TestAlertView: UIView {
             }
             self?.alertContent
         }
-        .backgroundColor(.gray)
+        .backgroundColor(.black.withAlphaComponent(0.3))
         
         self.arrangeViews {
-            self.alertView
+            self.alertView?
+                .alignment(.allEdges)
         }
         return self.alignment(.allEdges)
     }
@@ -108,12 +109,11 @@ class AlertTestViewController: UIViewController {
                 .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
                 .backgroundColor(.gray)
                 .alignment(.center)
-                .action { [weak self] in
-                    
-                self?.view.arrangeViews {
-                    TestAlertView().testShow()
+                .action {
+                    UIApplication.shared.keyWindow?.arrangeViews {
+                        TestAlertView().testShow()
+                    }
                 }
-            }
         }
         // Do any additional setup after loading the view.
     }

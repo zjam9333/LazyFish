@@ -13,16 +13,20 @@ enum ZKit {
 
 extension ZKit {
     class Attribute {
-        var padding: [Edges: CGFloat]?
+        var padding: [Edge: CGFloat]?
         var offset: CGPoint = .zero
         
-        var alignment: Alignment?
-        var width: CGFloat?
-        var height: CGFloat?
+        var alignment: [Edge: CGFloat]?
+        var width: SizeFill?
+        var height: SizeFill?
         
-        var filledWidth: Bool = false
-        var filledHeight: Bool = false
         var onAppear: OnAppearBlock?
+    }
+    
+    enum SizeFill {
+        case fillParent
+        case equalTo(_ size: CGFloat)
+        // 更多规则未完待续
     }
     
     typealias OnAppearBlock = (UIView) -> Void
@@ -42,8 +46,8 @@ extension ZKit {
         static let center: Alignment = [centerX, centerY]
     }
     
-    enum Edges {
-        case top, leading, bottom, trailing
+    enum Edge {
+        case top, leading, bottom, trailing, centerX, centerY
     }
     
     enum AssociatedKey {

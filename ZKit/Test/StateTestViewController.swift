@@ -52,7 +52,7 @@ class StateTestViewController: UIViewController {
                 
                 UIStackView(axis: .horizontal) {
                     UILabel().text("text with string state: ")
-                    UILabel().text($sayWhat).font(.systemFont(ofSize: 30, weight: .black)).textColor(.brown)
+                    UILabel().text(binding: $sayWhat).font(.systemFont(ofSize: 30, weight: .black)).textColor(.brown)
                 }
             }.alignment(.center)
             
@@ -90,7 +90,7 @@ class StateTestViewController: UIViewController {
     }
     
     func buttonForTitle(_ str: ZKit.Binding<String>, action: @escaping () -> Void) -> UIButton {
-        UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
+        UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
             .textColor(.black)
             .textColor(.gray, for: .highlighted)
             .action {

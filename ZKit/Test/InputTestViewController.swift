@@ -18,16 +18,17 @@ class InputTestViewController: UIViewController {
             UIView() {
                 UIStackView(axis: .vertical, spacing: 10) {
                     UILabel().text("your input:")
-                    UILabel().text(self.$text)
-                    UITextField().text(self.$text).borderStyle(.roundedRect)
+                    UILabel().text(binding: self.$text)
+                    UITextField().text(binding: self.$text).borderStyle(.roundedRect)
                 }
                 .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
+                .alignment(.allEdges)
             }
             .borderWidth(1)
             .borderColor(.black)
-            .alignment([.top, .centerX])
             .frame(width: 200)
-            .padding(top: 160)
+            .alignment(.top, value: 160)
+            .alignment(.centerX, value: 0)
         }
         // Do any additional setup after loading the view.
     }
