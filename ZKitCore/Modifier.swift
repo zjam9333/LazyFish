@@ -13,7 +13,7 @@ import UIKit
 ///摘抄了一些常用属性，修改后返回self，达到链式调用的效果
 ///
 
-extension UIView {
+public extension UIView {
     
     func backgroundColor(_ color: UIColor) -> Self {
         self.backgroundColor = color
@@ -50,7 +50,7 @@ extension UIView {
 //    }
 }
 
-extension UILabel {
+public extension UILabel {
     func text(_ text: String) -> Self {
         self.text = text
         return self
@@ -77,7 +77,7 @@ extension UILabel {
     }
 }
 
-extension UIControl {
+public extension UIControl {
     
     typealias ActionBlock = () -> Void
     
@@ -112,7 +112,7 @@ extension UIControl {
     }
 }
 
-extension UIButton {
+public extension UIButton {
     func font(_ font: UIFont) -> Self {
         self.titleLabel?.font = font
         return self
@@ -130,7 +130,7 @@ extension UIButton {
     }
 }
 
-extension UIScrollView {
+public extension UIScrollView {
     func bounce(_ axis: NSLayoutConstraint.Axis) -> Self {
         if axis == .vertical {
             self.alwaysBounceVertical = true
@@ -141,7 +141,7 @@ extension UIScrollView {
     }
 }
 
-extension UITextField {
+public extension UITextField {
     func textColor(_ color: UIColor) -> Self {
         self.textColor = color
         return self
@@ -160,9 +160,9 @@ extension UITextField {
 
 // MARK: State Observing
 
-extension UILabel {
+public extension UILabel {
     // stateText
-    func text(binding stateText: ZKit.Binding<String>) -> Self {
+    func text(binding stateText: Binding<String>) -> Self {
         stateText.wrapper.addObserver { [weak self] changed in
             self?.text = changed.new
         }
@@ -170,8 +170,8 @@ extension UILabel {
     }
 }
 
-extension UIButton {
-    func text(binding stateText: ZKit.Binding<String>, for state: UIControl.State = .normal) -> Self {
+public extension UIButton {
+    func text(binding stateText: Binding<String>, for state: UIControl.State = .normal) -> Self {
         stateText.wrapper.addObserver { [weak self] changed in
             self?.setTitle(changed.new, for: state)
         }
@@ -179,7 +179,7 @@ extension UIButton {
     }
 }
 
-extension UITextField {
+public extension UITextField {
     private typealias EditChangedBlock = (String) -> Void
     
     private enum AssociatedKey {
@@ -201,7 +201,7 @@ extension UITextField {
         self.zk_textBlock?(self.text ?? "")
     }
     
-    func text(binding text: ZKit.Binding<String>) -> Self {
+    func text(binding text: Binding<String>) -> Self {
         self.addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
         let state = text.wrapper
         var shouldObserve = true

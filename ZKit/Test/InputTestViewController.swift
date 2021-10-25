@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import ZKitCore
 
 class InputTestViewController: UIViewController {
     
-    @ZKit.State var text: String = "abc"
+    @State var text: String = "abc"
 
     override func viewDidLoad() {
         super.viewDidLoad()

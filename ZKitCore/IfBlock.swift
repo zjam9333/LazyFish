@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-func IfBlock(_ present: ZKit.Binding<Bool>, @ZKit.ViewBuilder content: ZKit.ViewBuilder.ContentBlock, contentElse: ZKit.ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+public func IfBlock(_ present: Binding<Bool>, @ViewBuilder content: ViewBuilder.ContentBlock, contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
     IfBlock(present, map: { a in
         return a
     }, contentIf: content, contentElse: contentElse)
 }
 
-func IfBlock<T>(_ observe: ZKit.Binding<T>, map: @escaping (T) -> Bool, @ZKit.ViewBuilder contentIf: ZKit.ViewBuilder.ContentBlock, @ZKit.ViewBuilder contentElse: ZKit.ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+public func IfBlock<T>(_ observe: Binding<T>, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
     let viewsIf = contentIf()
     let viewsElse = contentElse()
     let all = viewsIf + viewsElse

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ZKitCore
 
 class ViewController: UIViewController {
 

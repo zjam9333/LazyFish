@@ -8,25 +8,21 @@
 import Foundation
 import UIKit
 
-extension ZKit {
-    typealias ViewBuilder = ResultBuilder<UIView>
-    typealias LayoutBuilder = ResultBuilder<NSLayoutConstraint>
-    
-    @resultBuilder
-    struct ResultBuilder<MyReturnType> {
-        typealias ContentBlock = () -> [MyReturnType]
-        // MARK: 组合全部表达式的返回值
-        static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
-            let res = components.flatMap { r in
-                return r
-            }
-            return res
+public typealias ViewBuilder = ResultBuilder<UIView>
+public typealias LayoutBuilder = ResultBuilder<NSLayoutConstraint>
+
+@resultBuilder public struct ResultBuilder<MyReturnType> {
+    public typealias ContentBlock = () -> [MyReturnType]
+    // MARK: 组合全部表达式的返回值
+    public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
+        let res = components.flatMap { r in
+            return r
         }
+        return res
     }
 }
-    
-extension ZKit.ResultBuilder {
-    
+
+public extension ResultBuilder {
     // MARK: 处理空白block
     static func buildOptional<T>(_ component: [T]?) -> [MyReturnType] {
         return []

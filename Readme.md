@@ -9,7 +9,7 @@
 Passing `$text` into a `UITextField`, will auto assign to the label which observes the `text` value
 
 ```swift
-    @ZKit.State var text: String = "abc"
+    @State var text: String = "abc"
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -14,19 +14,47 @@
 		1C04001127041213008F025B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001027041213008F025B /* Assets.xcassets */; };
 		1C04001427041213008F025B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001227041213008F025B /* LaunchScreen.storyboard */; };
 		1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF527229408009CFCDD /* InputTestViewController.swift */; };
-		1CAD9CF82722B3BF009CFCDD /* ZKitObserve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF72722B3BF009CFCDD /* ZKitObserve.swift */; };
-		1CB1EF7927041776007CE1F3 /* ZKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1EF7827041776007CE1F3 /* ZKit.swift */; };
-		1CD8FE1D270FE71F00FE41E8 /* ZKitResultBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1C270FE71F00FE41E8 /* ZKitResultBuilder.swift */; };
-		1CD8FE1F270FEC7400FE41E8 /* ZKitModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* ZKitModifier.swift */; };
-		1CD8FE21270FEE0700FE41E8 /* ZKitLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE20270FEE0700FE41E8 /* ZKitLayout.swift */; };
 		1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2627102C6400FE41E8 /* StackTestViewController.swift */; };
 		1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */; };
 		1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */; };
-		1CD8FE2D27102EE100FE41E8 /* ZKitViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */; };
 		1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */; };
-		1CD8FE802720177600FE41E8 /* ZKitIfBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE7F2720177600FE41E8 /* ZKitIfBlock.swift */; };
 		1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */; };
+		1CE6349F2726A8A20051BF9F /* ZKitCore.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6349E2726A8A20051BF9F /* ZKitCore.docc */; };
+		1CE634A02726A8A20051BF9F /* ZKitCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE6349D2726A8A20051BF9F /* ZKitCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1CE634A32726A8A20051BF9F /* ZKitCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */; };
+		1CE634A42726A8A20051BF9F /* ZKitCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1CE634A82726A8C70051BF9F /* IfBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE7F2720177600FE41E8 /* IfBlock.swift */; };
+		1CE634A92726A8C70051BF9F /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2C27102EE100FE41E8 /* Views.swift */; };
+		1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */; };
+		1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */; };
+		1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE20270FEE0700FE41E8 /* Layout.swift */; };
+		1CE634AD2726A8C70051BF9F /* Observe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF72722B3BF009CFCDD /* Observe.swift */; };
+		1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1EF7827041776007CE1F3 /* Attributes.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1CE634A12726A8A20051BF9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C04FFFC27041212008F025B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CE6349A2726A8A20051BF9F;
+			remoteInfo = ZKitCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1CAD9D0D2726A369009CFCDD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1CE634A42726A8A20051BF9F /* ZKitCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1C04000427041212008F025B /* ZKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,25 +66,36 @@
 		1C04001327041213008F025B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C04001527041213008F025B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1CAD9CF527229408009CFCDD /* InputTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTestViewController.swift; sourceTree = "<group>"; };
-		1CAD9CF72722B3BF009CFCDD /* ZKitObserve.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitObserve.swift; sourceTree = "<group>"; };
+		1CAD9CF72722B3BF009CFCDD /* Observe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observe.swift; sourceTree = "<group>"; };
 		1CAD9CF92722B9D6009CFCDD /* textinput.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textinput.png; sourceTree = "<group>"; };
-		1CB1EF7827041776007CE1F3 /* ZKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKit.swift; sourceTree = "<group>"; };
-		1CD8FE1C270FE71F00FE41E8 /* ZKitResultBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitResultBuilder.swift; sourceTree = "<group>"; };
-		1CD8FE1E270FEC7400FE41E8 /* ZKitModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitModifier.swift; sourceTree = "<group>"; };
-		1CD8FE20270FEE0700FE41E8 /* ZKitLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitLayout.swift; sourceTree = "<group>"; };
+		1CB1EF7827041776007CE1F3 /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
+		1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBuilder.swift; sourceTree = "<group>"; };
+		1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
+		1CD8FE20270FEE0700FE41E8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		1CD8FE2627102C6400FE41E8 /* StackTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarginTestViewController.swift; sourceTree = "<group>"; };
-		1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitViews.swift; sourceTree = "<group>"; };
+		1CD8FE2C27102EE100FE41E8 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE302711900D00FE41E8 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		1CD8FE32271190F100FE41E8 /* scrollview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scrollview.png; sourceTree = "<group>"; };
-		1CD8FE7F2720177600FE41E8 /* ZKitIfBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZKitIfBlock.swift; sourceTree = "<group>"; };
+		1CD8FE7F2720177600FE41E8 /* IfBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IfBlock.swift; sourceTree = "<group>"; };
 		1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
+		1CE6349B2726A8A20051BF9F /* ZKitCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZKitCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CE6349D2726A8A20051BF9F /* ZKitCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKitCore.h; sourceTree = "<group>"; };
+		1CE6349E2726A8A20051BF9F /* ZKitCore.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = ZKitCore.docc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1C04000127041212008F025B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CE634A32726A8A20051BF9F /* ZKitCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CE634982726A8A20051BF9F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -70,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				1C04000427041212008F025B /* ZKit.app */,
+				1CE6349B2726A8A20051BF9F /* ZKitCore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -78,7 +118,6 @@
 			isa = PBXGroup;
 			children = (
 				1CD8FE222710272E00FE41E8 /* Test */,
-				1CB1EF7727041736007CE1F3 /* ZKit */,
 				1C04000727041212008F025B /* AppDelegate.swift */,
 				1C04000927041212008F025B /* SceneDelegate.swift */,
 				1C04000B27041212008F025B /* ViewController.swift */,
@@ -97,22 +136,9 @@
 				1CAD9CF92722B9D6009CFCDD /* textinput.png */,
 				1CD8FE32271190F100FE41E8 /* scrollview.png */,
 				1C04000627041212008F025B /* ZKit */,
+				1CE6349C2726A8A20051BF9F /* ZKitCore */,
 				1C04000527041212008F025B /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		1CB1EF7727041736007CE1F3 /* ZKit */ = {
-			isa = PBXGroup;
-			children = (
-				1CB1EF7827041776007CE1F3 /* ZKit.swift */,
-				1CD8FE1C270FE71F00FE41E8 /* ZKitResultBuilder.swift */,
-				1CD8FE20270FEE0700FE41E8 /* ZKitLayout.swift */,
-				1CD8FE1E270FEC7400FE41E8 /* ZKitModifier.swift */,
-				1CD8FE2C27102EE100FE41E8 /* ZKitViews.swift */,
-				1CD8FE7F2720177600FE41E8 /* ZKitIfBlock.swift */,
-				1CAD9CF72722B3BF009CFCDD /* ZKitObserve.swift */,
-			);
-			path = ZKit;
 			sourceTree = "<group>";
 		};
 		1CD8FE222710272E00FE41E8 /* Test */ = {
@@ -128,7 +154,34 @@
 			path = Test;
 			sourceTree = "<group>";
 		};
+		1CE6349C2726A8A20051BF9F /* ZKitCore */ = {
+			isa = PBXGroup;
+			children = (
+				1CB1EF7827041776007CE1F3 /* Attributes.swift */,
+				1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */,
+				1CD8FE20270FEE0700FE41E8 /* Layout.swift */,
+				1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */,
+				1CD8FE2C27102EE100FE41E8 /* Views.swift */,
+				1CD8FE7F2720177600FE41E8 /* IfBlock.swift */,
+				1CAD9CF72722B3BF009CFCDD /* Observe.swift */,
+				1CE6349D2726A8A20051BF9F /* ZKitCore.h */,
+				1CE6349E2726A8A20051BF9F /* ZKitCore.docc */,
+			);
+			path = ZKitCore;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1CE634962726A8A20051BF9F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CE634A02726A8A20051BF9F /* ZKitCore.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		1C04000327041212008F025B /* ZKit */ = {
@@ -138,15 +191,35 @@
 				1C04000027041212008F025B /* Sources */,
 				1C04000127041212008F025B /* Frameworks */,
 				1C04000227041212008F025B /* Resources */,
+				1CAD9D0D2726A369009CFCDD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1CE634A22726A8A20051BF9F /* PBXTargetDependency */,
 			);
 			name = ZKit;
 			productName = ZKit;
 			productReference = 1C04000427041212008F025B /* ZKit.app */;
 			productType = "com.apple.product-type.application";
+		};
+		1CE6349A2726A8A20051BF9F /* ZKitCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1CE634A72726A8A20051BF9F /* Build configuration list for PBXNativeTarget "ZKitCore" */;
+			buildPhases = (
+				1CE634962726A8A20051BF9F /* Headers */,
+				1CE634972726A8A20051BF9F /* Sources */,
+				1CE634982726A8A20051BF9F /* Frameworks */,
+				1CE634992726A8A20051BF9F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZKitCore;
+			productName = ZKitCore;
+			productReference = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -159,6 +232,9 @@
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
 					1C04000327041212008F025B = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					1CE6349A2726A8A20051BF9F = {
 						CreatedOnToolsVersion = 13.0;
 					};
 				};
@@ -177,6 +253,7 @@
 			projectRoot = "";
 			targets = (
 				1C04000327041212008F025B /* ZKit */,
+				1CE6349A2726A8A20051BF9F /* ZKitCore */,
 			);
 		};
 /* End PBXProject section */
@@ -192,6 +269,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1CE634992726A8A20051BF9F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -203,22 +287,38 @@
 				1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */,
 				1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */,
 				1C04000C27041212008F025B /* ViewController.swift in Sources */,
-				1CAD9CF82722B3BF009CFCDD /* ZKitObserve.swift in Sources */,
 				1C04000827041212008F025B /* AppDelegate.swift in Sources */,
 				1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */,
-				1CD8FE1F270FEC7400FE41E8 /* ZKitModifier.swift in Sources */,
-				1CD8FE1D270FE71F00FE41E8 /* ZKitResultBuilder.swift in Sources */,
 				1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */,
-				1CD8FE802720177600FE41E8 /* ZKitIfBlock.swift in Sources */,
-				1CD8FE21270FEE0700FE41E8 /* ZKitLayout.swift in Sources */,
-				1CD8FE2D27102EE100FE41E8 /* ZKitViews.swift in Sources */,
 				1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */,
 				1C04000A27041212008F025B /* SceneDelegate.swift in Sources */,
-				1CB1EF7927041776007CE1F3 /* ZKit.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CE634972726A8A20051BF9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CE634A92726A8C70051BF9F /* Views.swift in Sources */,
+				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
+				1CE634A82726A8C70051BF9F /* IfBlock.swift in Sources */,
+				1CE634AD2726A8C70051BF9F /* Observe.swift in Sources */,
+				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
+				1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */,
+				1CE6349F2726A8A20051BF9F /* ZKitCore.docc in Sources */,
+				1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1CE634A22726A8A20051BF9F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CE6349A2726A8A20051BF9F /* ZKitCore */;
+			targetProxy = 1CE634A12726A8A20051BF9F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1C04000D27041212008F025B /* Main.storyboard */ = {
@@ -359,6 +459,7 @@
 		1C04001927041213008F025B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -387,6 +488,7 @@
 		1C04001A27041213008F025B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -412,6 +514,68 @@
 			};
 			name = Release;
 		};
+		1CE634A52726A8A20051BF9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zjj.ZKitCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		1CE634A62726A8A20051BF9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zjj.ZKitCore;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -429,6 +593,15 @@
 			buildConfigurations = (
 				1C04001627041213008F025B /* Debug */,
 				1C04001727041213008F025B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1CE634A72726A8A20051BF9F /* Build configuration list for PBXNativeTarget "ZKitCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CE634A52726A8A20051BF9F /* Debug */,
+				1CE634A62726A8A20051BF9F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

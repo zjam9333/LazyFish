@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import ZKitCore
 
 class StateTestViewController: UIViewController {
     
-    @ZKit.State var showCake: Bool = true
-    @ZKit.State var showAnimals: Bool = true
-    @ZKit.State var addNum: Int = 0
-    @ZKit.State var sayWhat: String = "Hello"
+    @State var showCake: Bool = true
+    @State var showAnimals: Bool = true
+    @State var addNum: Int = 0
+    @State var sayWhat: String = "Hello"
     
     let animalNames: [String] = [
         "Dog 🐶", "Cat 🐯", "Pig 🐷"
@@ -89,7 +90,7 @@ class StateTestViewController: UIViewController {
             }
     }
     
-    func buttonForTitle(_ str: ZKit.Binding<String>, action: @escaping () -> Void) -> UIButton {
+    func buttonForTitle(_ str: Binding<String>, action: @escaping () -> Void) -> UIButton {
         UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
             .textColor(.black)
             .textColor(.gray, for: .highlighted)
