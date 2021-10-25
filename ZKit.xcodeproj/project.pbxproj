@@ -19,7 +19,6 @@
 		1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */; };
 		1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */; };
 		1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */; };
-		1CE6349F2726A8A20051BF9F /* ZKitCore.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6349E2726A8A20051BF9F /* ZKitCore.docc */; };
 		1CE634A02726A8A20051BF9F /* ZKitCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE6349D2726A8A20051BF9F /* ZKitCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CE634A32726A8A20051BF9F /* ZKitCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */; };
 		1CE634A42726A8A20051BF9F /* ZKitCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -83,7 +82,6 @@
 		1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
 		1CE6349B2726A8A20051BF9F /* ZKitCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZKitCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE6349D2726A8A20051BF9F /* ZKitCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKitCore.h; sourceTree = "<group>"; };
-		1CE6349E2726A8A20051BF9F /* ZKitCore.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = ZKitCore.docc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,7 +163,6 @@
 				1CD8FE7F2720177600FE41E8 /* IfBlock.swift */,
 				1CAD9CF72722B3BF009CFCDD /* Observe.swift */,
 				1CE6349D2726A8A20051BF9F /* ZKitCore.h */,
-				1CE6349E2726A8A20051BF9F /* ZKitCore.docc */,
 			);
 			path = ZKitCore;
 			sourceTree = "<group>";
@@ -305,7 +302,6 @@
 				1CE634AD2726A8C70051BF9F /* Observe.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
 				1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */,
-				1CE6349F2726A8A20051BF9F /* ZKitCore.docc in Sources */,
 				1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
