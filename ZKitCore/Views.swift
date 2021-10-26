@@ -30,20 +30,48 @@ public extension UIScrollView {
     convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, @ViewBuilder content: ViewBuilder.ContentBlock) {
         self.init()
         
+        let views = content()
+        let fakeViews = views.map { vi -> UIView in
+            let newView = UIView()
+            return newView
+        }
+        // 此fakeviews仅用于排版
         self.arrangeViews { [weak self] in
             if direction == .vertical {
                 self?.showsHorizontalScrollIndicator = false
-                let stack = UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0, content: content)
+                let stack = UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
+                        fakeViews
+                    }
                     .frame(filledWidth: true)
                     .alignment(.allEdges)
+                stack.isHidden = true
                 stack
             } else {
                 self?.showsVerticalScrollIndicator = false
-                let stack = UIStackView(axis: .horizontal, distribution: .fill, alignment: .fill, spacing: 0, content: content)
+                let stack = UIStackView(axis: .horizontal, distribution: .fill, alignment: .fill, spacing: 0) {
+                        fakeViews
+                    }
                     .frame(filledHeight: true)
                     .alignment(.allEdges)
+                stack.isHidden = true
                 stack
             }
+        }
+        for a in views {
+            a.zk_attribute.alignment = nil
+        }
+        self.arrangeViews {
+            views
+        }
+        for (a, b) in zip(views, fakeViews) {
+            var aview = a
+            if let p = aview.superview as? PaddingContainerView {
+                aview = p
+            }
+            aview.topAnchor.constraint(equalTo: b.topAnchor).isActive = true
+            aview.bottomAnchor.constraint(equalTo: b.bottomAnchor).isActive = true
+            aview.leadingAnchor.constraint(equalTo: b.leadingAnchor).isActive = true
+            aview.trailingAnchor.constraint(equalTo: b.trailingAnchor).isActive = true
         }
     }
 }

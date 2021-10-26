@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         self.navigationItem.title = "Some Tests"
         
         let testClasses: [(String, UIViewController.Type)] = [
+            ("Page Test", PageTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),

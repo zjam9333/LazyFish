@@ -15,7 +15,7 @@ public extension UIView {
         return self
     }
     
-    fileprivate var zk_attribute: Attribute {
+    internal var zk_attribute: Attribute {
         set {
             let obj = newValue
             objc_setAssociatedObject(self, &AssociatedKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -167,7 +167,7 @@ public extension UIView {
     }
 }
 
-private class PaddingContainerView: UIView {
+internal class PaddingContainerView: UIView {
     func addContentView(_ content: UIView, padding: [Edge: CGFloat], offset: CGPoint = .zero) {
         self.contentOffset = offset
         self.addSubview(content)
