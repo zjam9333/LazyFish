@@ -31,6 +31,8 @@
 		1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1EF7827041776007CE1F3 /* Attributes.swift */; };
 		1CE6351A2727EC510051BF9F /* ForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE635192727EC510051BF9F /* ForEach.swift */; };
 		1CE6351C2727F0090051BF9F /* PageTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6351B2727F0090051BF9F /* PageTestViewController.swift */; };
+		1CFBC27B272A9BB900AE64C4 /* ForEachTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */; };
+		1CFBC27D272AA5A400AE64C4 /* ForEach2TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFBC27C272AA5A400AE64C4 /* ForEach2TestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +88,8 @@
 		1CE6349D2726A8A20051BF9F /* ZKitCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKitCore.h; sourceTree = "<group>"; };
 		1CE635192727EC510051BF9F /* ForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForEach.swift; sourceTree = "<group>"; };
 		1CE6351B2727F0090051BF9F /* PageTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTestViewController.swift; sourceTree = "<group>"; };
+		1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForEachTestViewController.swift; sourceTree = "<group>"; };
+		1CFBC27C272AA5A400AE64C4 /* ForEach2TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForEach2TestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +157,8 @@
 				1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */,
 				1CAD9CF527229408009CFCDD /* InputTestViewController.swift */,
 				1CE6351B2727F0090051BF9F /* PageTestViewController.swift */,
+				1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */,
+				1CFBC27C272AA5A400AE64C4 /* ForEach2TestViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -290,7 +296,9 @@
 				1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */,
 				1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */,
 				1C04000C27041212008F025B /* ViewController.swift in Sources */,
+				1CFBC27D272AA5A400AE64C4 /* ForEach2TestViewController.swift in Sources */,
 				1C04000827041212008F025B /* AppDelegate.swift in Sources */,
+				1CFBC27B272A9BB900AE64C4 /* ForEachTestViewController.swift in Sources */,
 				1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */,
 				1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */,
 				1CE6351C2727F0090051BF9F /* PageTestViewController.swift in Sources */,

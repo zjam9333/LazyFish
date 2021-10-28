@@ -12,6 +12,7 @@ class PageTestViewController: UIViewController {
 
     let pageCount = 5
     @State var currentPage: CGFloat = 0
+    @State var showPage1: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +21,20 @@ class PageTestViewController: UIViewController {
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 UIScrollView(.horizontal) {
                     for i in 0..<pageCount {
-                        UILabel()
+                        let lab = UILabel()
                             .text("page: \(i)")
                             .textAlignment(.center)
                             .textColor(.black)
                             .border(width: 1, color: .black)
                             .frame(width: .fillParent)
                             .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
+                        if i == 2 {
+                            IfBlock($showPage1) {
+                                lab.border(width: 3, color: .red).backgroundColor(.yellow)
+                            }
+                        } else {
+                            lab
+                        }
                     }
                 }
                 .frame(width: 240, height: 240)
@@ -36,6 +44,7 @@ class PageTestViewController: UIViewController {
 //                    print(page)
                 }
                 
+                // page control
                 UIStackView(axis: .horizontal, spacing: 4) {
                     for i in 0..<pageCount {
                         IfBlock($currentPage) { currentPage in
@@ -49,6 +58,13 @@ class PageTestViewController: UIViewController {
                         }
                     }
                 }
+                
+                UIButton()
+                    .textColor(.black).font(.systemFont(ofSize: 17, weight: .bold))
+                    .action(for: .touchUpInside) { [weak self] in
+                        self?.showPage1.toggle()
+                    }
+                    .text("toggle page 2")
             }
             .alignment([.top, .leading], value: 100)
         }

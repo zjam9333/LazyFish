@@ -13,3 +13,52 @@ import UIKit
 //    
 //    return []
 //}
+
+public func ForEach<T>(_ models: Binding<[T]>, @ViewBuilder contents: @escaping (T) -> [UIView]) -> UIView {
+    let container = ForEachView<T>()
+    container.viewCreater = contents
+    DispatchQueue.main.async {
+        models.wrapper.addObserver { [weak container] changed in
+            container?.reloadSubviews(changed.new)
+        }
+    }
+    return container
+}
+
+private class ForEachView<T>: UIView {
+    var viewCreater: ((T) -> [UIView])?
+    
+    func reloadSubviews(_ models: [T]) {
+        let allSubviews = self.subviews
+        for i in allSubviews {
+            i.removeFromSuperview()
+        }
+        
+        self.isHidden = models.isEmpty
+        
+        let superView = self.superview
+        if let superStack = superView as? UIStackView {
+            let views = models.map { [weak self] m in
+                UIView("container") {
+                    self?.viewCreater?(m) ?? []
+                }
+            }
+            // stack内foreach将再封一层stack，且参数一致
+            self.arrangeViews {
+                UIStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
+                    views
+                }.alignment(.allEdges)
+            }
+        } else {
+            let views = models.map { [weak self] m in
+                UIView("container") {
+                    self?.viewCreater?(m) ?? []
+                }.alignment(.allEdges)
+            }
+            self.arrangeViews {
+                views
+            }
+            // 不在stack内的views应该怎么排？？
+        }
+    }
+}

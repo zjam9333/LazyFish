@@ -131,11 +131,11 @@ public extension UIButton {
 }
 
 public extension UIScrollView {
-    func bounce(_ axis: NSLayoutConstraint.Axis) -> Self {
+    func bounce(_ axis: NSLayoutConstraint.Axis, bounce: Bool = true) -> Self {
         if axis == .vertical {
-            self.alwaysBounceVertical = true
+            self.alwaysBounceVertical = bounce
         } else if axis == .horizontal {
-            self.alwaysBounceHorizontal = true
+            self.alwaysBounceHorizontal = bounce
         }
         return self
     }

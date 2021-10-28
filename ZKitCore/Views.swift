@@ -27,40 +27,48 @@ public extension UIView {
 }
 
 public extension UIScrollView {
-    convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, @ViewBuilder content: ViewBuilder.ContentBlock) {
+    private class HiddenLayoutView: UIView {
+        private var observeTokens = [NSKeyValueObservation]()
+        func observeViewHidden(_ view: UIView) {
+            if view != self {
+                let token = view.observe(\.isHidden, options: .new) { [weak self] view, changed in
+                    self?.isHidden = changed.newValue ?? false
+                }
+                self.observeTokens.append(token)
+            }
+        }
+    }
+    
+    convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, @ViewBuilder content: ViewBuilder.ContentBlock) {
         self.init()
         
         let views = content()
-        let fakeViews = views.map { vi -> UIView in
-            let newView = UIView()
+        let fakeViews = views.map { vi -> HiddenLayoutView in
+            let newView = HiddenLayoutView()
             return newView
         }
+        if direction == .vertical {
+            self.showsHorizontalScrollIndicator = false
+        } else {
+            self.showsVerticalScrollIndicator = false
+        }
         // 此fakeviews仅用于排版
-        self.arrangeViews { [weak self] in
-            if direction == .vertical {
-                self?.showsHorizontalScrollIndicator = false
-                let stack = UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
-                        fakeViews
-                    }
-                    .frame(filledWidth: true)
-                    .alignment(.allEdges)
-                stack.isHidden = true
-                stack
-            } else {
-                self?.showsVerticalScrollIndicator = false
-                let stack = UIStackView(axis: .horizontal, distribution: .fill, alignment: .fill, spacing: 0) {
-                        fakeViews
-                    }
-                    .frame(filledHeight: true)
-                    .alignment(.allEdges)
-                stack.isHidden = true
-                stack
-            }
-        }
-        for a in views {
-            a.zk_attribute.alignment = nil
-        }
         self.arrangeViews {
+            let stack = UIStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
+                    fakeViews
+                }
+                .alignment(.allEdges)
+            if direction == .vertical {
+                _ = stack.frame(filledWidth: true)
+            } else {
+                _ = stack.frame(filledHeight: true)
+            }
+            stack.isHidden = true
+            stack
+        }
+        
+        // 真正的views添加在scrollview里，不直接排版，仅与fakeviews对齐
+        self.arrangeViews(ignoreAlignments: true) {
             views
         }
         for (a, b) in zip(views, fakeViews) {
@@ -68,6 +76,7 @@ public extension UIScrollView {
             if let p = aview.superview as? PaddingContainerView {
                 aview = p
             }
+            b.observeViewHidden(a)
             aview.topAnchor.constraint(equalTo: b.topAnchor).isActive = true
             aview.bottomAnchor.constraint(equalTo: b.bottomAnchor).isActive = true
             aview.leadingAnchor.constraint(equalTo: b.leadingAnchor).isActive = true

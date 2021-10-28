@@ -98,7 +98,29 @@ public extension UIView {
         return self
     }
     
-    @discardableResult func arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self {
+    internal func zk_alignSubview(_ subview: UIView, alignment: [Edge: CGFloat]) {
+        // 对齐
+        if let const = alignment[.centerY] {
+            subview.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: const).isActive = true
+        }
+        if let const = alignment[.centerX] {
+            subview.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: const).isActive = true
+        }
+        if let const = alignment[.leading] {
+            subview.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: const).isActive = true
+        }
+        if let const = alignment[.trailing] {
+            subview.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: const).isActive = true
+        }
+        if let const = alignment[.top] {
+            subview.topAnchor.constraint(equalTo: self.topAnchor, constant: const).isActive = true
+        }
+        if let const = alignment[.bottom] {
+            subview.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: const).isActive = true
+        }
+    }
+    
+    @discardableResult func arrangeViews(ignoreAlignments: Bool = false, @ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self {
         let views = content()
         let base = self
         
@@ -118,26 +140,9 @@ public extension UIView {
                 // 在stack中不用操心对齐问题
             } else {
                 base.addSubview(container)
-                
-                let alignment = attribute.alignment ?? [:] // 不提供默认值，让外面传入
-                // 对齐
-                if let const = alignment[.centerY] {
-                    container.centerYAnchor.constraint(equalTo: base.centerYAnchor, constant: const).isActive = true
-                }
-                if let const = alignment[.centerX] {
-                    container.centerXAnchor.constraint(equalTo: base.centerXAnchor, constant: const).isActive = true
-                }
-                if let const = alignment[.leading] {
-                    container.leadingAnchor.constraint(equalTo: base.leadingAnchor, constant: const).isActive = true
-                }
-                if let const = alignment[.trailing] {
-                    container.trailingAnchor.constraint(equalTo: base.trailingAnchor, constant: const).isActive = true
-                }
-                if let const = alignment[.top] {
-                    container.topAnchor.constraint(equalTo: base.topAnchor, constant: const).isActive = true
-                }
-                if let const = alignment[.bottom] {
-                    container.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: const).isActive = true
+                if (ignoreAlignments == false) {
+                    let alignment = attribute.alignment ?? [:] // 不提供默认值，让外面传入
+                    base.zk_alignSubview(container, alignment: alignment)
                 }
             }
             
