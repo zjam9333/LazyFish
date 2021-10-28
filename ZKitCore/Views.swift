@@ -39,6 +39,19 @@ public extension UIScrollView {
         }
     }
     
+    private class HiddenStackView: UIStackView {
+        
+    }
+    
+    internal var internalLayoutStack: UIStackView? {
+        for i in self.subviews {
+            if let a = i as? HiddenStackView {
+                return a
+            }
+        }
+        return nil
+    }
+    
     convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, @ViewBuilder content: ViewBuilder.ContentBlock) {
         self.init()
         
@@ -54,7 +67,7 @@ public extension UIScrollView {
         }
         // 此fakeviews仅用于排版
         self.arrangeViews {
-            let stack = UIStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
+            let stack = HiddenStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
                     fakeViews
                 }
                 .alignment(.allEdges)

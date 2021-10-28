@@ -33,11 +33,19 @@ private class ForEachView<T>: UIView {
         for i in allSubviews {
             i.removeFromSuperview()
         }
-        
+        // 重新加载全部！！！如何优化？
         self.isHidden = models.isEmpty
         
+        // 如果和stack有关，则拷贝stack的属性
         let superView = self.superview
-        if let superStack = superView as? UIStackView {
+        var superStack: UIStackView?
+        if let stack = superView as? UIStackView {
+            superStack = stack
+        } else if let scroll = superView as? UIScrollView, let stack = scroll.internalLayoutStack {
+            superStack = stack
+            // internalLayoutStack定义在views extension UIScrollView中
+        }
+        if let superStack = superStack {
             let views = models.map { [weak self] m in
                 UIView("container") {
                     self?.viewCreater?(m) ?? []

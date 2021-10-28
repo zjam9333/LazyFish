@@ -16,7 +16,7 @@ class ForEach2TestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.arrangeViews {
-            UIScrollView (.vertical, spacing: 0) {
+            UIScrollView (.vertical, spacing: 10) {
                 // section 1
                 UILabel().text("Header").backgroundColor(.lightGray)
                 
@@ -24,6 +24,8 @@ class ForEach2TestViewController: UIViewController {
                     UILabel().text(str).alignment(.allEdges).backgroundColor(.yellow)
                 }
                 .border(width: 1, color: .red)
+                
+                UILabel().text("Footer").backgroundColor(.lightGray)
             }
             .alignment([.leading], value: 60)
             .alignment(.centerX)
