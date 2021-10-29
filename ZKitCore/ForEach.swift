@@ -16,7 +16,7 @@ import UIKit
 
 public func ForEach<T>(_ models: Binding<[T]>, @ViewBuilder contents: @escaping (T) -> [UIView]) -> UIView {
     let container = ForEachView<T>()
-    container.viewCreater = contents
+    container.contentBuilder = contents
     DispatchQueue.main.async {
         models.wrapper.addObserver { [weak container] changed in
             container?.reloadSubviews(changed.new)
@@ -26,7 +26,7 @@ public func ForEach<T>(_ models: Binding<[T]>, @ViewBuilder contents: @escaping 
 }
 
 private class ForEachView<T>: UIView {
-    var viewCreater: ((T) -> [UIView])?
+    var contentBuilder: ((T) -> [UIView])?
     
     func reloadSubviews(_ models: [T]) {
         let allSubviews = self.subviews
@@ -45,12 +45,13 @@ private class ForEachView<T>: UIView {
             superStack = stack
             // internalLayoutStack定义在views extension UIScrollView中
         }
+        
+        let views = models.map { [weak self] m in
+            self?.contentBuilder?(m) ?? []
+        }.flatMap { t in
+            t
+        }
         if let superStack = superStack {
-            let views = models.map { [weak self] m in
-                UIView("container") {
-                    self?.viewCreater?(m) ?? []
-                }
-            }
             // stack内foreach将再封一层stack，且参数一致
             self.arrangeViews {
                 UIStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
@@ -58,11 +59,6 @@ private class ForEachView<T>: UIView {
                 }.alignment(.allEdges)
             }
         } else {
-            let views = models.map { [weak self] m in
-                UIView("container") {
-                    self?.viewCreater?(m) ?? []
-                }.alignment(.allEdges)
-            }
             self.arrangeViews {
                 views
             }
