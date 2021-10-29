@@ -14,7 +14,6 @@ class InputTestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.view.arrangeViews {
             UIView() {
                 UIStackView(axis: .vertical, spacing: 10) {

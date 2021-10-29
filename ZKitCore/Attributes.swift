@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class Attribute {
+internal class Attribute {
     var padding: [Edge: CGFloat]?
     var offset: CGPoint = .zero
     
@@ -43,10 +43,10 @@ public struct Alignment: OptionSet {
     public static let center: Alignment = [centerX, centerY]
 }
 
-public enum Edge {
+internal enum Edge {
     case top, leading, bottom, trailing, centerX, centerY
 }
 
-public enum AssociatedKey {
+internal enum AssociatedKey {
     static var attributeKey: Int = 0
 }
