@@ -8,11 +8,15 @@
 import UIKit
 import ZKitCore
 
-// TODO: - Did Not Passed
-
-class ForEach2TestViewController: UIViewController {
+class ForEachScrollTestViewController: UIViewController {
     let animals = ["bird", "dog", "cat", "horse", "bull", "goat", "fish"]
+    @State var showBirds = true
     @State var section1: [String] = ["bird"]
+    
+    deinit {
+        print("deinit", self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.arrangeViews {
@@ -21,13 +25,19 @@ class ForEach2TestViewController: UIViewController {
                 UILabel().text("Header").backgroundColor(.lightGray)
                 
                 ForEach($section1) { str in
+                    if str == "bird" {
+                        IfBlock(self.$showBirds) {
+                            UILabel().text(str).alignment(.allEdges).backgroundColor(.cyan)
+                        }
+                    } else {
                     UILabel().text(str).alignment(.allEdges).backgroundColor(.yellow)
+                    }
                 }
                 .border(width: 1, color: .red)
                 
                 UILabel().text("Footer").backgroundColor(.lightGray)
             }
-            .alignment([.leading], value: 60)
+            .alignment([.leading, .top], value: 60)
             .alignment(.centerX)
             .frame(height: 300)
             .bounce(.vertical)
@@ -44,6 +54,9 @@ class ForEach2TestViewController: UIViewController {
                         if let ran = self?.animals.randomElement() {
                             self?.section1.append(ran)
                         }
+                    }
+                    UIButton().text("toggleBirds").textColor(.red).font(.systemFont(ofSize: 20, weight: .bold)).action { [weak self] in
+                        self?.showBirds.toggle()
                     }
                 }
             }

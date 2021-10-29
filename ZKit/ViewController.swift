@@ -16,15 +16,15 @@ class ViewController: UIViewController {
         self.navigationItem.title = "Some Tests"
         
         let testClasses: [(String, UIViewController.Type)] = [
-            ("ForEach Test", ForEachTestViewController.self),
-            ("ForEach2 Test", ForEach2TestViewController.self),
+            ("ForEach In Stack Test", ForEachTestViewController.self),
+            ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
             ("Page Test", PageTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
-            ("Stack Test", StackTestViewController.self),
-            ("Margin Test", MarginTestViewController.self),
             ("Demo Test", DemoTestViewController.self),
             ("State Test", StateTestViewController.self),
-            ("Input Test", InputTestViewController.self)
+            ("Input Test", InputTestViewController.self),
+            ("Stack Test", StackTestViewController.self),
+            ("Margin Test", MarginTestViewController.self),
         ]
         
         self.view.arrangeViews {

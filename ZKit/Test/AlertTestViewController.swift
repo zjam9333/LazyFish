@@ -61,7 +61,7 @@ fileprivate class TestAlertView: UIView {
                         UIButton()
                             .text("确认")
                             .textColor(.systemBlue, for: .normal)
-                            .textColor(.systemBlue, for: .normal)
+                            .textColor(.systemBlue.withAlphaComponent(0.5), for: .highlighted)
                             .font(UIFont.systemFont(ofSize: 14, weight: .semibold))
                             .action {
                                 print("确认")
