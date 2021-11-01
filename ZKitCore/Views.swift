@@ -27,39 +27,47 @@ public extension UIView {
 }
 
 public extension UIScrollView {
-    private class HiddenLayoutView: ObserveContainer {
-    }
-    
-    private class HiddenStackView: UIStackView {
-        
-    }
-    
-    internal var internalLayoutStack: UIStackView? {
-        for i in self.subviews {
-            if let a = i as? HiddenStackView {
-                return a
-            }
+    internal var zk_scrollViewDelegate: Delegate {
+        set {
+            let obj = newValue
+            objc_setAssociatedObject(self, &Delegate.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
-        return nil
+        get {
+            if let obj = objc_getAssociatedObject(self, &Delegate.attributeKey) as? Delegate {
+                return obj
+            }
+            let newone = Delegate()
+            self.zk_scrollViewDelegate = newone
+            return newone
+        }
+    }
+    
+    internal class Delegate: NSObject, UIScrollViewDelegate {
+        static var attributeKey: Int = 0
+        var scrollDidScrollHandler: ((CGPoint) -> Void)?
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            self.scrollDidScrollHandler?(scrollView.contentOffset)
+        }
+    }
+    
+    internal class InternalLayoutStackView: UIStackView {
+        var superScrollView: UIScrollView? {
+            return self.superview as? UIScrollView
+        }
     }
     
     convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, @ViewBuilder content: ViewBuilder.ContentBlock) {
         self.init()
         
         let views = content()
-        let fakeViews = views.map { vi -> HiddenLayoutView in
-            let newView = HiddenLayoutView()
-            return newView
-        }
         if direction == .vertical {
             self.showsHorizontalScrollIndicator = false
         } else {
             self.showsVerticalScrollIndicator = false
         }
-        // 此fakeviews仅用于排版
         self.arrangeViews {
-            let stack = HiddenStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
-                    fakeViews
+            let stack = InternalLayoutStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
+                    views
                 }
                 .alignment(.allEdges)
             if direction == .vertical {
@@ -67,24 +75,24 @@ public extension UIScrollView {
             } else {
                 _ = stack.frame(filledHeight: true)
             }
-            stack.isHidden = true
             stack
-        }
-        
-        // 真正的views添加在scrollview里，不直接排版，仅与fakeviews对齐
-        self.arrangeViews(ignoreAlignments: true) {
-            views
-        }
-        for (a, b) in zip(views, fakeViews) {
-            var aview = a
-            if let p = aview.superview as? PaddingContainerView {
-                aview = p
-            }
-            b.observeTargetProperties(a)
-            aview.topAnchor.constraint(equalTo: b.topAnchor).isActive = true
-            aview.bottomAnchor.constraint(equalTo: b.bottomAnchor).isActive = true
-            aview.leadingAnchor.constraint(equalTo: b.leadingAnchor).isActive = true
-            aview.trailingAnchor.constraint(equalTo: b.trailingAnchor).isActive = true
         }
     }
 }
+
+extension UITableView {
+    private class DataSourceDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return 10
+        }
+        
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
+            cell.textLabel?.text = "\(indexPath.section)"
+            return cell
+        }
+        
+        static var attributeKey: Int = 0
+    }
+}
+

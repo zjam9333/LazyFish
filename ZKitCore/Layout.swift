@@ -136,7 +136,16 @@ public extension UIView {
     }
     
     internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView?) {
-        
+        DispatchQueue.main.async {
+            var target = target
+            if let targetSuper = target as? UIScrollView.InternalLayoutStackView, let targetSuperScroll = targetSuper.superScrollView {
+                target = targetSuperScroll
+            }
+            self.private_zk_sizeFill(width: width, height: height, target: target)
+        }
+    }
+    
+    private func private_zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView?) {
         if let si = width {
             if case .equalTo(let size) = si {
                 self.widthAnchor.constraint(equalToConstant: size).isActive = true

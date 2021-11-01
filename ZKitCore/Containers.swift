@@ -54,17 +54,3 @@ internal class PaddingContainerView: ObserveContainer {
         content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: trailing).isActive = true
     }
 }
-
-extension UIView {
-    internal var zk_superStackView: UIStackView? {
-        let superView = self.superview
-        var superStack: UIStackView?
-        if let stack = superView as? UIStackView {
-            superStack = stack
-        } else if let scroll = superView as? UIScrollView, let stack = scroll.internalLayoutStack {
-            superStack = stack
-            // internalLayoutStack定义在views extension UIScrollView中
-        }
-        return superStack
-    }
-}

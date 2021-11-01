@@ -37,7 +37,7 @@ private class ForEachView<T>: UIView {
         self.isHidden = models.isEmpty
         
         // 如果和stack有关，则拷贝stack的属性
-        let superStack = self.zk_superStackView
+        let superStack = self.superview as? UIStackView
         
         let views = models.map { [weak self] m in
             self?.contentBuilder?(m) ?? []

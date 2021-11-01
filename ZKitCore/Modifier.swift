@@ -146,8 +146,8 @@ public extension UIScrollView {
     }
     
     func contentOffsetObserve(handler: @escaping (CGPoint) -> Void) -> Self {
-        self.zk_delegate.scrollDidScrollHandler = handler
-        self.delegate = self.zk_delegate
+        self.zk_scrollViewDelegate.scrollDidScrollHandler = handler
+        self.delegate = self.zk_scrollViewDelegate
         return self
     }
     
@@ -157,29 +157,6 @@ public extension UIScrollView {
                 let page = point.x / size
                 handler(page)
             }
-        }
-    }
-    
-    private var zk_delegate: Delegate {
-        set {
-            let obj = newValue
-            objc_setAssociatedObject(self, &Delegate.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            if let obj = objc_getAssociatedObject(self, &Delegate.attributeKey) as? Delegate {
-                return obj
-            }
-            let newone = Delegate()
-            self.zk_delegate = newone
-            return newone
-        }
-    }
-    
-    private class Delegate: NSObject, UIScrollViewDelegate {
-        static var attributeKey: Int = 0
-        var scrollDidScrollHandler: ((CGPoint) -> Void)?
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            self.scrollDidScrollHandler?(scrollView.contentOffset)
         }
     }
 }
