@@ -29,27 +29,32 @@ class ViewController: UIViewController {
         
         self.view.arrangeViews {
             UIScrollView(.vertical) {
-                UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 10) {
                     for (key, val) in testClasses {
                         let title = key
-                        UIButton()
-                            .text(title)
-                            .textColor(.black)
-                            .textColor(.red, for: .highlighted)
-                            .font(UIFont.systemFont(ofSize: 20, weight: .bold))
-                            .backgroundColor(.lightGray)
-                            .borderWidth(1).borderColor(.black)
-                            .action { [weak self] in
-                                let vc = val.init()
-                                vc.view.backgroundColor = .white
-                                vc.navigationItem.title = title
-                                self?.navigationController?.pushViewController(vc, animated: true)
+                        UIView {
+                            UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                                .alignment(.centerY)
+                                .alignment(.leading, value: 20)
+                            if #available(iOS 13.0, *) {
+                                UIImageView(image: UIImage(systemName: "chevron.right"))
+                                    .alignment([.trailing, .centerY])
+                                    .offset(x: -10, y: 0)
                             }
-                            .frame(height: 50)
-                            .alignment(.allEdges)
+                            UIView().backgroundColor(.gray)
+                                .alignment([.bottom, .trailing], value: 0)
+                                .alignment(.leading, value: 20)
+                                .frame(height: 0.5)
+                            UIButton()
+                                .action { [weak self] in
+                                    let vc = val.init()
+                                    vc.view.backgroundColor = .white
+                                    vc.navigationItem.title = title
+                                    self?.navigationController?.pushViewController(vc, animated: true)
+                                }
+                                .alignment(.allEdges)
+                        }
+                        .frame(height: 50)
                     }
-                }
-                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
             }
             .alignment(.allEdges)
             .bounce(.vertical)//.bounce(.horizontal)

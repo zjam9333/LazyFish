@@ -12,14 +12,15 @@ internal class Attribute {
     var offset: CGPoint = .zero
     
     var alignment: [Edge: CGFloat]?
-    var width: SizeFill?
-    var height: SizeFill?
+    var width: SizeFill = .unknown
+    var height: SizeFill = .unknown
     
     var onAppear: OnAppearBlock?
 }
 
 public enum SizeFill {
-    case fillParent
+    case unknown
+    case fillParent(multipy: CGFloat = 1, constant: CGFloat = 0)
     case equalTo(_ size: CGFloat)
     // 更多规则未完待续
 }

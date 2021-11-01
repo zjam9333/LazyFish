@@ -10,17 +10,17 @@ import UIKit
 
 internal class ObserveContainer: UIView {
     
-    func observeContentProperties(_ content: UIView) {
-        self.resetContentKeyPathObservations {
-            self.observe(obj: content, keyPath: \.isHidden)
+    func observeTargetProperties(_ target: UIView) {
+        self.observeTokens.removeAll()
+        self.addTargetKeyPathObservations {
+            self.observe(obj: target, keyPath: \.isHidden)
         }
     }
     
     private var observeTokens = [NSKeyValueObservation]()
     private typealias KVOResultBuilder = ResultBuilder<NSKeyValueObservation>
     
-    private func resetContentKeyPathObservations(@KVOResultBuilder _ content: KVOResultBuilder.ContentBlock) {
-        self.observeTokens.removeAll()
+    private func addTargetKeyPathObservations(@KVOResultBuilder _ content: KVOResultBuilder.ContentBlock) {
         let kvo = content()
         observeTokens.append(contentsOf: kvo)
     }
@@ -38,7 +38,7 @@ internal class ObserveContainer: UIView {
 internal class PaddingContainerView: ObserveContainer {
     func addContentView(_ content: UIView, padding: [Edge: CGFloat], offset: CGPoint = .zero) {
         self.addSubview(content)
-        self.observeContentProperties(content)
+        self.observeTargetProperties(content)
         
         content.translatesAutoresizingMaskIntoConstraints = false
         
@@ -53,11 +53,18 @@ internal class PaddingContainerView: ObserveContainer {
         content.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leading).isActive = true
         content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: trailing).isActive = true
     }
-    
 }
 
-internal class ForEachCellContainer: ObserveContainer {
-//    override func arrangeViews(ignoreAlignments: Bool = false, _ content: () -> [UIView]) -> Self {
-//        return super.arrangeViews(ignoreAlignments: ignoreAlignments, content)
-//    }
+extension UIView {
+    internal var zk_superStackView: UIStackView? {
+        let superView = self.superview
+        var superStack: UIStackView?
+        if let stack = superView as? UIStackView {
+            superStack = stack
+        } else if let scroll = superView as? UIScrollView, let stack = scroll.internalLayoutStack {
+            superStack = stack
+            // internalLayoutStack定义在views extension UIScrollView中
+        }
+        return superStack
+    }
 }

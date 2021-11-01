@@ -31,29 +31,31 @@ public extension UIView {
     }
     
     func frame(filledWidth: Bool? = false, filledHeight: Bool? = false) -> Self {
-        if let w = filledWidth, w == true {
-            _ = self.frame(width: .fillParent)
+        let att = self.zk_attribute
+        if filledWidth == true {
+            att.width = .fillParent()
         }
-        if let h = filledHeight, h == true {
-            _ = self.frame(height: .fillParent)
+        if filledHeight == true {
+            att.height = .fillParent()
         }
         return self
     }
     
     func frame(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
+        let att = self.zk_attribute
         if let w = width {
-            _ = self.frame(width: .equalTo(w))
+            att.width = .equalTo(w)
         }
         if let h = height {
-            _ = self.frame(height: .equalTo(h))
+            att.height = .equalTo(h)
         }
         return self
     }
     
-    func frame(width: SizeFill? = nil, height: SizeFill? = nil) -> Self {
+    func frame(width: SizeFill = .unknown, height: SizeFill = .unknown) -> Self {
         let att = self.zk_attribute
-        att.width = width ?? att.width
-        att.height = height ?? att.height
+        att.width = width
+        att.height = height
         return self
     }
     
@@ -138,15 +140,15 @@ public extension UIView {
         if let si = width {
             if case .equalTo(let size) = si {
                 self.widthAnchor.constraint(equalToConstant: size).isActive = true
-            } else if case .fillParent = si {
-                target?.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+            } else if case .fillParent(let mul, let con) = si, let target = target {
+                self.widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
         if let si = height {
             if case .equalTo(let size) = si {
                 self.heightAnchor.constraint(equalToConstant: size).isActive = true
-            } else if case .fillParent = si {
-                target?.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+            } else if case .fillParent(let mul, let con) = si, let target = target {
+                self.heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
     }

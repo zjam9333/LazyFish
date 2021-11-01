@@ -39,7 +39,7 @@ class ForEachScrollTestViewController: UIViewController {
             }
             .alignment([.leading, .top], value: 60)
             .alignment(.centerX)
-            .frame(height: 300)
+            .frame(height: .fillParent(multipy: 0.7, constant: 0))
             .bounce(.vertical)
             
             UIStackView(axis: .horizontal, alignment: .fill, spacing: 10) {

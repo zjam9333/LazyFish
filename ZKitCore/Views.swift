@@ -27,16 +27,7 @@ public extension UIView {
 }
 
 public extension UIScrollView {
-    private class HiddenLayoutView: UIView {
-        private var observeTokens = [NSKeyValueObservation]()
-        func observeViewHidden(_ view: UIView) {
-            if view != self {
-                let token = view.observe(\.isHidden, options: .new) { [weak self] view, changed in
-                    self?.isHidden = changed.newValue ?? false
-                }
-                self.observeTokens.append(token)
-            }
-        }
+    private class HiddenLayoutView: ObserveContainer {
     }
     
     private class HiddenStackView: UIStackView {
@@ -89,7 +80,7 @@ public extension UIScrollView {
             if let p = aview.superview as? PaddingContainerView {
                 aview = p
             }
-            b.observeViewHidden(a)
+            b.observeTargetProperties(a)
             aview.topAnchor.constraint(equalTo: b.topAnchor).isActive = true
             aview.bottomAnchor.constraint(equalTo: b.bottomAnchor).isActive = true
             aview.leadingAnchor.constraint(equalTo: b.leadingAnchor).isActive = true

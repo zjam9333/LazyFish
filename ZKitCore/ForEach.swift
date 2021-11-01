@@ -37,14 +37,7 @@ private class ForEachView<T>: UIView {
         self.isHidden = models.isEmpty
         
         // 如果和stack有关，则拷贝stack的属性
-        let superView = self.superview
-        var superStack: UIStackView?
-        if let stack = superView as? UIStackView {
-            superStack = stack
-        } else if let scroll = superView as? UIScrollView, let stack = scroll.internalLayoutStack {
-            superStack = stack
-            // internalLayoutStack定义在views extension UIScrollView中
-        }
+        let superStack = self.zk_superStackView
         
         let views = models.map { [weak self] m in
             self?.contentBuilder?(m) ?? []

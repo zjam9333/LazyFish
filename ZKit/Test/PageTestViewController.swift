@@ -26,7 +26,7 @@ class PageTestViewController: UIViewController {
                             .textAlignment(.center)
                             .textColor(.black)
                             .border(width: 1, color: .black)
-                            .frame(width: .fillParent)
+                            .frame(width: .fillParent())
                             .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
                         if i == 2 {
                             IfBlock($showPage1) {
@@ -45,16 +45,17 @@ class PageTestViewController: UIViewController {
                 }
                 
                 // page control
-                UIStackView(axis: .horizontal, spacing: 4) {
+                let ballWidth: CGFloat = 4
+                UIStackView(axis: .horizontal, spacing: ballWidth) {
                     for i in 0..<pageCount {
                         IfBlock($currentPage) { currentPage in
                             return Int(currentPage + 0.5) == i
                         } contentIf: {
-                            UIView().backgroundColor(UIColor(white: 0.7, alpha: 1)).frame(width: 12, height: 8)
-                                .cornerRadius(4)
+                            UIView().backgroundColor(UIColor(white: 0.7, alpha: 1)).frame(width: ballWidth * 2, height: ballWidth)
+                                .cornerRadius(ballWidth / 2)
                         } contentElse: {
-                            UIView().backgroundColor(UIColor(white: 0.9, alpha: 1)).frame(width: 8, height: 8)
-                                .cornerRadius(4)
+                            UIView().backgroundColor(UIColor(white: 0.9, alpha: 1)).frame(width: ballWidth, height: ballWidth)
+                                .cornerRadius(ballWidth / 2)
                         }
                     }
                 }
