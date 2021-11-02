@@ -2,7 +2,158 @@
 
 类似SwiftUI，使用DSL布局UIView，但并非单纯的描述view，而是真正的创建view并布局
 
-# 基础
+# 已实现的拓展
+
+## 任意view添加subviews
+
+```swift
+someView.arrangeViews {
+    // 内容1...
+    // 内容2...
+    // 内容n...
+    // 根据内容的alignment属性排版，stack则根据自己的axis、distribution、alignment、spacing属性排版
+}
+```
+
+## 普通view
+
+```swift
+UIView {
+    // 内容1...
+    // 内容2...
+    // 内容n...
+    // 根据内容的alignment属性排版
+}
+```
+
+## 栈stack
+
+```swift
+UIStackView(axis: .horizontal， distribution: .fill, alignment: .fill, spacing: 0) {
+    // 内容1...
+    // 内容2...
+    // 内容n...
+    // 根据stack的axis、distribution、alignment、spacing属性排版
+}
+```
+
+## 滚动scrollview
+
+暂时只有嵌套stack的样式
+```swift
+UIScrollView(.vertical, spacing: CGFloat = 0) {
+    // 内容1...
+    // 内容2...
+    // 内容n...
+    // 排列逻辑与stack一致
+}
+```
+
+## 表格tableview（未完待续）
+
+未完善reuse、section、reload等问题
+
+```swift
+UITableView(style: .plain) {
+    for i in 0...100 {
+        UILabel().text("row\(i)")
+    }
+}
+```
+
+### 注意：
+- `DSL`内声明的`view`之间并无布局依赖，仅通过`stackview`和`alignment`属性做约束
+- `DSL`内的`view`作为`returnValue`传递给`ViewBuilder`，若需要引用则参考以下写法
+```swift
+UIStackView {
+    // 前面一些views
+
+    let label = UILabel().text(binding: $text) // return void
+    self.label = label // return void
+    label  // return label
+
+    // 后面一些views
+}
+```
+
+# 已实现的属性修改
+
+用于链式修改`view、button、label`等的常见属性，列举部分：
+
+## UIView
+
+```swift
+public extension UIView {
+    func backgroundColor(_ color: UIColor) -> Self
+    func cornerRadius(_ cornerRadius: CGFloat) -> Self
+    func clipped() -> Self
+    func borderColor(_ color: UIColor) -> Self
+    func borderWidth(_ width: CGFloat) -> Self
+    func border(width: CGFloat, color: UIColor) -> Self
+}
+```
+
+## UILabel
+
+```swift
+public extension UILabel {
+    func text(_ text: String) -> Self
+    func textColor(_ color: UIColor) -> Self
+    func textAlignment(_ alignment: NSTextAlignment) -> Self
+    func numberOfLines(_ lines: Int) -> Self
+    func font(_ font: UIFont) -> Self
+}
+public extension UILabel {
+    // stateText
+    func text(binding stateText: Binding<String>) -> Self
+}
+```
+
+## UIControl, UIButton
+
+```swift
+public extension UIControl {
+    typealias ActionBlock = () -> Void
+    func action(for event: Event = .touchUpInside, _ action: @escaping ActionBlock) -> Self
+    func textAlignment(_ alignment: ContentHorizontalAlignment) -> Self
+}
+
+public extension UIButton {
+    func font(_ font: UIFont) -> Self
+    func text(_ text: String, for state: UIControl.State = .normal) -> Self
+    func textColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self
+}
+public extension UIButton {
+    func text(binding stateText: Binding<String>, for state: UIControl.State = .normal) -> Self
+}
+```
+
+## UIScrollView
+
+```swift
+public extension UIScrollView {
+    func bounce(_ axis: NSLayoutConstraint.Axis, bounce: Bool = true) -> Self
+    func pageEnabled(_ enabled: Bool) -> Self
+    func contentOffsetObserve(handler: @escaping (CGPoint) -> Void) -> Self
+    func pageObserve(handler: @escaping (CGFloat) -> Void) -> Self
+}
+```
+
+## UITextField
+
+```swift
+public extension UITextField {
+    func textColor(_ color: UIColor) -> Self
+    func textAlignment(_ alignment: NSTextAlignment) -> Self
+    func font(_ font: UIFont) -> Self
+    func borderStyle(_ style: BorderStyle) -> Self
+}
+public extension UITextField {
+    func text(binding text: Binding<String>) -> Self
+}
+```
+
+# ResultBuilder基础
 
 `UIView`拓展了`arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self`方法，是进入`DSL`声明布局的入口
 
@@ -24,7 +175,7 @@ public typealias ViewBuilder = ResultBuilder<UIView>
     // if\else\for..in..\while\等等等
 }
 ```
-关于`resultBuilder`的更多内容可以参考[Swift Result Builder](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md)
+关于`@resultBuilder`的更多内容可以参考[Swift Result Builder](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md)
 
 
 在`@ViewBuilder`修饰的闭包中写入各种`view`，以及`alignment`、`frame`、`padding`等参数，甚至是`modifier`链式方法，即可实现布局和展示，例如在视图中央展示一个文本：
