@@ -136,11 +136,13 @@ public extension UIView {
     }
     
     internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView?) {
-        DispatchQueue.main.async {
-            var target = target
-            if let targetSuper = target as? UIScrollView.InternalLayoutStackView, let targetSuperScroll = targetSuper.superScrollView {
-                target = targetSuperScroll
+        if let targetSuper = target as? UIScrollView.InternalLayoutStackView {
+            // ScrollView -> StackView -> self，fillParent逻辑需要知道ScrollView的存在，但此时无法获得
+            // 因此在StackView被添加到ScrollView时才立即处理sizeFill逻辑
+            targetSuper.appendActionForDidMoveToSuperview { [weak self] superSuperView in
+                self?.private_zk_sizeFill(width: width, height: height, target: superSuperView)
             }
+        } else {
             self.private_zk_sizeFill(width: width, height: height, target: target)
         }
     }

@@ -9,13 +9,15 @@ import UIKit
 import ZKitCore
 
 class ViewController: UIViewController {
+    
+    @State var testClasses = [(name: String, classType: UIViewController.Type)]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.title = "Some Tests"
         
-        let testClasses: [(String, UIViewController.Type)] = [
+        testClasses = [
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
@@ -29,36 +31,25 @@ class ViewController: UIViewController {
         ]
         
         self.view.arrangeViews {
-            UIScrollView(.vertical) {
-                    for (key, val) in testClasses {
-                        let title = key
-                        UIView {
-                            UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                                .alignment(.centerY)
-                                .alignment(.leading, value: 20)
-                            if #available(iOS 13.0, *) {
-                                UIImageView(image: UIImage(systemName: "chevron.right"))
-                                    .alignment([.trailing, .centerY])
-                                    .offset(x: -10, y: 0)
-                            }
-                            UIView().backgroundColor(.gray)
-                                .alignment([.bottom, .trailing], value: 0)
-                                .alignment(.leading, value: 20)
-                                .frame(height: 0.5)
-                            UIButton()
-                                .action { [weak self] in
-                                    let vc = val.init()
-                                    vc.view.backgroundColor = .white
-                                    vc.navigationItem.title = title
-                                    self?.navigationController?.pushViewController(vc, animated: true)
-                                }
-                                .alignment(.allEdges)
-                        }
-                        .frame(height: 50)
+            UITableView(style: .plain) {
+                TableViewSection($testClasses) { item in
+                    let title = item.name
+                    UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                        .alignment(.centerY)
+                        .alignment(.leading, value: 20)
+                    if #available(iOS 13.0, *) {
+                        UIImageView(image: UIImage(systemName: "chevron.right"))
+                            .alignment([.trailing, .centerY])
+                            .offset(x: -10, y: 0)
                     }
+                } action: { [weak self] item in
+                    let vc = item.classType.init()
+                    vc.view.backgroundColor = .white
+                    vc.navigationItem.title = item.name
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
             }
             .alignment(.allEdges)
-            .bounce(.vertical)//.bounce(.horizontal)
         }
     }
 }

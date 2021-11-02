@@ -51,8 +51,19 @@ public extension UIScrollView {
     }
     
     internal class InternalLayoutStackView: UIStackView {
-        var superScrollView: UIScrollView? {
-            return self.superview as? UIScrollView
+        
+        private var actionWhileMoveToSuperview: [(UIView) -> Void] = []
+        func appendActionForDidMoveToSuperview(_ action: @escaping (UIView) -> Void) {
+            self.actionWhileMoveToSuperview.append(action)
+        }
+        override func didMoveToSuperview() {
+            super.didMoveToSuperview()
+            if let scr = self.superview as? UIScrollView {
+                for i in actionWhileMoveToSuperview {
+                    i(scr)
+                }
+                self.actionWhileMoveToSuperview.removeAll()
+            }
         }
     }
     
@@ -81,32 +92,72 @@ public extension UIScrollView {
 }
 
 // MARK: - 无法重用cellcontent，非常浪费性能，待完善
+public typealias TableViewSection = UITableView.Section
+
 public extension UITableView {
-    internal var zk_tableViewViewDelegate: DataSourceDelegate {
+    private enum DelegateKey {
+        static var attributeKey: Int = 0
+    }
+    
+    internal var zk_tableViewViewDelegate: DataSourceDelegate? {
         set {
             let obj = newValue
-            objc_setAssociatedObject(self, &DataSourceDelegate.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &DelegateKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            if let obj = objc_getAssociatedObject(self, &DataSourceDelegate.attributeKey) as? DataSourceDelegate {
+            if let obj = objc_getAssociatedObject(self, &DelegateKey.attributeKey) as? DataSourceDelegate {
                 return obj
             }
-            let newone = DataSourceDelegate()
-            self.zk_tableViewViewDelegate = newone
-            return newone
+            return nil
         }
     }
     
-    convenience init(style: Style, @ViewBuilder content: ViewBuilder.ContentBlock) {
+    convenience init(style: Style, @ResultBuilder<TableViewSection> content: ResultBuilder<TableViewSection>.ContentBlock) {
         self.init(frame: .zero, style: style)
         let delegate = DataSourceDelegate()
         self.delegate = delegate
         self.dataSource = delegate
         self.zk_tableViewViewDelegate = delegate
-        delegate.views = content()
+        delegate.sections = content()
+        for item in delegate.sections.enumerated() {
+            item.element.didUpdate = { [weak self] in
+//                self?.reloadSections(IndexSet(integer: i), with: .none)
+                self?.reloadData()
+            }
+        }
         self.rowHeight = UITableView.automaticDimension
+        self.estimatedRowHeight = 44
         DispatchQueue.main.async {
             self.reloadData()
+        }
+    }
+    
+    class Section {
+        var rowCount: Int = 0
+        var viewsForRow: ((Int) -> [UIView])?
+        var didUpdate: (() -> Void)?
+        var didClick: ((Int) -> Void)?
+        
+        public init<T>(_ binding: Binding<Array<T>>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+            let wrapper = binding.wrapper
+            wrapper.addObserver { [weak self, weak wrapper] _ in
+                let count = wrapper?.wrappedValue.count ?? 0
+                self?.rowCount = count
+                self?.viewsForRow = { row in
+                    // TODO: - 这里需要做一个缓存机制！！
+                    // TODO: - 但是缓存了又如何刷新内容？？
+                    if let obj = wrapper?.wrappedValue[row] {
+                        return cellContent(obj)
+                    }
+                    return []
+                }
+                self?.didClick = { row in
+                    if let obj = wrapper?.wrappedValue[row] {
+                        action?(obj)
+                    }
+                }
+                self?.didUpdate?()
+            }
         }
     }
     
@@ -126,20 +177,22 @@ public extension UITableView {
             }
         }
         
-        var views: [UIView] = []
+        var sections: [Section] = []
         
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return views.count
+            return sections[section].rowCount
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? WasteSpaceTableViewCell ?? WasteSpaceTableViewCell(style: .default, reuseIdentifier: "cell")
-            let vi = views[indexPath.row]
-            cell.remakeSubviews([vi])
+            let vi = sections[indexPath.section].viewsForRow?(indexPath.row) ?? []
+            cell.remakeSubviews(vi)
             return cell
         }
         
-        static var attributeKey: Int = 0
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            sections[indexPath.section].didClick?(indexPath.row)
+        }
     }
 }
 
