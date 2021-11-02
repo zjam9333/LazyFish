@@ -13,6 +13,7 @@
 		1C04000F27041212008F025B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04000D27041212008F025B /* Main.storyboard */; };
 		1C04001127041213008F025B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001027041213008F025B /* Assets.xcassets */; };
 		1C04001427041213008F025B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001227041213008F025B /* LaunchScreen.storyboard */; };
+		1C09DBCA2730DEFC006E20AF /* TableViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */; };
 		1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF527229408009CFCDD /* InputTestViewController.swift */; };
 		1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2627102C6400FE41E8 /* StackTestViewController.swift */; };
 		1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */; };
@@ -69,6 +70,7 @@
 		1C04001027041213008F025B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C04001327041213008F025B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C04001527041213008F025B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF527229408009CFCDD /* InputTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF72722B3BF009CFCDD /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		1CB1EF7827041776007CE1F3 /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				1CE6351B2727F0090051BF9F /* PageTestViewController.swift */,
 				1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */,
 				1CFBC27C272AA5A400AE64C4 /* ForEachScrollTestViewController.swift */,
+				1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				1CE6351C2727F0090051BF9F /* PageTestViewController.swift in Sources */,
 				1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */,
 				1C04000A27041212008F025B /* SceneDelegate.swift in Sources */,
+				1C09DBCA2730DEFC006E20AF /* TableViewTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

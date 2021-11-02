@@ -80,15 +80,62 @@ public extension UIScrollView {
     }
 }
 
-extension UITableView {
-    private class DataSourceDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+// MARK: - 无法重用cellcontent，非常浪费性能，待完善
+public extension UITableView {
+    internal var zk_tableViewViewDelegate: DataSourceDelegate {
+        set {
+            let obj = newValue
+            objc_setAssociatedObject(self, &DataSourceDelegate.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            if let obj = objc_getAssociatedObject(self, &DataSourceDelegate.attributeKey) as? DataSourceDelegate {
+                return obj
+            }
+            let newone = DataSourceDelegate()
+            self.zk_tableViewViewDelegate = newone
+            return newone
+        }
+    }
+    
+    convenience init(style: Style, @ViewBuilder content: ViewBuilder.ContentBlock) {
+        self.init(frame: .zero, style: style)
+        let delegate = DataSourceDelegate()
+        self.delegate = delegate
+        self.dataSource = delegate
+        self.zk_tableViewViewDelegate = delegate
+        delegate.views = content()
+        self.rowHeight = UITableView.automaticDimension
+        DispatchQueue.main.async {
+            self.reloadData()
+        }
+    }
+    
+    internal class DataSourceDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
+        class WasteSpaceTableViewCell: UITableViewCell {
+            func remakeSubviews(_ views: [UIView]) {
+                let olds = self.contentView.subviews
+                for i in olds {
+                    i.removeFromSuperview()
+                }
+                for i in views {
+                    i.removeFromSuperview()
+                }
+                self.contentView.arrangeViews {
+                    views
+                }
+            }
+        }
+        
+        var views: [UIView] = []
+        
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 10
+            return views.count
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
-            cell.textLabel?.text = "\(indexPath.section)"
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? WasteSpaceTableViewCell ?? WasteSpaceTableViewCell(style: .default, reuseIdentifier: "cell")
+            let vi = views[indexPath.row]
+            cell.remakeSubviews([vi])
             return cell
         }
         

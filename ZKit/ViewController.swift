@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         self.navigationItem.title = "Some Tests"
         
         let testClasses: [(String, UIViewController.Type)] = [
+            ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
             ("Page Test", PageTestViewController.self),
