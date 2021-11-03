@@ -10,12 +10,13 @@ import ZKitCore
 
 class TableViewTestViewController: UIViewController {
 
-    @State var arr = Array((0...10))
+    @State var arr = Array((0...4))
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.arrangeViews {
-            UITableView(style: .plain) {
+            UITableView(style: .grouped) {
+                // 动态section
                 TableViewSection(binding: $arr) { str in
                     UIView {
                         UIStackView(axis: .horizontal, spacing: 10) {
@@ -37,7 +38,37 @@ class TableViewTestViewController: UIViewController {
                     }
                     .alignment(.allEdges)
                 }
+                // header footer 展示
+                .headerViews {
+                    UIStackView(axis: .horizontal, spacing: 10) {
+                        if #available(iOS 13.0, *) {
+                            UIImageView(image: UIImage(systemName: "flame.fill")).frame(width: 32, height: 32)
+                        }
+                        UILabel().text("Some Section Header").font(UIFont.systemFont(ofSize: 24, weight: .bold))
+                    }
+                    .padding(5)
+                    .alignment(.allEdges)
+                }
+                .footerViews {
+                    UILabel().text("some footer").backgroundColor(.red)
+                    
+                        .padding(5)
+                        .alignment(.allEdges)
+                }
                 
+                // 静态section
+                TableViewSection(Array(0...4)) { str in
+                    UILabel()
+                        .text("row: \(str)")
+                        .alignment(.leading, value: 20)
+                        .alignment(.centerY)
+                }
+                .headerTitle {
+                    return "section header using Title"
+                }
+                .footerTitle {
+                    return "section footer using Title"
+                }
             }.alignment(.allEdges)
         }
         // Do any additional setup after loading the view.

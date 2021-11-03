@@ -99,6 +99,10 @@ public extension UIView {
         self.zk_attribute.padding = mar
         return self
     }
+    
+    func padding(_ pad: CGFloat) -> Self {
+        return self.padding(top: pad, leading: pad, bottom: pad, trailing: pad)
+    }
 }
 
 public extension UIView {

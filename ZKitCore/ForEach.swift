@@ -17,10 +17,8 @@ import UIKit
 public func ForEach<T>(_ models: Binding<[T]>, @ViewBuilder contents: @escaping (T) -> [UIView]) -> UIView {
     let container = ForEachView<T>()
     container.contentBuilder = contents
-    DispatchQueue.main.async {
-        models.wrapper.addObserver { [weak container] changed in
-            container?.reloadSubviews(changed.new)
-        }
+    models.wrapper.addObserver { [weak container] changed in
+        container?.reloadSubviews(changed.new)
     }
     return container
 }

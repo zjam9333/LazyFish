@@ -126,25 +126,29 @@ public extension UITableView {
                 self?.reloadData()
             }
         }
-        self.rowHeight = UITableView.automaticDimension
+        if #available(iOS 15.0, *) {
+            self.sectionHeaderTopPadding = 0
+        }
+        
         self.estimatedRowHeight = 44
     }
     
     // 一个动态section
-    convenience init<T>(style: Style, binding: Binding<Array<T>>, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    convenience init<T>(style: Style, binding: Binding<[T]>, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
         self.init(style: style) {
             Section(binding: binding, cellContent: content, action: action)
         }
     }
     
     // 一个静态section
-    convenience init<T>(style: Style, array: Array<T>, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    convenience init<T>(style: Style, array: [T], @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
         self.init(style: style) {
             Section(array, cellContent: content, action: action)
         }
     }
     
     class Section {
+        // MARK: rows
         var rowCount: Int = 0
         var viewsForRow: ((Int) -> [UIView])?
         var didUpdate: (() -> Void)?
@@ -154,7 +158,7 @@ public extension UITableView {
             self.resetArray(array, cellContent: cellContent, action: action)
         }
         
-        public init<T>(binding: Binding<Array<T>>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+        public init<T>(binding: Binding<[T]>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
             let wrapper = binding.wrapper
             wrapper.addObserver { [weak self, weak wrapper] _ in
                 // binding的array发生变化，则更新datasource
@@ -177,6 +181,32 @@ public extension UITableView {
                 action?(obj)
             }
         }
+        
+        // MARK: header footer
+        var headerTitleGetter: (() -> String?)?
+        var headerViewsGetter: (ViewBuilder.ContentBlock)?
+        var footerTitleGetter: (() -> String?)?
+        var footerViewsGetter: (ViewBuilder.ContentBlock)?
+        
+        public func headerTitle(getter: @escaping () -> String?) -> Self {
+            self.headerTitleGetter = getter
+            return self
+        }
+        
+        public func headerViews(@ViewBuilder getter: @escaping ViewBuilder.ContentBlock) -> Self {
+            self.headerViewsGetter = getter
+            return self
+        }
+        
+        public func footerTitle(getter: @escaping () -> String?) -> Self {
+            self.footerTitleGetter = getter
+            return self
+        }
+        
+        public func footerViews(@ViewBuilder getter: @escaping ViewBuilder.ContentBlock) -> Self {
+            self.footerViewsGetter = getter
+            return self
+        }
     }
     
     internal class DataSourceDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
@@ -198,6 +228,12 @@ public extension UITableView {
         
         var sections: [Section] = []
         
+        // MARK: ROWS
+        
+        func numberOfSections(in tableView: UITableView) -> Int {
+            return sections.count
+        }
+        
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return sections[section].rowCount
         }
@@ -211,6 +247,59 @@ public extension UITableView {
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             sections[indexPath.section].didClick?(indexPath.row)
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        
+        // MARK: Height
+        
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return UITableView.automaticDimension
+        }
+        
+        func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+            if let _ = sections[section].headerTitleGetter {
+                return UITableView.automaticDimension
+            } else if let _ = sections[section].headerViewsGetter {
+                return UITableView.automaticDimension
+            }
+            return 0
+        }
+        
+        func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+            if let _ = sections[section].headerTitleGetter {
+                return UITableView.automaticDimension
+            } else if let _ = sections[section].headerViewsGetter {
+                return UITableView.automaticDimension
+            }
+            return 0
+        }
+        
+        // MARK: Header Footer
+        
+        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+            return sections[section].headerTitleGetter?()
+        }
+        
+        func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+            return sections[section].footerTitleGetter?()
+        }
+        
+        func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+            if let getter = sections[section].headerViewsGetter {
+                return UIView {
+                    getter()
+                }
+            }
+            return nil
+        }
+        
+        func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+            if let getter = sections[section].footerViewsGetter {
+                return UIView {
+                    getter()
+                }
+            }
+            return nil
         }
     }
 }
