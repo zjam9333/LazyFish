@@ -51,13 +51,46 @@ UIScrollView(.vertical, spacing: CGFloat = 0) {
 
 ## 表格tableview（未完待续）
 
-未完善reuse、section、reload等问题
+未完善`Cell Reuse`等问题
+
+`Tableview`的`@ResultBuilder<TableViewSection>`内传入若干个`TableViewSection`
 
 ```swift
-UITableView(style: .plain) {
-    for i in 0...100 {
-        UILabel().text("row\(i)")
+@State var arr1: String = ["Dog", "Cat", "Fish"]
+var arr2: String = ["Tom", "Jerry", "Butch"]
+
+UITableView(style: .grouped) {
+    // 使用绑定的数组section
+    TableViewSection(binding: $arr1) { item in
+        UILabel()
+            .text("dynamic row: \(item)")
+            .alignment(.leading, value: 20)
+            .alignment(.centerY)
+    } action: { [weak self] item in
+        // did selected cell
     }
+
+    // 静态section（一次创建）不再动态刷新
+    TableViewSection(arr2) { item in
+        UILabel()
+            .text("static row: \(item)")
+            .alignment(.leading, value: 20)
+            .alignment(.centerY)
+    }
+}
+```
+
+只有单个`section`的`tableview`可简写为：
+
+```swift
+
+UITableView(style: .plain, array: testClasses) { item in
+    let title = item.name
+    UILabel().text(title)
+        .alignment(.leading, value: 20)
+        .alignment(.centerY)
+} action: { [weak self] item in
+    // ...
 }
 ```
 
