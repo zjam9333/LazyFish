@@ -112,13 +112,14 @@ public extension UITableView {
         }
     }
     
-    convenience init(style: Style, @ResultBuilder<TableViewSection> content: ResultBuilder<TableViewSection>.ContentBlock) {
+    // 若干个section
+    convenience init(style: Style, @ResultBuilder<TableViewSection> sectionBuilder: ResultBuilder<TableViewSection>.ContentBlock) {
         self.init(frame: .zero, style: style)
         let delegate = DataSourceDelegate()
         self.delegate = delegate
         self.dataSource = delegate
         self.zk_tableViewViewDelegate = delegate
-        delegate.sections = content()
+        delegate.sections = sectionBuilder()
         for item in delegate.sections.enumerated() {
             item.element.didUpdate = { [weak self] in
 //                self?.reloadSections(IndexSet(integer: i), with: .none)
@@ -127,8 +128,19 @@ public extension UITableView {
         }
         self.rowHeight = UITableView.automaticDimension
         self.estimatedRowHeight = 44
-        DispatchQueue.main.async {
-            self.reloadData()
+    }
+    
+    // 一个动态section
+    convenience init<T>(style: Style, binding: Binding<Array<T>>, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+        self.init(style: style) {
+            Section(binding: binding, cellContent: content, action: action)
+        }
+    }
+    
+    // 一个静态section
+    convenience init<T>(style: Style, array: Array<T>, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+        self.init(style: style) {
+            Section(array, cellContent: content, action: action)
         }
     }
     
@@ -138,25 +150,31 @@ public extension UITableView {
         var didUpdate: (() -> Void)?
         var didClick: ((Int) -> Void)?
         
-        public init<T>(_ binding: Binding<Array<T>>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+        public init<T>(_ array: [T], @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+            self.resetArray(array, cellContent: cellContent, action: action)
+        }
+        
+        public init<T>(binding: Binding<Array<T>>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
             let wrapper = binding.wrapper
             wrapper.addObserver { [weak self, weak wrapper] _ in
-                let count = wrapper?.wrappedValue.count ?? 0
-                self?.rowCount = count
-                self?.viewsForRow = { row in
-                    // TODO: - 这里需要做一个缓存机制！！
-                    // TODO: - 但是缓存了又如何刷新内容？？
-                    if let obj = wrapper?.wrappedValue[row] {
-                        return cellContent(obj)
-                    }
-                    return []
-                }
-                self?.didClick = { row in
-                    if let obj = wrapper?.wrappedValue[row] {
-                        action?(obj)
-                    }
-                }
+                // binding的array发生变化，则更新datasource
+                let arr = wrapper?.wrappedValue ?? []
+                self?.resetArray(arr, cellContent: cellContent, action: action)
                 self?.didUpdate?()
+            }
+        }
+        
+        private func resetArray<T>(_ array: [T], @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+            self.rowCount = array.count
+            self.viewsForRow = { row in
+                // TODO: - 这里需要做一个缓存机制！！
+                // TODO: - 但是缓存了又如何刷新内部view的内容（文案、图片等）？？
+                let obj = array[row]
+                return cellContent(obj)
+            }
+            self.didClick = { row in
+                let obj = array[row]
+                action?(obj)
             }
         }
     }
@@ -174,6 +192,7 @@ public extension UITableView {
                 self.contentView.arrangeViews {
                     views
                 }
+                // TODO: 反复移除添加必然造成浪费
             }
         }
         

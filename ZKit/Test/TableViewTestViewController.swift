@@ -16,7 +16,7 @@ class TableViewTestViewController: UIViewController {
         
         self.view.arrangeViews {
             UITableView(style: .plain) {
-                TableViewSection($arr) { str in
+                TableViewSection(binding: $arr) { str in
                     UIView {
                         UIStackView(axis: .horizontal, spacing: 10) {
                             if #available(iOS 13.0, *) {

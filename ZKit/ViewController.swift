@@ -9,15 +9,13 @@ import UIKit
 import ZKitCore
 
 class ViewController: UIViewController {
-    
-    @State var testClasses = [(name: String, classType: UIViewController.Type)]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationItem.title = "Some Tests"
         
-        testClasses = [
+        let testClasses: [(name: String, classType: UIViewController.Type)] = [
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
@@ -31,8 +29,7 @@ class ViewController: UIViewController {
         ]
         
         self.view.arrangeViews {
-            UITableView(style: .plain) {
-                TableViewSection($testClasses) { item in
+            UITableView(style: .plain, array: testClasses) { item in
                     let title = item.name
                     UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
                         .alignment(.centerY)
@@ -48,7 +45,6 @@ class ViewController: UIViewController {
                     vc.navigationItem.title = item.name
                     self?.navigationController?.pushViewController(vc, animated: true)
                 }
-            }
             .alignment(.allEdges)
         }
     }
