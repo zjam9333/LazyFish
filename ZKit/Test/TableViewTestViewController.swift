@@ -51,7 +51,6 @@ class TableViewTestViewController: UIViewController {
                 }
                 .footerViews {
                     UILabel().text("some footer").backgroundColor(.red)
-                    
                         .padding(5)
                         .alignment(.allEdges)
                 }

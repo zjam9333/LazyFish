@@ -30,21 +30,21 @@ class ViewController: UIViewController {
         
         self.view.arrangeViews {
             UITableView(style: .plain, array: testClasses) { item in
-                    let title = item.name
-                    UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                let title = item.name
+                UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                    .alignment(.centerY)
+                    .alignment(.leading, value: 20)
+                if #available(iOS 13.0, *) {
+                    UIImageView(image: UIImage(systemName: "chevron.right"))
                         .alignment(.centerY)
-                        .alignment(.leading, value: 20)
-                    if #available(iOS 13.0, *) {
-                        UIImageView(image: UIImage(systemName: "chevron.right"))
-                            .alignment([.trailing, .centerY])
-                            .offset(x: -10, y: 0)
-                    }
-                } action: { [weak self] item in
-                    let vc = item.classType.init()
-                    vc.view.backgroundColor = .white
-                    vc.navigationItem.title = item.name
-                    self?.navigationController?.pushViewController(vc, animated: true)
+                        .alignment(.trailing, value: -10)
                 }
+            } action: { [weak self] item in
+                let vc = item.classType.init()
+                vc.view.backgroundColor = .white
+                vc.navigationItem.title = item.name
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
             .alignment(.allEdges)
         }
     }

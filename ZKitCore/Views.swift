@@ -122,8 +122,9 @@ public extension UITableView {
         delegate.sections = sectionBuilder()
         for item in delegate.sections.enumerated() {
             item.element.didUpdate = { [weak self] in
-//                self?.reloadSections(IndexSet(integer: i), with: .none)
-                self?.reloadData()
+                let i = item.offset
+                self?.reloadSections(IndexSet(integer: i), with: .none)
+//                self?.reloadData()
             }
         }
         if #available(iOS 15.0, *) {
@@ -160,21 +161,40 @@ public extension UITableView {
         
         public init<T>(binding: Binding<[T]>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
             let wrapper = binding.wrapper
-            wrapper.addObserver { [weak self, weak wrapper] _ in
+            wrapper.addObserver { [weak self] changed in
                 // binding的array发生变化，则更新datasource
-                let arr = wrapper?.wrappedValue ?? []
+                let arr = changed.new
                 self?.resetArray(arr, cellContent: cellContent, action: action)
                 self?.didUpdate?()
             }
         }
         
+        // MARK: Cache
+        private struct Cache {
+            let cellContents: [UIView]
+        }
+        private var cellCaches = [Int: Cache]()
+        
         private func resetArray<T>(_ array: [T], @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+            self.cellCaches.removeAll()
             self.rowCount = array.count
-            self.viewsForRow = { row in
+            self.viewsForRow = { [weak self] row in
                 // TODO: - 这里需要做一个缓存机制！！
                 // TODO: - 但是缓存了又如何刷新内部view的内容（文案、图片等）？？
-                let obj = array[row]
-                return cellContent(obj)
+                // 直接重新创建subviews，简单粗暴，浪费时间
+//                let obj = array[row]
+//                return cellContent(obj)
+                
+                // MARK: 能否假设： 在reloadData之前，同一个indexPath的cell总是相同？即使滑上滑下
+                // 创建过的subviews缓存起来，浪费空间
+                guard let cacheContents = self?.cellCaches[row]?.cellContents else {
+                    let obj = array[row]
+                    let newContents = cellContent(obj)
+                    self?.cellCaches[row] = Cache(cellContents: newContents)
+                    return newContents
+                    // 这里的缓存随着滑动，会堆积
+                }
+                return cacheContents
             }
             self.didClick = { row in
                 let obj = array[row]
@@ -223,6 +243,7 @@ public extension UITableView {
                     views
                 }
                 // TODO: 反复移除添加必然造成浪费
+                // 不确定view层级的变化对autolayout的影响有多大
             }
         }
         
@@ -262,7 +283,7 @@ public extension UITableView {
             } else if let _ = sections[section].headerViewsGetter {
                 return UITableView.automaticDimension
             }
-            return 0
+            return tableView.style == .plain ? 0 : UITableView.automaticDimension
         }
         
         func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -271,7 +292,7 @@ public extension UITableView {
             } else if let _ = sections[section].headerViewsGetter {
                 return UITableView.automaticDimension
             }
-            return 0
+            return tableView.style == .plain ? 0 : UITableView.automaticDimension
         }
         
         // MARK: Header Footer
