@@ -10,7 +10,7 @@ import ZKitCore
 
 class PageTestViewController: UIViewController {
 
-    let pageCount = 5
+    @State var pages = Array(0..<5)
     @State var currentPage: CGFloat = 0
     @State var showPage1: Bool = true
     
@@ -20,7 +20,7 @@ class PageTestViewController: UIViewController {
         self.view.arrangeViews {
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 UIScrollView(.horizontal) {
-                    for i in 0..<pageCount {
+                    ForEach($pages) { [weak self] i in
                         let lab = UILabel()
                             .text("page: \(i)")
                             .textAlignment(.center)
@@ -28,8 +28,9 @@ class PageTestViewController: UIViewController {
                             .border(width: 1, color: .black)
                             .frame(width: .fillParent())
                             .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
+//                        lab
                         if i == 2 {
-                            IfBlock($showPage1) {
+                            IfBlock(self?.$showPage1) {
                                 lab.border(width: 3, color: .red).backgroundColor(.yellow)
                             }
                         } else {
@@ -47,8 +48,10 @@ class PageTestViewController: UIViewController {
                 // page control
                 let ballWidth: CGFloat = 4
                 UIStackView(axis: .horizontal, spacing: ballWidth) {
-                    for i in 0..<pageCount {
-                        IfBlock($currentPage) { currentPage in
+                    ForEach($pages) { [weak self] i in
+                        IfBlock(self?.$currentPage) { currentPage in
+//                    for i in 0..<pageCount {
+//                        IfBlock($currentPage) { currentPage in
                             return Int(currentPage + 0.5) == i
                         } contentIf: {
                             UIView().backgroundColor(UIColor(white: 0.7, alpha: 1)).frame(width: ballWidth * 2, height: ballWidth)

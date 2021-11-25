@@ -23,14 +23,12 @@
 		1CE634A02726A8A20051BF9F /* ZKitCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE6349D2726A8A20051BF9F /* ZKitCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CE634A32726A8A20051BF9F /* ZKitCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */; };
 		1CE634A42726A8A20051BF9F /* ZKitCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* ZKitCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1CE634A82726A8C70051BF9F /* IfBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE7F2720177600FE41E8 /* IfBlock.swift */; };
 		1CE634A92726A8C70051BF9F /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2C27102EE100FE41E8 /* Views.swift */; };
 		1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */; };
 		1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */; };
 		1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE20270FEE0700FE41E8 /* Layout.swift */; };
 		1CE634AD2726A8C70051BF9F /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF72722B3BF009CFCDD /* State.swift */; };
 		1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1EF7827041776007CE1F3 /* Attributes.swift */; };
-		1CE6351A2727EC510051BF9F /* ForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE635192727EC510051BF9F /* ForEach.swift */; };
 		1CE6351C2727F0090051BF9F /* PageTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE6351B2727F0090051BF9F /* PageTestViewController.swift */; };
 		1CFBC27B272A9BB900AE64C4 /* ForEachTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */; };
 		1CFBC27D272AA5A400AE64C4 /* ForEachScrollTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFBC27C272AA5A400AE64C4 /* ForEachScrollTestViewController.swift */; };
@@ -82,11 +80,9 @@
 		1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarginTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE2C27102EE100FE41E8 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		1CD8FE2E27118B4A00FE41E8 /* DemoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTestViewController.swift; sourceTree = "<group>"; };
-		1CD8FE7F2720177600FE41E8 /* IfBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IfBlock.swift; sourceTree = "<group>"; };
 		1CD8FE8127201AED00FE41E8 /* StateTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
 		1CE6349B2726A8A20051BF9F /* ZKitCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZKitCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE6349D2726A8A20051BF9F /* ZKitCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKitCore.h; sourceTree = "<group>"; };
-		1CE635192727EC510051BF9F /* ForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForEach.swift; sourceTree = "<group>"; };
 		1CE6351B2727F0090051BF9F /* PageTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTestViewController.swift; sourceTree = "<group>"; };
 		1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForEachTestViewController.swift; sourceTree = "<group>"; };
 		1CFBC27C272AA5A400AE64C4 /* ForEachScrollTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForEachScrollTestViewController.swift; sourceTree = "<group>"; };
@@ -170,9 +166,7 @@
 				1CD8FE20270FEE0700FE41E8 /* Layout.swift */,
 				1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */,
 				1CD8FE2C27102EE100FE41E8 /* Views.swift */,
-				1CD8FE7F2720177600FE41E8 /* IfBlock.swift */,
 				1CAD9CF72722B3BF009CFCDD /* State.swift */,
-				1CE635192727EC510051BF9F /* ForEach.swift */,
 				1CFBC27E272B95D100AE64C4 /* Containers.swift */,
 				1CE6349D2726A8A20051BF9F /* ZKitCore.h */,
 			);
@@ -314,12 +308,10 @@
 			files = (
 				1CE634A92726A8C70051BF9F /* Views.swift in Sources */,
 				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
-				1CE634A82726A8C70051BF9F /* IfBlock.swift in Sources */,
 				1CE634AD2726A8C70051BF9F /* State.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
 				1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */,
 				1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */,
-				1CE6351A2727EC510051BF9F /* ForEach.swift in Sources */,
 				1CFBC27F272B95D100AE64C4 /* Containers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

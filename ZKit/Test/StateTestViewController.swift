@@ -97,7 +97,7 @@ class StateTestViewController: UIViewController {
             }
     }
     
-    func buttonForTitle(_ str: Binding<String>, action: @escaping () -> Void) -> UIButton {
+    func buttonForTitle(_ str: Binding<String>?, action: @escaping () -> Void) -> UIButton {
         UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
             .textColor(.black)
             .textColor(.gray, for: .highlighted)

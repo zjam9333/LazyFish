@@ -50,23 +50,6 @@ public extension UIScrollView {
         }
     }
     
-    internal class InternalLayoutStackView: UIStackView {
-        
-        private var actionWhileMoveToSuperview: [(UIView) -> Void] = []
-        func appendActionForDidMoveToSuperview(_ action: @escaping (UIView) -> Void) {
-            self.actionWhileMoveToSuperview.append(action)
-        }
-        override func didMoveToSuperview() {
-            super.didMoveToSuperview()
-            if let scr = self.superview as? UIScrollView {
-                for i in actionWhileMoveToSuperview {
-                    i(scr)
-                }
-                self.actionWhileMoveToSuperview.removeAll()
-            }
-        }
-    }
-    
     convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, @ViewBuilder content: ViewBuilder.ContentBlock) {
         self.init()
         
@@ -135,7 +118,7 @@ public extension UITableView {
     }
     
     // 一个动态section
-    convenience init<T>(style: Style, binding: Binding<[T]>, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    convenience init<T>(style: Style, binding: Binding<[T]>?, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
         self.init(style: style) {
             Section(binding: binding, cellContent: content, action: action)
         }
@@ -159,9 +142,9 @@ public extension UITableView {
             self.resetArray(array, cellContent: cellContent, action: action)
         }
         
-        public init<T>(binding: Binding<[T]>, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
-            let wrapper = binding.wrapper
-            wrapper.addObserver { [weak self] changed in
+        public init<T>(binding: Binding<[T]>?, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
+            let wrapper = binding?.wrapper
+            wrapper?.addObserver { [weak self] changed in
                 // binding的array发生变化，则更新datasource
                 let arr = changed.new
                 self?.resetArray(arr, cellContent: cellContent, action: action)
