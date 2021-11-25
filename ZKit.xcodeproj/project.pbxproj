@@ -14,6 +14,9 @@
 		1C04001127041213008F025B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001027041213008F025B /* Assets.xcassets */; };
 		1C04001427041213008F025B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001227041213008F025B /* LaunchScreen.storyboard */; };
 		1C09DBCA2730DEFC006E20AF /* TableViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */; };
+		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
+		1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F6274F69CE00DF13A4 /* Section.swift */; };
+		1C4981F9274F6AF200DF13A4 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F8274F6AF200DF13A4 /* CollectionView.swift */; };
 		1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF527229408009CFCDD /* InputTestViewController.swift */; };
 		1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2627102C6400FE41E8 /* StackTestViewController.swift */; };
 		1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */; };
@@ -69,6 +72,9 @@
 		1C04001327041213008F025B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C04001527041213008F025B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTestViewController.swift; sourceTree = "<group>"; };
+		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
+		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		1C4981F8274F6AF200DF13A4 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		1CAD9CF527229408009CFCDD /* InputTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF72722B3BF009CFCDD /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		1CB1EF7827041776007CE1F3 /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
@@ -168,6 +174,9 @@
 				1CD8FE2C27102EE100FE41E8 /* Views.swift */,
 				1CAD9CF72722B3BF009CFCDD /* State.swift */,
 				1CFBC27E272B95D100AE64C4 /* Containers.swift */,
+				1C4981F6274F69CE00DF13A4 /* Section.swift */,
+				1C4981F4274F693200DF13A4 /* TableView.swift */,
+				1C4981F8274F6AF200DF13A4 /* CollectionView.swift */,
 				1CE6349D2726A8A20051BF9F /* ZKitCore.h */,
 			);
 			path = ZKitCore;
@@ -306,11 +315,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */,
 				1CE634A92726A8C70051BF9F /* Views.swift in Sources */,
 				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
 				1CE634AD2726A8C70051BF9F /* State.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
 				1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */,
+				1C4981F9274F6AF200DF13A4 /* CollectionView.swift in Sources */,
+				1C4981F5274F693200DF13A4 /* TableView.swift in Sources */,
 				1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */,
 				1CFBC27F272B95D100AE64C4 /* Containers.swift in Sources */,
 			);

@@ -29,16 +29,14 @@ class ViewController: UIViewController {
         ]
         
         self.view.arrangeViews {
-            UITableView(style: .plain, array: testClasses) { item in
+            UICollectionView(array: testClasses) { item in
                 let title = item.name
                 UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                    .alignment(.centerY)
-                    .alignment(.leading, value: 20)
-                if #available(iOS 13.0, *) {
-                    UIImageView(image: UIImage(systemName: "chevron.right"))
-                        .alignment(.centerY)
-                        .alignment(.trailing, value: -10)
-                }
+                    .border(width: 1, color: .black)
+                    .textAlignment(.center)
+                    .numberOfLines(0)
+                    .frame(width: 72, height: 64)
+                    .alignment(.allEdges).padding(10)
             } action: { [weak self] item in
                 let vc = item.classType.init()
                 vc.view.backgroundColor = .white

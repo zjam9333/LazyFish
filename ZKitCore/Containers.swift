@@ -61,6 +61,24 @@ extension FakeInternalContainer {
     }
 }
 
+extension FakeInternalContainer where Self: UIView {
+    func fakeContainerArranged(@ViewBuilder content: ViewBuilder.ContentBlock) {
+        let views = content()
+        // 如果和stack有关，则拷贝stack的属性
+        if let superStack = self.superview as? UIStackView {
+            self.arrangeViews {
+                InternalLayoutStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
+                    views
+                }.alignment(.allEdges)
+            }
+        } else {
+            self.arrangeViews {
+                views
+            }
+        }
+    }
+}
+
 internal class PaddingContainerView: UIView, ObserveContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     func addContentView(_ content: UIView, padding: [Edge: CGFloat], offset: CGPoint = .zero) {
@@ -135,26 +153,13 @@ internal class ForEachView<T>: UIView, FakeInternalContainer {
         }
         // 重新加载全部！！！如何优化？
         
-        // 如果和stack有关，则拷贝stack的属性
-        let superStack = self.superview as? UIStackView
-        
         let views = models.map { [weak self] m in
             self?.contentBuilder?(m) ?? []
         }.flatMap { t in
             t
         }
-        if let superStack = superStack {
-            // stack内foreach将再封一层stack，且参数一致
-            self.arrangeViews {
-                InternalLayoutStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
-                    views
-                }.alignment(.allEdges)
-            }
-        } else {
-            self.arrangeViews {
-                views
-            }
-            // 不在stack内的views应该怎么排？？
+        self.fakeContainerArranged {
+            views
         }
         
         removeAllSubviewObservations()
@@ -235,16 +240,8 @@ internal class IfBlockView: UIView, FakeInternalContainer {
         self.init()
         self.actionWhileMoveToWindow.append {
             [weak self] in
-            if let superStack = self?.superview as? UIStackView {
-                self?.arrangeViews {
-                    InternalLayoutStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
-                        contents
-                    }.alignment(.allEdges)
-                }
-            } else {
-                self?.arrangeViews {
-                    contents
-                }
+            self?.fakeContainerArranged {
+                contents
             }
         }
         for i in self.subviews {
