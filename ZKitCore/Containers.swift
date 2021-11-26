@@ -17,7 +17,7 @@ extension ObserveContainer {
         observeSubviewTokens.removeAll()
     }
     func observe<T: UIView, Value>(obj: T, keyPath: WritableKeyPath<T, Value>, action: @escaping (Value?) -> Void) {
-        let obs = obj.observe(keyPath, options: .new) { view, change in
+        let obs = obj.observe(keyPath, options: [.initial, .new]) { view, change in
             action(change.newValue)
         }
         observeSubviewTokens.append(obs)
@@ -151,6 +151,7 @@ internal class ForEachView<T>: UIView, FakeInternalContainer {
         for i in allSubviews {
             i.removeFromSuperview()
         }
+        removeAllSubviewObservations()
         // 重新加载全部！！！如何优化？
         
         let views = models.map { [weak self] m in
@@ -158,11 +159,16 @@ internal class ForEachView<T>: UIView, FakeInternalContainer {
         }.flatMap { t in
             t
         }
+        
+        if views.isEmpty {
+            self.isHidden = true
+            return
+        }
+        
         self.fakeContainerArranged {
             views
         }
         
-        removeAllSubviewObservations()
         for i in self.subviews {
             observe(obj: i, keyPath: \.isHidden) { [weak self] isHidden in
                 self?.isHidden = self?.hasNoSubviewShown(self?.subviews ?? []) ?? false

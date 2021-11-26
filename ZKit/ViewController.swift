@@ -29,14 +29,11 @@ class ViewController: UIViewController {
         ]
         
         self.view.arrangeViews {
-            UICollectionView(array: testClasses) { item in
+            UITableView(style: .plain, array: testClasses) { item in
                 let title = item.name
                 UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                    .border(width: 1, color: .black)
-                    .textAlignment(.center)
-                    .numberOfLines(0)
-                    .frame(width: 72, height: 64)
-                    .alignment(.allEdges).padding(10)
+                    .alignment(.allEdges)
+                    .padding(20)
             } action: { [weak self] item in
                 let vc = item.classType.init()
                 vc.view.backgroundColor = .white
