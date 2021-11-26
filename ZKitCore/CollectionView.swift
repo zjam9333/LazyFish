@@ -22,11 +22,10 @@ public extension UICollectionView {
         self.dataSource = delegate
         self.zk_collectionViewViewDelegate = delegate
         delegate.sections = sectionBuilder()
-        for item in delegate.sections.enumerated() {
-            item.element.didUpdate = { [weak self] in
-                let i = item.offset
+        for (offset, element) in delegate.sections.enumerated() {
+            element.didUpdate = { [weak self] in
                 UIView.performWithoutAnimation {
-                    self?.reloadSections(IndexSet(integer: i))
+                    self?.reloadSections(IndexSet(integer: offset))
                 }
             }
         }

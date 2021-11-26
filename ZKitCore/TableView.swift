@@ -17,14 +17,11 @@ public extension UITableView {
         self.dataSource = delegate
         self.zk_tableViewViewDelegate = delegate
         delegate.sections = sectionBuilder()
-        for item in delegate.sections.enumerated() {
-            item.element.didUpdate = { [weak self] in
-                let i = item.offset
+        for (offset, element) in delegate.sections.enumerated() {
+            element.didUpdate = { [weak self] in
                 UIView.performWithoutAnimation {
-                    self?.reloadSections(IndexSet(integer: i), with: .none)
+                    self?.reloadSections(IndexSet(integer: offset), with: .none)
                 }
-                
-//                self?.reloadData()
             }
         }
         if #available(iOS 15.0, *) {

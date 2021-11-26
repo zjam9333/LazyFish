@@ -15,7 +15,8 @@ class ViewController: UIViewController {
         
         self.navigationItem.title = "Some Tests"
         
-        let testClasses: [(name: String, classType: UIViewController.Type)] = [
+        typealias VCModel = (name: String, classType: UIViewController.Type)
+        var testClasses: [VCModel] = [
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
@@ -27,6 +28,7 @@ class ViewController: UIViewController {
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
+        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 1000))
         
         self.view.arrangeViews {
             UITableView(style: .plain, array: testClasses) { item in
