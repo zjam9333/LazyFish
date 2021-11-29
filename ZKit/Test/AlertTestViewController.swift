@@ -6,93 +6,126 @@
 //
 
 import UIKit
+import ZKitCore
+
+fileprivate enum AlertStyle {
+    case `default`
+    case cancel
+    var color: UIColor {
+        switch self {
+        case .cancel:
+            return .black
+        case .default:
+            return .systemBlue
+        }
+    }
+    var font: UIFont {
+        switch self {
+        case .cancel:
+            return .systemFont(ofSize: 14, weight: .regular)
+        case .default:
+            return .systemFont(ofSize: 14, weight: .semibold)
+        }
+    }
+}
+
+fileprivate struct AlertAction {
+    let name: String
+    let style: AlertStyle
+    let action: () -> Void
+}
+fileprivate typealias AlertActionBuilder = ResultBuilder<AlertAction>
 
 fileprivate class TestAlertView: UIView {
     
-    var alertView: UIView? = nil
-    var alertContent: UIView? = nil
-    
-    deinit {
-        print("deinit alert")
+    let alertActions: [AlertAction]
+    let title: String
+    let message: String
+    init(title: String, message: String, @AlertActionBuilder actions: () -> [AlertAction]) {
+        self.title = title
+        self.message = message
+        alertActions = actions()
+        super.init(frame: .zero)
     }
-
-    func testShow() -> Self? {
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    lazy var alertContent: UIView? = UIView("center Card") {
+        
         let hideAlert = { [weak self] in
             UIView.animate(withDuration: 0.25) {
-                self?.alertView?.alpha = 0
+                self?.alpha = 0
                 self?.alertContent?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
             } completion: { fi in
                 self?.removeFromSuperview()
             }
         }
         
-        self.alertView = UIView("main BG") { [weak self] in
-            self?.alertContent = UIView("center Card") {
-                UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
-                    UIStackView(axis: .vertical, distribution: .fill, alignment: .leading, spacing: 12) {
-                        UILabel()
-                            .text("退出登录")
-                            .textColor(.black)
-                            .font(UIFont.systemFont(ofSize: 16, weight: .bold))
-                        
-                        UILabel()
-                            .text("确定要退出登录吗？")
-                            .textColor(.darkGray)
-                            .font(UIFont.systemFont(ofSize: 14, weight: .regular))
-                    }
-                    .alignment(.allEdges)
-                    .padding(top: 20, leading: 20, bottom: 20, trailing: 20)
-                    
-                    UIView()
-                        .backgroundColor(.lightGray)
-                        .frame(height: 0.5)
-                    
-                    UIStackView(axis: .horizontal, distribution: .fillEqually, alignment: .fill, spacing: 0) {
-                        UIButton()
-                            .text("取消")
-                            .textColor(.black, for: .normal)
-                            .textColor(.black.withAlphaComponent(0.5), for: .highlighted)
-                            .font(UIFont.systemFont(ofSize: 14, weight: .regular))
-                            .action {
-                                print("取消")
-                                hideAlert()
-                            }
-                        
-                        UIButton()
-                            .text("确认")
-                            .textColor(.systemBlue, for: .normal)
-                            .textColor(.systemBlue.withAlphaComponent(0.5), for: .highlighted)
-                            .font(UIFont.systemFont(ofSize: 14, weight: .semibold))
-                            .action {
-                                print("确认")
-                                hideAlert()
-                            }
-                    }.frame(height: 48)
-                }
-                .alignment(.allEdges)
+        //
+        UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
+            UIStackView(axis: .vertical, distribution: .fill, alignment: .leading, spacing: 12) {
+                UILabel()
+                    .text(title)
+                    .textColor(.black)
+                    .font(UIFont.systemFont(ofSize: 16, weight: .bold))
+                
+                UILabel()
+                    .text(message)
+                    .textColor(.darkGray)
+                    .font(UIFont.systemFont(ofSize: 14, weight: .regular))
             }
-            .backgroundColor(.white)
-            .cornerRadius(10).clipped()
-            .frame(width: 300)
-            .alignment(.center)
-            .onAppear { [weak self] someview in
-                print("apppp")
-                self?.alertView?.alpha = 0
-                self?.alertContent?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-                UIView.animate(withDuration: 0.25) {
-                    self?.alertView?.alpha = 1
-                    self?.alertContent?.transform = CGAffineTransform.identity
+            .alignment(.allEdges)
+            .padding(top: 20, leading: 20, bottom: 20, trailing: 20)
+            
+            UIView()
+                .backgroundColor(.lightGray)
+                .frame(height: 0.5)
+            
+            UIStackView(axis: .horizontal, distribution: .fillEqually, alignment: .fill, spacing: 0) {
+                for i in alertActions {
+                    UIButton()
+                        .text(i.name)
+                        .textColor(i.style.color, for: .normal)
+                        .textColor(i.style.color.withAlphaComponent(0.5), for: .highlighted)
+                        .font(i.style.font)
+                        .action {
+                            hideAlert()
+                            i.action()
+                        }
                 }
-            }
-            self?.alertContent
+            }.frame(height: 48)
         }
+        .alignment(.allEdges)
+    }
+    .backgroundColor(.white)
+    .cornerRadius(10).clipped()
+    .frame(width: 300)
+    .alignment(.center)
+    .onAppear { [weak self] someview in
+        print("apppp")
+        self?.alpha = 0
+        self?.alertContent?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        UIView.animate(withDuration: 0.25) {
+            self?.alpha = 1
+            self?.alertContent?.transform = CGAffineTransform.identity
+        }
+    }
+    
+    deinit {
+        print("deinit alert")
+    }
+
+    func testShow() {
+        let mySelfAlert = self.arrangeViews {
+            self.alertContent
+        }
+        .alignment(.allEdges)
         .backgroundColor(.black.withAlphaComponent(0.3))
-        
-        self.arrangeViews {
-            self.alertView?
-                .alignment(.allEdges)
+        UIApplication.shared.keyWindow?.arrangeViews {
+            mySelfAlert
         }
-        return self.alignment(.allEdges)
     }
 }
 
@@ -110,9 +143,14 @@ class AlertTestViewController: UIViewController {
                 .backgroundColor(.gray)
                 .alignment(.center)
                 .action {
-                    UIApplication.shared.keyWindow?.arrangeViews {
-                        TestAlertView().testShow()
-                    }
+                    TestAlertView(title: "Logout", message: "Are you sure?") {
+                        AlertAction(name: "Cancel", style: .cancel) {
+                            print("cancelled")
+                        }
+                        AlertAction(name: "OK", style: .default) {
+                            print("comfirmed")
+                        }
+                    }.testShow()
                 }
         }
         // Do any additional setup after loading the view.
