@@ -2,20 +2,122 @@
 
 类似SwiftUI，使用DSL布局UIView，但并非单纯的描述view，而是真正的创建view并布局
 
+暂未完善，勿用于工业生产
+
+# How to Use
+
+Edit your Podfile file
+```ruby
+platform :ios, '9.0'
+target 'ZKitTest' do
+	use_frameworks!
+	pod 'ZKit', :git => 'https://github.com/ZJamm1993/ZKit', :branch => 'pod'
+end
+```
+
+Insert code in your `ViewControllers`
+
+here is an example to create a `tableView` with sample `label` in his cells
+
+```swift
+class ViewController: UIViewController {
+    @State var models = Array(0...10)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationItem.title = "Test"
+        
+        self.view.arrangeViews {
+            UITableView(style: .grouped, binding: $models) { item in
+                UILabel().text("model row \(item)")
+                    .alignment(.leading, value: 20)
+                    .alignment(.centerY)
+
+            } action: { [weak self] item in
+                let vc = UIViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+                vc.navigationItem.title = "model row \(item)"
+                vc.view.backgroundColor = .white
+            }
+            .alignment(.allEdges)
+        }
+    }
+}
+```
+
+Result shown below: 
+
+![tableview](doc/tableview.png)
+
+Pros:
+
+- you can still use your ViewController stuff
+- writing UI code like SwiftUI DSL
+
+Cons:
+
+- can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
+- need to test
+- lack of animation modifier
+- lack of .. a lot of features
+
+# ResultBuilder基础
+
+`UIView`拓展了`arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self`方法，是进入声明布局的入口
+
+其中`@ViewBuilder`修饰的方法和闭包将实现`DSL`功能并返回`Array<UIView>`，得到`UIView`数组后进行`addSubview()`或`addArrangedSubview()`，并使用`AutoLayout`约束
+
+```swift
+public typealias ViewBuilder = ResultBuilder<UIView>
+@resultBuilder public struct ResultBuilder<MyReturnType> {
+    public typealias ContentBlock = () -> [MyReturnType]
+    // MARK: 组合全部表达式的返回值
+    public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
+        let res = components.flatMap { r in
+            return r
+        }
+        return res
+    }
+    // MARK: 其他语法支持的buildBlock
+    // static func buildBlock...
+    // if\else\for..in..\while\等等等
+}
+```
+关于`@resultBuilder`的更多内容可以参考[Swift Result Builder](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md)
+
+
+在`@ViewBuilder`修饰的闭包中写入各种`view`，以及`alignment`、`frame`、`padding`等参数，甚至是`modifier`链式方法，即可实现布局和展示，例如在视图中央展示一个文本：
+
+```swift
+self.view.arrangeViews {
+    UILabel()
+    .text("Hello World")
+    .alignment(.center)
+}
+```
+
 # 已实现的拓展
 
 ## 任意view添加subviews
 
 ```swift
 someView.arrangeViews {
-    // 内容1...
-    // 内容2...
-    // 内容n...
+    view1
+    view2
+    view3
     // 根据内容的alignment属性排版，stack则根据自己的axis、distribution、alignment、spacing属性排版
 }
 ```
 
-## 普通view
+```swift
+someView
+    \
+    ---view1
+    ---view2
+    ---view3
+```
+
+## 普通view、UILabel、UIButton、UIImageView等
 
 ```swift
 UIView {
@@ -47,6 +149,107 @@ UIScrollView(.vertical, spacing: CGFloat = 0) {
     // 内容n...
     // 排列逻辑与stack一致
 }
+```
+
+生成内容：
+
+```
+scrollview
+    \
+    ---internalStackView
+        \
+        ---view1
+        ---view2
+        ---view3
+```
+
+## 条件IfBlock
+
+传入`Binding<Bool>`作为参数, 返回`[IfBlockView]`，条件变化时自动隐藏或展示`ifContent`和`elseContent`
+
+直接写`if ... {} else ... {}`暂未支持变量监听，因此需要动态刷新时使用`IfBlock`
+
+```swift
+IfBlock(self?.$showPage1) {
+    view1
+    view2
+} 
+// 或者
+IfBlock(self?.$showPage1) {
+    view1
+    view2
+} contentElse: {
+    view3
+}
+```
+
+生成内容：
+
+若监测到上层view为StackView
+
+```swift
+// 上层是stack，复制一个stack
+IfBlockView // if条件
+    \
+    ---internalStackView
+        \
+        ---view1
+        ---view2
+IfBlockView // else条件
+    \
+    ---internalStackView
+        \
+        ---view3
+```
+
+上层view为普通view
+
+```swift
+IfBlockView // if条件
+    \
+    ---view1
+    ---view2
+IfBlockView // else条件
+    \
+    ---view3
+```
+
+## 遍历ForEach
+
+传入Binding<[T]>作为参数，返回ForEachView<T>
+
+直接写`for i in array {}`暂未支持变量监听，因此需要动态刷新时使用`ForEach`
+
+```swift
+ForEach($array) { item in
+    view1
+    view2
+    view3
+}
+```
+
+生成内容：
+若监测到上层view为StackView
+
+```swift
+// 上层是stack，复制一个stack
+ForEachView<T>
+    \
+    ---internalStackView
+        \
+        ---view1
+        ---view2
+        ---view3
+```
+
+上层view为普通view
+
+```swift
+ForEachView<T>
+    \
+    ---view1
+    ---view2
+    ---view3
 ```
 
 ## 表格tableview（未完待续）
@@ -94,16 +297,17 @@ UITableView(style: .plain, array: testClasses) { item in
 }
 ```
 
-### 注意：
-- `DSL`内声明的`view`之间并无布局依赖，仅通过`stackview`和`alignment`属性做约束
-- `DSL`内的`view`作为`returnValue`传递给`ViewBuilder`，若需要引用则参考以下写法
+# 注意：
+
+- `content`内声明的`view`之间并无布局依赖，仅通过`stackview`和`alignment`属性做约束
+- `content`内的`view`作为`returnValue`传递给`ViewBuilder`，若需要引用则参考以下写法
 ```swift
+var myView = UILabel()
+
 UIStackView {
     // 前面一些views
 
-    let label = UILabel().text(binding: $text) // return void
-    self.label = label // return void
-    label  // return label
+    myView
 
     // 后面一些views
 }
@@ -183,41 +387,6 @@ public extension UITextField {
 }
 public extension UITextField {
     func text(binding text: Binding<String>) -> Self
-}
-```
-
-# ResultBuilder基础
-
-`UIView`拓展了`arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self`方法，是进入`DSL`声明布局的入口
-
-其中`@ViewBuilder`修饰的方法和闭包将实现`DSL`功能并返回`Array<UIView>`，得到`UIView`数组后进行`addSubview()`或`addArrangedSubview()`，并使用`AutoLayout`约束
-
-```swift
-public typealias ViewBuilder = ResultBuilder<UIView>
-@resultBuilder public struct ResultBuilder<MyReturnType> {
-    public typealias ContentBlock = () -> [MyReturnType]
-    // MARK: 组合全部表达式的返回值
-    public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
-        let res = components.flatMap { r in
-            return r
-        }
-        return res
-    }
-    // MARK: 其他语法支持的buildBlock
-    // static func buildBlock...
-    // if\else\for..in..\while\等等等
-}
-```
-关于`@resultBuilder`的更多内容可以参考[Swift Result Builder](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md)
-
-
-在`@ViewBuilder`修饰的闭包中写入各种`view`，以及`alignment`、`frame`、`padding`等参数，甚至是`modifier`链式方法，即可实现布局和展示，例如在视图中央展示一个文本：
-
-```swift
-self.view.arrangeViews {
-    UILabel()
-    .text("Hello World")
-    .alignment(.center)
 }
 ```
 

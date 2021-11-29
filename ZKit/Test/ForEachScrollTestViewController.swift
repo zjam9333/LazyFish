@@ -19,14 +19,14 @@ class ForEachScrollTestViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.arrangeViews {
+        self.view.arrangeViews { [weak self] in
             UIScrollView (.vertical, spacing: 10) {
                 // section 1
                 UILabel().text("Header").backgroundColor(.lightGray)
                 
-                ForEach($section1) { str in
+                ForEach(self?.$section1) { str in
                     if str == "bird" {
-                        IfBlock(self.$showBirds) {
+                        IfBlock(self?.$showBirds) {
                             UILabel().text(str).alignment(.allEdges).backgroundColor(.cyan)
                         }
                     } else {

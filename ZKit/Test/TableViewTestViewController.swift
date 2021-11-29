@@ -17,7 +17,7 @@ class TableViewTestViewController: UIViewController {
         self.view.arrangeViews {
             UITableView(style: .grouped) {
                 // 动态section
-                TableViewSection(binding: $arr) { str in
+                Section(binding: $arr) { str in
                     UIView {
                         UIStackView(axis: .horizontal, spacing: 10) {
                             if #available(iOS 13.0, *) {
@@ -51,13 +51,12 @@ class TableViewTestViewController: UIViewController {
                 }
                 .footerViews {
                     UILabel().text("some footer").backgroundColor(.red)
-                    
                         .padding(5)
                         .alignment(.allEdges)
                 }
                 
                 // 静态section
-                TableViewSection(Array(0...4)) { str in
+                Section(Array(0...4)) { str in
                     UILabel()
                         .text("row: \(str)")
                         .alignment(.leading, value: 20)

@@ -15,7 +15,8 @@ class ViewController: UIViewController {
         
         self.navigationItem.title = "Some Tests"
         
-        let testClasses: [(name: String, classType: UIViewController.Type)] = [
+        typealias VCModel = (name: String, classType: UIViewController.Type)
+        var testClasses: [VCModel] = [
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
@@ -27,24 +28,20 @@ class ViewController: UIViewController {
             ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
+        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 1000))
         
         self.view.arrangeViews {
             UITableView(style: .plain, array: testClasses) { item in
-                    let title = item.name
-                    UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                        .alignment(.centerY)
-                        .alignment(.leading, value: 20)
-                    if #available(iOS 13.0, *) {
-                        UIImageView(image: UIImage(systemName: "chevron.right"))
-                            .alignment([.trailing, .centerY])
-                            .offset(x: -10, y: 0)
-                    }
-                } action: { [weak self] item in
-                    let vc = item.classType.init()
-                    vc.view.backgroundColor = .white
-                    vc.navigationItem.title = item.name
-                    self?.navigationController?.pushViewController(vc, animated: true)
-                }
+                let title = item.name
+                UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                    .alignment(.allEdges)
+                    .padding(20)
+            } action: { [weak self] item in
+                let vc = item.classType.init()
+                vc.view.backgroundColor = .white
+                vc.navigationItem.title = item.name
+                self?.navigationController?.pushViewController(vc, animated: true)
+            }
             .alignment(.allEdges)
         }
     }

@@ -23,11 +23,18 @@ class StateTestViewController: UIViewController {
         super.viewDidLoad()
         
         self.view.arrangeViews {
-            UIStackView(axis: .vertical, alignment: .center) {
+            UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 foodForTitle("Tea 🍵")
                 IfBlock($showCake) {
                     foodForTitle("Cake 🍰")
                         .borderColor(.blue).borderWidth(1)
+                } contentElse: {
+                    foodForTitle("NO !!Cake 🍰")
+                        .borderColor(.yellow).borderWidth(1)
+                    IfBlock($showAnimals) {
+                        foodForTitle("But animals")
+                            .borderColor(.yellow).borderWidth(1)
+                    }
                 }
                 foodForTitle("Pizza 🍕")
                 
@@ -90,7 +97,7 @@ class StateTestViewController: UIViewController {
             }
     }
     
-    func buttonForTitle(_ str: Binding<String>, action: @escaping () -> Void) -> UIButton {
+    func buttonForTitle(_ str: Binding<String>?, action: @escaping () -> Void) -> UIButton {
         UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
             .textColor(.black)
             .textColor(.gray, for: .highlighted)
