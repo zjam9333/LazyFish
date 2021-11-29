@@ -9,4 +9,6 @@ Pod::Spec.new do |spec|
   spec.source_files     = 'ZKitCore/*'
   spec.framework        = 'UIKit'
   spec.requires_arc     = true
+  spec.swift-versions   = '5.0'
+  spec.platform         = :ios, '9.0'
 end
