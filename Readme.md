@@ -4,6 +4,63 @@
 
 暂未完善，勿用于工业生产
 
+# How to Use
+
+Edit your Podfile file
+```ruby
+platform :ios, '9.0'
+target 'ZKitTest' do
+	use_frameworks!
+	pod 'ZKit', :git => 'https://github.com/ZJamm1993/ZKit', :branch => 'pod'
+end
+```
+
+Insert code in your `ViewControllers`
+
+here is an example to create a `tableView` with sample `label` in his cells
+
+```swift
+class ViewController: UIViewController {
+    @State var models = Array(0...10)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationItem.title = "Test"
+        
+        self.view.arrangeViews {
+            UITableView(style: .grouped, binding: $models) { item in
+                UILabel().text("model row \(item)")
+                    .alignment(.leading, value: 20)
+                    .alignment(.centerY)
+
+            } action: { [weak self] item in
+                let vc = UIViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+                vc.navigationItem.title = "model row \(item)"
+                vc.view.backgroundColor = .white
+            }
+            .alignment(.allEdges)
+        }
+    }
+}
+```
+
+Result shown below: 
+
+![tableview](doc/tableview.png)
+
+Pros:
+
+- you can still use your ViewController stuff
+- writing UI code like SwiftUI DSL
+
+Cons:
+
+- can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
+- need to test
+- lack of animation modifier
+- lack of .. a lot of features
+
 # ResultBuilder基础
 
 `UIView`拓展了`arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self`方法，是进入声明布局的入口
