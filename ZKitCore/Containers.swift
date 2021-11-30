@@ -81,7 +81,7 @@ extension FakeInternalContainer where Self: UIView {
 
 internal class PaddingContainerView: UIView, ObserveContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    func addContentView(_ content: UIView, padding: [Edge: CGFloat], offset: CGPoint = .zero) {
+    func addContentView(_ content: UIView, padding: [Edge: CGFloat] = [:], offset: CGPoint = .zero) {
         self.addSubview(content)
         observe(obj: content, keyPath: \.isHidden) { [weak self] isHidden in
             self?.isHidden = self?.hasNoSubviewShown(self?.subviews ?? []) ?? false
@@ -122,13 +122,18 @@ internal class InternalLayoutStackView: UIStackView, FakeInternalContainer {
 // MARK: FOR_EACH
 
 public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (T) -> [UIView]) -> UIView {
+    return ForEachEnumerated(models) { index, model in
+        contents(model)
+    }
+}
+
+public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
     let container = ForEachView<T>()
-    container.contentBuilder = contents
     models?.wrapper.addObserver { [weak container] changed in
-        container?.reloadSubviews(changed.new)
+        container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
     container.actionWhileMoveToWindow.append { [weak container] in
-        container?.reloadSubviews(models?.wrapper.wrappedValue ?? [])
+        container?.reloadSubviews(models?.wrapper.wrappedValue ?? [], contentBuilder: contents)
     }
     return container
 }
@@ -141,9 +146,7 @@ internal class ForEachView<T>: UIView, FakeInternalContainer {
         excuteAllActionsWhileMoveToWindow()
     }
     
-    var contentBuilder: ((T) -> [UIView])?
-    
-    func reloadSubviews(_ models: [T]) {
+    func reloadSubviews(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
         guard let _ = self.window else {
             return
         }
@@ -154,8 +157,8 @@ internal class ForEachView<T>: UIView, FakeInternalContainer {
         removeAllSubviewObservations()
         // 重新加载全部！！！如何优化？
         
-        let views = models.map { [weak self] m in
-            self?.contentBuilder?(m) ?? []
+        let views = models.enumerated().map { i, m in
+            contentBuilder?(i, m) ?? []
         }.flatMap { t in
             t
         }

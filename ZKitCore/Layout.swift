@@ -9,103 +9,6 @@ import Foundation
 import UIKit
 
 public extension UIView {
-
-    func onAppear(_ action: @escaping OnAppearBlock) -> Self {
-        self.zk_attribute.onAppear = action
-        return self
-    }
-    
-    internal var zk_attribute: Attribute {
-        set {
-            let obj = newValue
-            objc_setAssociatedObject(self, &AssociatedKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            if let obj = objc_getAssociatedObject(self, &AssociatedKey.attributeKey) as? Attribute {
-                return obj
-            }
-            let newone = Attribute()
-            self.zk_attribute = newone
-            return newone
-        }
-    }
-    
-    func frame(filledWidth: Bool? = false, filledHeight: Bool? = false) -> Self {
-        let att = self.zk_attribute
-        if filledWidth == true {
-            att.width = .fillParent()
-        }
-        if filledHeight == true {
-            att.height = .fillParent()
-        }
-        return self
-    }
-    
-    func frame(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
-        let att = self.zk_attribute
-        if let w = width {
-            att.width = .equalTo(w)
-        }
-        if let h = height {
-            att.height = .equalTo(h)
-        }
-        return self
-    }
-    
-    func frame(width: SizeFill = .unknown, height: SizeFill = .unknown) -> Self {
-        let att = self.zk_attribute
-        att.width = width
-        att.height = height
-        return self
-    }
-    
-    func alignment(_ edges: Alignment, value: CGFloat? = 0) -> Self {
-        var align = self.zk_attribute.alignment ?? [:]
-        if edges.contains(.centerY) {
-            align[.centerY] = value
-        }
-        if edges.contains(.centerX) {
-            align[.centerX] = value
-        }
-        if edges.contains(.leading) {
-            align[.leading] = value
-        }
-        if edges.contains(.trailing) {
-            align[.trailing] = value
-        }
-        if edges.contains(.top) {
-            align[.top] = value
-        }
-        if edges.contains(.bottom) {
-            align[.bottom] = value
-        }
-        self.zk_attribute.alignment = align
-        return self
-    }
-    
-    // 未完善
-    func offset(x: CGFloat, y: CGFloat) -> Self {
-        self.zk_attribute.offset = CGPoint(x: x, y: y)
-        return self
-    }
-    
-    // padding将封装一个containerview
-    func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
-        var mar = [Edge: CGFloat]()
-        mar[.top] = top
-        mar[.leading] = leading
-        mar[.bottom] = bottom
-        mar[.trailing] = trailing
-        self.zk_attribute.padding = mar
-        return self
-    }
-    
-    func padding(_ pad: CGFloat) -> Self {
-        return self.padding(top: pad, leading: pad, bottom: pad, trailing: pad)
-    }
-}
-
-public extension UIView {
     internal func zk_alignSubview(_ subview: UIView, alignment: [Edge: CGFloat]) {
         // 对齐
         if let const = alignment[.centerY] {
@@ -128,15 +31,23 @@ public extension UIView {
         }
     }
     
-    internal func zk_containerPaddingIfNeed(attribute: Attribute) -> UIView {
-        let attribute = self.zk_attribute
-        if attribute.padding != nil || !attribute.offset.equalTo(.zero) {
-            let paddingContainer = PaddingContainerView()
-            paddingContainer.addContentView(self, padding: attribute.padding ?? [:], offset: attribute.offset)
-            return paddingContainer
-        } else {
-            return self
+    internal func zk_containerPaddingIfNeed(attributes: [Attribute._Attribute]) -> UIView {
+        var paddingView = self
+        for i in attributes {
+            switch i {
+            case .padding(let pad):
+                let paddingContainer = PaddingContainerView()
+                paddingContainer.addContentView(paddingView, padding: pad)
+                paddingView = paddingContainer
+            case .offset(let point):
+                let paddingContainer = PaddingContainerView()
+                paddingContainer.addContentView(paddingView, offset: point)
+                paddingView = paddingContainer
+            default:
+                continue
+            }
         }
+        return paddingView
     }
     
     internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView?) {
@@ -172,34 +83,67 @@ public extension UIView {
             }
         }
     }
+}
+
+public extension UIView {
     
     @discardableResult func arrangeViews(ignoreAlignments: Bool = false, @ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self {
         let views = content()
+        var allActionsOnAppear = [() -> Void]()
+        
         for view in views {
             let attribute = view.zk_attribute
-            let container = view.zk_containerPaddingIfNeed(attribute: attribute)
-            
+            var alignment: EdgeValuePair = [:]
+            var widthFill: SizeFill?
+            var heightFill: SizeFill?
+            var padding: [Attribute._Attribute] = []
+            for i in attribute.attrs {
+                switch i {
+                case .width(let w):
+                    widthFill = w
+                case .height(let h):
+                    heightFill = h
+                case .alignment(let ali):
+                    for (k, v) in ali {
+                        alignment[k] = v
+                    }
+                case .offset, .padding:
+                    padding.append(i)
+                case .onAppear(let block):
+                    allActionsOnAppear.append {
+                        block?(view)
+                    }
+                }
+            }
+            let container = view.zk_containerPaddingIfNeed(attributes: padding)
             container.translatesAutoresizingMaskIntoConstraints = false
             if let stack = self as? UIStackView {
                 stack.addArrangedSubview(container)
                 // 在stack中不用操心对齐问题
             } else {
                 self.addSubview(container)
-                if (ignoreAlignments == false) {
-                    let alignment = attribute.alignment ?? [:] // 不提供默认值，让外面传入
+                if ignoreAlignments == false && !alignment.isEmpty {
                     self.zk_alignSubview(container, alignment: alignment)
                 }
             }
             
-            container.zk_sizeFill(width: attribute.width, height: attribute.height, target: self)
+            container.zk_sizeFill(width: widthFill, height: heightFill, target: self)
         }
         
-        // on appear
-        DispatchQueue.main.async { // [weak view] in
-            for view in views {
-                view.zk_attribute.onAppear?(view)
-            }
+        for action in allActionsOnAppear {
+            action()
         }
+        
+        return self
+    }
+    
+    // MARK: OVERLAY & BACKGROUND
+    
+    @discardableResult private func overlay(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self {
+        return self
+    }
+    
+    @discardableResult private func background(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self {
         return self
     }
 }

@@ -7,15 +7,29 @@
 
 import UIKit
 
+internal typealias EdgeValuePair = [Edge: CGFloat]
+
 internal class Attribute {
-    var padding: [Edge: CGFloat]?
-    var offset: CGPoint = .zero
+    enum _Attribute {
+        case width(SizeFill)
+        case height(SizeFill)
+        
+        case alignment(EdgeValuePair)
+        case padding(EdgeValuePair)
+        case offset(CGPoint)
+        
+        case onAppear(OnAppearBlock?)
+    }
+    var attrs: [_Attribute] = []
     
-    var alignment: [Edge: CGFloat]?
-    var width: SizeFill = .unknown
-    var height: SizeFill = .unknown
-    
-    var onAppear: OnAppearBlock?
+//    var padding: [Edge: CGFloat]?
+//    var offset: CGPoint = .zero
+//
+//    var alignment: [Edge: CGFloat]?
+//    var width: SizeFill = .unknown
+//    var height: SizeFill = .unknown
+//
+//    var onAppear: OnAppearBlock?
 }
 
 public enum SizeFill {
@@ -50,4 +64,111 @@ internal enum Edge {
 
 internal enum AssociatedKey {
     static var attributeKey: Int = 0
+}
+
+public extension UIView {
+
+    func onAppear(_ action: @escaping OnAppearBlock) -> Self {
+        self.zk_attribute.attrs.append(.onAppear(action))
+        return self
+    }
+    
+    internal var zk_attribute: Attribute {
+        set {
+            let obj = newValue
+            objc_setAssociatedObject(self, &AssociatedKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            if let obj = objc_getAssociatedObject(self, &AssociatedKey.attributeKey) as? Attribute {
+                return obj
+            }
+            let newone = Attribute()
+            self.zk_attribute = newone
+            return newone
+        }
+    }
+    
+    func frame(filledWidth: Bool? = false, filledHeight: Bool? = false) -> Self {
+        let att = self.zk_attribute
+        if filledWidth == true {
+            att.attrs.append(.width(.fillParent()))
+        }
+        if filledHeight == true {
+            att.attrs.append(.height(.fillParent()))
+        }
+        return self
+    }
+    
+    func frame(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
+        let att = self.zk_attribute
+        if let w = width {
+            att.attrs.append(.width(.equalTo(w)))
+        }
+        if let h = height {
+            att.attrs.append(.height(.equalTo(h)))
+        }
+        return self
+    }
+    
+    func frame(width: SizeFill = .unknown, height: SizeFill = .unknown) -> Self {
+        let att = self.zk_attribute
+        att.attrs.append(.width(width))
+        att.attrs.append(.height(height))
+        return self
+    }
+    
+    func alignment(_ edges: Alignment, value: CGFloat? = 0) -> Self {
+        var align = EdgeValuePair()
+        if edges.contains(.centerY) {
+            align[.centerY] = value
+        }
+        if edges.contains(.centerX) {
+            align[.centerX] = value
+        }
+        if edges.contains(.leading) {
+            align[.leading] = value
+        }
+        if edges.contains(.trailing) {
+            align[.trailing] = value
+        }
+        if edges.contains(.top) {
+            align[.top] = value
+        }
+        if edges.contains(.bottom) {
+            align[.bottom] = value
+        }
+        if edges.isEmpty {
+            return self
+        }
+        self.zk_attribute.attrs.append(.alignment(align))
+        return self
+    }
+    
+    // 未完善
+    func offset(x: CGFloat, y: CGFloat) -> Self {
+        let p = CGPoint(x: x, y: y)
+        if p == .zero {
+            return self
+        }
+        self.zk_attribute.attrs.append(.offset(p))
+        return self
+    }
+    
+    // padding将封装一个containerview
+    func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
+        var mar = EdgeValuePair()
+        mar[.top] = top
+        mar[.leading] = leading
+        mar[.bottom] = bottom
+        mar[.trailing] = trailing
+        if mar.isEmpty {
+            return self
+        }
+        self.zk_attribute.attrs.append(.padding(mar))
+        return self
+    }
+    
+    func padding(_ pad: CGFloat) -> Self {
+        return self.padding(top: pad, leading: pad, bottom: pad, trailing: pad)
+    }
 }

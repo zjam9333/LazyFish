@@ -62,6 +62,20 @@ public class Section {
         }
     }
     
+    func removeCacheIfNeed(withShowingRows: [Int]) {
+        guard let maxValue = withShowingRows.max(), let minValue = withShowingRows.min() else {
+            return
+        }
+        // 缓存中，超出屏幕的view移除
+        let threshold = 10
+        let allKeyToRemove = self.cellCaches.keys.filter { i in
+            return i < minValue - threshold || i > maxValue + threshold
+        }
+        for i in allKeyToRemove {
+            self.cellCaches[i] = nil
+        }
+    }
+    
     // MARK: header footer
     var headerTitleGetter: (() -> String?)?
     var headerViewsGetter: (ViewBuilder.ContentBlock)?

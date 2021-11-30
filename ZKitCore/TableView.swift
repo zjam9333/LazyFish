@@ -160,6 +160,17 @@ extension UITableView {
             }
             return nil
         }
+        
+        // MARK: Cell rolling
+        
+        func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+            let showingRows = tableView.indexPathsForVisibleRows?.map { indexpath in
+                indexpath.row
+            } ?? []
+            let section = sections[indexPath.section]
+            section.removeCacheIfNeed(withShowingRows: showingRows)
+        }
+        
     }
 }
 

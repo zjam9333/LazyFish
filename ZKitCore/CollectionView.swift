@@ -115,6 +115,14 @@ extension UICollectionView {
             collectionView.deselectItem(at: indexPath, animated: true)
         }
         
+        func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+            let showingRows = collectionView.indexPathsForVisibleItems.map { indexpath in
+                indexpath.row
+            }
+            let section = sections[indexPath.section]
+            section.removeCacheIfNeed(withShowingRows: showingRows)
+        }
+        
         /*
         // MARK: Height
         
