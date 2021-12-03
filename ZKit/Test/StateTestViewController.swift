@@ -22,7 +22,28 @@ class StateTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let foodForTitle: (String) -> UILabel = { str in
+            UILabel().text(str).textColor(.black).font(.systemFont(ofSize: 30, weight: .black)).alignment(.center)
+        }
+        let buttonForTitle: (String, @escaping () -> Void) -> UIButton = { str, action in
+            UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
+                .textColor(.black)
+                .textColor(.gray, for: .highlighted)
+                .action {
+                    action()
+                }
+        }
+        let buttonForTitleBinding: (Binding<String>?, @escaping () -> Void) -> UIButton = { str, action in
+            UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
+                .textColor(.black)
+                .textColor(.gray, for: .highlighted)
+                .action {
+                    action()
+                }
+        }
+        
         self.view.arrangeViews {
+            
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 foodForTitle("Tea 🍵")
                 IfBlock($showCake) {
@@ -71,7 +92,7 @@ class StateTestViewController: UIViewController {
                 buttonForTitle("Toggle Animals 🙊") { [weak self] in
                     self?.showAnimals.toggle()
                 }
-                buttonForTitle($sayWhat) { [weak self] in
+                buttonForTitleBinding($sayWhat) { [weak self] in
                     self?.addNum += 1
                     if self?.sayWhat == "Hello" {
                         self?.sayWhat = "World"
@@ -84,25 +105,5 @@ class StateTestViewController: UIViewController {
         }
     }
     
-    func foodForTitle(_ str: String) -> UILabel {
-        UILabel().text(str).textColor(.black).font(.systemFont(ofSize: 30, weight: .black)).alignment(.center)
-    }
     
-    func buttonForTitle(_ str: String, action: @escaping () -> Void) -> UIButton {
-        UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
-            .textColor(.black)
-            .textColor(.gray, for: .highlighted)
-            .action {
-                action()
-            }
-    }
-    
-    func buttonForTitle(_ str: Binding<String>?, action: @escaping () -> Void) -> UIButton {
-        UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
-            .textColor(.black)
-            .textColor(.gray, for: .highlighted)
-            .action {
-                action()
-            }
-    }
 }

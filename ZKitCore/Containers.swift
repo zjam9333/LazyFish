@@ -40,6 +40,7 @@ extension ObserveContainer {
 
 protocol FakeInternalContainer: ObserveContainer {
     var actionWhileMoveToWindow: [() -> Void] { get set }
+    var userCreatedContents: [UIView] { get set }
 }
 
 extension FakeInternalContainer {
@@ -53,27 +54,23 @@ extension FakeInternalContainer {
         }
         return nil
     }
+    
     func excuteAllActionsWhileMoveToWindow() {
         for i in actionWhileMoveToWindow {
             i()
         }
         actionWhileMoveToWindow.removeAll()
     }
-}
 
-extension FakeInternalContainer where Self: UIView {
-    func fakeContainerArranged(@ViewBuilder content: ViewBuilder.ContentBlock) {
-        let views = content()
-        // 如果和stack有关，则拷贝stack的属性
-        if let superStack = self.superview as? UIStackView {
-            self.arrangeViews {
-                InternalLayoutStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
-                    views
-                }.alignment(.allEdges)
+    func didAddToSuperStackView(_ superStack: UIStackView) {
+        if let view = self as? UIView {
+            for i in userCreatedContents {
+                i.removeFromSuperview()
             }
-        } else {
-            self.arrangeViews {
-                views
+            view.arrangeViews {
+                InternalLayoutStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
+                    userCreatedContents
+                }.alignment(.allEdges)
             }
         }
     }
@@ -105,6 +102,7 @@ internal class PaddingContainerView: UIView, ObserveContainer {
 internal class InternalLayoutStackView: UIStackView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     var actionWhileMoveToWindow: [() -> Void] = []
+    var userCreatedContents: [UIView] = []
     override func didMoveToWindow() {
         super.didMoveToWindow()
         excuteAllActionsWhileMoveToWindow()
@@ -141,6 +139,7 @@ public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents:
 internal class ForEachView: UIView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     var actionWhileMoveToWindow: [() -> Void] = []
+    var userCreatedContents: [UIView] = []
     override func didMoveToWindow() {
         super.didMoveToWindow()
         excuteAllActionsWhileMoveToWindow()
@@ -150,10 +149,11 @@ internal class ForEachView: UIView, FakeInternalContainer {
         guard let _ = self.window else {
             return
         }
-        let allSubviews = self.subviews
+        let allSubviews = subviews
         for i in allSubviews {
             i.removeFromSuperview()
         }
+        userCreatedContents.removeAll()
         removeAllSubviewObservations()
         // 重新加载全部！！！如何优化？
         
@@ -168,16 +168,20 @@ internal class ForEachView: UIView, FakeInternalContainer {
             return
         }
         
-        self.fakeContainerArranged {
+        arrangeViews {
             views
         }
+        userCreatedContents.append(contentsOf: views)
+        if let stack = self.superview as? UIStackView {
+            didAddToSuperStackView(stack)
+        }
         
-        for i in self.subviews {
+        for i in userCreatedContents {
             observe(obj: i, keyPath: \.isHidden) { [weak self] isHidden in
-                self?.isHidden = self?.hasNoSubviewShown(self?.subviews ?? []) ?? false
+                self?.isHidden = self?.hasNoSubviewShown(self?.userCreatedContents ?? []) ?? false
             }
         }
-        self.isHidden = self.hasNoSubviewShown(self.subviews)
+        isHidden = hasNoSubviewShown(userCreatedContents)
     }
 }
 
@@ -236,6 +240,7 @@ private func _View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool
 internal class IfBlockView: UIView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     var actionWhileMoveToWindow: [() -> Void] = []
+    var userCreatedContents: [UIView] = []
     override func didMoveToWindow() {
         super.didMoveToWindow()
         excuteAllActionsWhileMoveToWindow()
@@ -247,15 +252,13 @@ internal class IfBlockView: UIView, FakeInternalContainer {
             return nil
         }
         self.init()
-        self.actionWhileMoveToWindow.append {
-            [weak self] in
-            self?.fakeContainerArranged {
-                contents
-            }
+        userCreatedContents = contents
+        arrangeViews {
+            contents
         }
-        for i in self.subviews {
+        for i in userCreatedContents {
             observe(obj: i, keyPath: \.isHidden) { [weak self] isHidden in
-                self?.isHidden = self?.hasNoSubviewShown(self?.subviews ?? []) ?? false
+                self?.isHidden = self?.hasNoSubviewShown(self?.userCreatedContents ?? []) ?? false
             }
         }
     }

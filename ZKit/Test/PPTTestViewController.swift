@@ -12,8 +12,6 @@ class PPTTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let title = "姓名"
-        let summary = "摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要"
         self.view.arrangeViews {
             UIView {
                 UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
@@ -21,19 +19,18 @@ class PPTTestViewController: UIViewController {
                         .frame(width: 64, height: 64)
                         .cornerRadius(32)
                     UIStackView(axis: .vertical, spacing: 12) {
-                        UILabel(title)
+                        UILabel("姓名")
                             .font(.systemFont(ofSize: 20, weight: .bold))
-                        UILabel(summary)
-                            .font(.systemFont(ofSize: 16, weight: .regular)).numberOfLines(0)
+                        UILabel("摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘")
+                            .font(.systemFont(ofSize: 16, weight: .regular))
+                            .numberOfLines(0)
                     }
                 }
                 .padding(16).alignment(.allEdges)
             }
             .cornerRadius(20)
             .backgroundColor(.init(white: 0.9, alpha: 1))
-            .padding(top: 100)
-            .alignment([.top, .leading], value: 16)
-            .alignment(.trailing, value: -64)
+            .alignment(.center).alignment(.leading, value: 10)
         }
         // Do any additional setup after loading the view.
     }

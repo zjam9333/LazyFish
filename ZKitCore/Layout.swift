@@ -119,7 +119,10 @@ public extension UIView {
             container.translatesAutoresizingMaskIntoConstraints = false
             if let stack = self as? UIStackView {
                 stack.addArrangedSubview(container)
-                // 在stack中不用操心对齐问题
+                // 针对stackview作为superview的IfBlock、ForEach等FakeInternalContainer
+                if let fakeContainer = container as? FakeInternalContainer {
+                    fakeContainer.didAddToSuperStackView(stack)
+                }
             } else {
                 self.addSubview(container)
                 if ignoreAlignments == false && !alignment.isEmpty {
