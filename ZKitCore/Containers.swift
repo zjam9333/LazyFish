@@ -127,12 +127,12 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
 
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
     let container = ForEachView()
-    models?.wrapper.addObserver { [weak container] changed in
+    models?.wrapper.addObserver(target: container) { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
-    container.actionWhileMoveToWindow.append { [weak container] in
-        container?.reloadSubviews(models?.wrapper.wrappedValue ?? [], contentBuilder: contents)
-    }
+//    container.actionWhileMoveToWindow.append { [weak container] in
+//        container?.reloadSubviews(models?.wrapper.wrappedValue ?? [], contentBuilder: contents)
+//    }
     return container
 }
 
@@ -146,9 +146,9 @@ internal class ForEachView: UIView, FakeInternalContainer {
     }
     
     func reloadSubviews<T>(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
-        guard let _ = self.window else {
-            return
-        }
+//        guard let _ = self.window else {
+//            return
+//        }
         let allSubviews = subviews
         for i in allSubviews {
             i.removeFromSuperview()
@@ -217,24 +217,31 @@ private func _No_View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> B
 
 // new ifblock using container
 private func _View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    let ifview = IfBlockView(ifBlockContents: contentIf)
-    let elseview = IfBlockView(ifBlockContents: contentElse)
+    let ifview = IfBlockView(conditionContents: contentIf)
+    let elseview = ElseBlockView(conditionContents: contentElse)
     if ifview == nil && elseview == nil {
         return []
     }
-    observe?.wrapper.addObserver { [weak ifview, weak elseview] changed in
-        let present = map(changed.new)
-        ifview?.isHidden = !present
-        elseview?.isHidden = present
-    }
     var views = [UIView]()
     if let ifview = ifview {
+        observe?.wrapper.addObserver(target: ifview) { [weak ifview] changed in
+            let present = map(changed.new)
+            ifview?.isHidden = !present
+        }
         views.append(ifview)
     }
     if let elseview = elseview {
+        observe?.wrapper.addObserver(target: elseview) { [weak elseview] changed in
+            let present = map(changed.new)
+            elseview?.isHidden = present
+        }
         views.append(elseview)
     }
     return views
+}
+
+internal class ElseBlockView: IfBlockView {
+    
 }
 
 internal class IfBlockView: UIView, FakeInternalContainer {
@@ -246,8 +253,8 @@ internal class IfBlockView: UIView, FakeInternalContainer {
         excuteAllActionsWhileMoveToWindow()
     }
     
-    convenience init?(@ViewBuilder ifBlockContents: ViewBuilder.ContentBlock) {
-        let contents = ifBlockContents()
+    convenience init?(@ViewBuilder conditionContents: ViewBuilder.ContentBlock) {
+        let contents = conditionContents()
         if contents.isEmpty {
             return nil
         }

@@ -33,6 +33,13 @@ public extension UILabel {
     }
 }
 
+public extension UIButton {
+    convenience init(_ text: String) {
+        self.init()
+        _ = self.text(text)
+    }
+}
+
 public extension UIScrollView {
     internal var zk_scrollViewDelegate: Delegate {
         set {

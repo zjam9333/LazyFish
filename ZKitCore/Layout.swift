@@ -50,16 +50,11 @@ public extension UIView {
         return paddingView
     }
     
-    internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView?) {
+    internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView) {
         if let targetSuper = target as? FakeInternalContainer {
-            // ScrollView -> StackView -> self，fillParent逻辑需要知道ScrollView的存在，但此时无法获得
-            // 因此在StackView被添加到ScrollView时才立即处理sizeFill逻辑
-//            targetSuper.appendActionForDidMoveToSuperview { [weak self] superSuperView in
-//                self?.private_zk_sizeFill(width: width, height: height, target: superSuperView)
-//            }
-            targetSuper.actionWhileMoveToWindow.append {
+            targetSuper.actionWhileMoveToWindow.append { [weak self] in
                 if let superSuperView = targetSuper.seekTrullyContainer() {
-                    self.private_zk_sizeFill(width: width, height: height, target: superSuperView)
+                    self?.private_zk_sizeFill(width: width, height: height, target: superSuperView)
                 }
             }
         } else {
@@ -67,18 +62,21 @@ public extension UIView {
         }
     }
     
-    private func private_zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView?) {
+    private func private_zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView) {
+        guard self.isDescendant(of: target) else {
+            return
+        }
         if let si = width {
             if case .equalTo(let size) = si {
                 self.widthAnchor.constraint(equalToConstant: size).isActive = true
-            } else if case .fillParent(let mul, let con) = si, let target = target {
+            } else if case .fillParent(let mul, let con) = si {
                 self.widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
         if let si = height {
             if case .equalTo(let size) = si {
                 self.heightAnchor.constraint(equalToConstant: size).isActive = true
-            } else if case .fillParent(let mul, let con) = si, let target = target {
+            } else if case .fillParent(let mul, let con) = si {
                 self.heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
