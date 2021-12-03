@@ -26,6 +26,13 @@ public extension UIView {
     }
 }
 
+public extension UILabel {
+    convenience init(_ text: String) {
+        self.init()
+        _ = self.text(text)
+    }
+}
+
 public extension UIScrollView {
     internal var zk_scrollViewDelegate: Delegate {
         set {

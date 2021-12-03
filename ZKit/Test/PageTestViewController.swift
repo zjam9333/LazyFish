@@ -51,7 +51,7 @@ class PageTestViewController: UIViewController {
                         IfBlock(self?.$currentPage) { currentPage in
 //                    for i in 0..<pageCount {
 //                        IfBlock($currentPage) { currentPage in
-                            return Int(currentPage + 0.5) == i
+                            return Int(currentPage + 0.5) == self?.pages.firstIndex(of: i) ?? 0
                         } contentIf: {
                             UIView().backgroundColor(UIColor(white: 0.7, alpha: 1)).frame(width: ballWidth * 2, height: ballWidth)
                                 .cornerRadius(ballWidth / 2)

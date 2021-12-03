@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         
         typealias VCModel = (name: String, classType: UIViewController.Type)
         var testClasses: [VCModel] = [
+            ("PPT Test", PPTTestViewController.self),
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),

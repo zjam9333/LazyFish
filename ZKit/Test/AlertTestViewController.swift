@@ -34,7 +34,7 @@ fileprivate struct AlertAction {
     let style: AlertStyle
     let action: () -> Void
 }
-fileprivate typealias AlertActionBuilder = ResultBuilder<AlertAction>
+fileprivate typealias AlertActionBuilder = ArrayBuilder<AlertAction>
 
 fileprivate class TestAlertView: UIView {
     

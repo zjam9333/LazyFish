@@ -11,7 +11,7 @@ import UIKit
 public extension UICollectionView {
     
     // 若干个section
-    convenience init(@ResultBuilder<Section> sectionBuilder: ResultBuilder<Section>.ContentBlock) {
+    convenience init(@ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: 100, height: 100)
         self.init(frame: .zero, collectionViewLayout: layout)

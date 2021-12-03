@@ -128,7 +128,7 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
 }
 
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
-    let container = ForEachView<T>()
+    let container = ForEachView()
     models?.wrapper.addObserver { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
@@ -138,7 +138,7 @@ public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents:
     return container
 }
 
-internal class ForEachView<T>: UIView, FakeInternalContainer {
+internal class ForEachView: UIView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     var actionWhileMoveToWindow: [() -> Void] = []
     override func didMoveToWindow() {
@@ -146,7 +146,7 @@ internal class ForEachView<T>: UIView, FakeInternalContainer {
         excuteAllActionsWhileMoveToWindow()
     }
     
-    func reloadSubviews(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
+    func reloadSubviews<T>(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
         guard let _ = self.window else {
             return
         }

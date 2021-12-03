@@ -10,7 +10,7 @@ import UIKit
 public extension UITableView {
     
     // 若干个section
-    convenience init(style: Style, @ResultBuilder<Section> sectionBuilder: ResultBuilder<Section>.ContentBlock) {
+    convenience init(style: Style, @ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
         self.init(frame: .zero, style: style)
         let delegate = DataSourceDelegate()
         self.delegate = delegate
