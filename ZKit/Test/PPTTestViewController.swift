@@ -13,24 +13,44 @@ class PPTTestViewController: UIViewController {
         super.viewDidLoad()
 
         view.arrangeViews {
-            UIView {
+            let title = UIView {
                 UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
                     UIView().backgroundColor(.white)
                         .frame(width: 64, height: 64)
                         .cornerRadius(32)
                     UIStackView(axis: .vertical, spacing: 12) {
-                        UILabel("姓名")
+                        UILabel("姓名：杨过")
                             .font(.systemFont(ofSize: 20, weight: .bold))
-                        UILabel("摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘要摘")
+                        UILabel("年龄：18")
                             .font(.systemFont(ofSize: 16, weight: .regular))
-                            .numberOfLines(0)
+                        UILabel("流派：武当")
+                            .font(.systemFont(ofSize: 16, weight: .regular))
                     }
                 }
                 .padding(16).alignment(.allEdges)
             }
             .cornerRadius(20)
             .backgroundColor(.init(white: 0.9, alpha: 1))
-            .alignment(.center).alignment(.leading, value: 10)
+            
+            let message = UIView {
+                UIStackView(axis: .vertical, spacing: 16) {
+                    UILabel("详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明")
+                        .font(.systemFont(ofSize: 16, weight: .regular))
+                        .numberOfLines(0)
+                }
+                .padding(16).alignment(.allEdges)
+            }
+            .cornerRadius(20)
+            .backgroundColor(.init(white: 0.9, alpha: 1))
+            
+            UIScrollView(.vertical, spacing: 12) {
+                title
+                message
+            }
+            .alignment(.allEdges)
+            .bounce(.vertical)
+            .padding(20)
+//            .alignment(.center).alignment(.leading, value: 10)
         }
         // Do any additional setup after loading the view.
     }

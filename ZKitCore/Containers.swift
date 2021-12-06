@@ -136,19 +136,24 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
 
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
     let container = ForEachView()
+        .alignment(.allEdges)
     models?.wrapper.addObserver(target: container) { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
     return container
 }
 
-internal class ForEachView: UIView, FakeInternalContainer {
+internal class ForEachView: TouchIgnoreContainerView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     var actionWhileMoveToWindow: [() -> Void] = []
     var userCreatedContents: [UIView] = []
     override func didMoveToWindow() {
         super.didMoveToWindow()
         excuteAllActionsWhileMoveToWindow()
+    }
+    
+    override var viewsAcceptedTouches: [UIView] {
+        return userCreatedContents
     }
     
     func reloadSubviews<T>(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
@@ -220,8 +225,10 @@ private func _No_View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> B
 
 // new ifblock using container
 private func _View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    let ifview = IfBlockView(conditionContents: contentIf)
-    let elseview = ElseBlockView(conditionContents: contentElse)
+    let ifview = IfBlockView(conditionContents: contentIf)?
+        .alignment(.allEdges)
+    let elseview = ElseBlockView(conditionContents: contentElse)?
+        .alignment(.allEdges)
     if ifview == nil && elseview == nil {
         return []
     }
@@ -247,10 +254,15 @@ internal class ElseBlockView: IfBlockView {
     
 }
 
-internal class IfBlockView: UIView, FakeInternalContainer {
+internal class IfBlockView: TouchIgnoreContainerView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     var actionWhileMoveToWindow: [() -> Void] = []
     var userCreatedContents: [UIView] = []
+    
+    override var viewsAcceptedTouches: [UIView] {
+        return userCreatedContents
+    }
+    
     override func didMoveToWindow() {
         super.didMoveToWindow()
         excuteAllActionsWhileMoveToWindow()
@@ -271,5 +283,42 @@ internal class IfBlockView: UIView, FakeInternalContainer {
                 self?.isHidden = self?.hasNoSubviewShown(self?.userCreatedContents ?? []) ?? false
             }
         }
+    }
+}
+
+internal class TouchIgnoreContainerView: UIView {
+    private var ignoringTouch = false
+    
+    var viewsAcceptedTouches: [UIView] {
+        return []
+    }
+    var viewsIgnoredTouches: [UIView] {
+        return [self]
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if ignoringTouch {
+            ignoringTouch = false
+            return nil
+        }
+        let superHit = super.hitTest(point, with: event)
+        for i in viewsAcceptedTouches {
+            if superHit?.isDescendant(of: i) ?? false {
+                return superHit
+            }
+        }
+
+        for i in viewsIgnoredTouches {
+            if superHit?.isDescendant(of: i) ?? false {
+                ignoringTouch = true
+                let superviewHitAgain = superview?.hitTest(point, with: event)
+                ignoringTouch = false
+                if let superviewHitAgain = superviewHitAgain {
+                    return superviewHitAgain
+                }
+                break
+            }
+        }
+        return superHit
     }
 }
