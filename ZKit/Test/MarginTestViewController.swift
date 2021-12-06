@@ -11,7 +11,7 @@ class MarginTestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIView {
                 UIView {
                     UIView {

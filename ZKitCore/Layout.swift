@@ -12,26 +12,35 @@ public extension UIView {
     internal func zk_alignSubview(_ subview: UIView, alignment: [Edge: CGFloat]) {
         // 对齐
         if let const = alignment[.centerY] {
-            subview.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: const).isActive = true
+            subview.centerYAnchor.constraint(equalTo: centerYAnchor, constant: const).isActive = true
         }
         if let const = alignment[.centerX] {
-            subview.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: const).isActive = true
+            subview.centerXAnchor.constraint(equalTo: centerXAnchor, constant: const).isActive = true
         }
         if let const = alignment[.leading] {
-            subview.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: const).isActive = true
+            subview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: const).isActive = true
         }
         if let const = alignment[.trailing] {
-            subview.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: const).isActive = true
+            subview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: const).isActive = true
         }
         if let const = alignment[.top] {
-            subview.topAnchor.constraint(equalTo: self.topAnchor, constant: const).isActive = true
+            subview.topAnchor.constraint(equalTo: topAnchor, constant: const).isActive = true
         }
         if let const = alignment[.bottom] {
-            subview.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: const).isActive = true
+            subview.bottomAnchor.constraint(equalTo: bottomAnchor, constant: const).isActive = true
         }
     }
     
-    internal func zk_containerPaddingIfNeed(attributes: [Attribute._Attribute]) -> UIView {
+    internal func zk_containerPaddingIfNeed(padding: EdgeValuePair, offset: CGPoint) -> UIView {
+        if padding.isEmpty && offset == .zero {
+            return self
+        }
+        let paddingContainer = PaddingContainerView()
+        paddingContainer.addContentView(self, padding: padding, offset: offset)
+        return paddingContainer
+    }
+    
+    internal func old_descre_zk_containerPaddingIfNeed(attributes: [Attribute._Attribute]) -> UIView {
         var paddingView = self
         for i in attributes {
             switch i {
@@ -52,32 +61,33 @@ public extension UIView {
     
     internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView) {
         if let targetSuper = target as? FakeInternalContainer {
-            targetSuper.actionWhileMoveToWindow.append { [weak self] in
+            targetSuper.excuteActionWhileMoveToWindow { [weak self] in
+                // 如果一个view有window，那么一定有superview？
                 if let superSuperView = targetSuper.seekTrullyContainer() {
                     self?.private_zk_sizeFill(width: width, height: height, target: superSuperView)
                 }
             }
         } else {
-            self.private_zk_sizeFill(width: width, height: height, target: target)
+            private_zk_sizeFill(width: width, height: height, target: target)
         }
     }
     
     private func private_zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView) {
-        guard self.isDescendant(of: target) else {
+        guard isDescendant(of: target) else {
             return
         }
         if let si = width {
             if case .equalTo(let size) = si {
-                self.widthAnchor.constraint(equalToConstant: size).isActive = true
+                widthAnchor.constraint(equalToConstant: size).isActive = true
             } else if case .fillParent(let mul, let con) = si {
-                self.widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
+                widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
         if let si = height {
             if case .equalTo(let size) = si {
-                self.heightAnchor.constraint(equalToConstant: size).isActive = true
+                heightAnchor.constraint(equalToConstant: size).isActive = true
             } else if case .fillParent(let mul, let con) = si {
-                self.heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
+                heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
     }
@@ -94,7 +104,8 @@ public extension UIView {
             var alignment: EdgeValuePair = [:]
             var widthFill: SizeFill?
             var heightFill: SizeFill?
-            var padding: [Attribute._Attribute] = []
+            var padding = EdgeValuePair()
+            var offset = CGPoint.zero
             for i in attribute.attrs {
                 switch i {
                 case .width(let w):
@@ -105,15 +116,19 @@ public extension UIView {
                     for (k, v) in ali {
                         alignment[k] = v
                     }
-                case .offset, .padding:
-                    padding.append(i)
+                case .padding(let pad):
+                    for (k, v) in pad {
+                        padding[k] = v
+                    }
+                case .offset(let point):
+                    offset = point
                 case .onAppear(let block):
                     allActionsOnAppear.append {
                         block?(view)
                     }
                 }
             }
-            let container = view.zk_containerPaddingIfNeed(attributes: padding)
+            let container = view.zk_containerPaddingIfNeed(padding: padding, offset: offset)
             container.translatesAutoresizingMaskIntoConstraints = false
             if let stack = self as? UIStackView {
                 stack.addArrangedSubview(container)
@@ -122,9 +137,9 @@ public extension UIView {
                     fakeContainer.didAddToSuperStackView(stack)
                 }
             } else {
-                self.addSubview(container)
+                addSubview(container)
                 if ignoreAlignments == false && !alignment.isEmpty {
-                    self.zk_alignSubview(container, alignment: alignment)
+                    zk_alignSubview(container, alignment: alignment)
                 }
             }
             

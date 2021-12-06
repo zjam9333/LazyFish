@@ -19,7 +19,7 @@ class PageTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 UIScrollView(.horizontal) {
                     ForEachEnumerated($pages) { i, name in

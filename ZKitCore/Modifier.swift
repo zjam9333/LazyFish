@@ -16,32 +16,32 @@ import UIKit
 public extension UIView {
     
     func backgroundColor(_ color: UIColor) -> Self {
-        self.backgroundColor = color
+        backgroundColor = color
         return self
     }
     
     func cornerRadius(_ cornerRadius: CGFloat) -> Self {
-        self.layer.cornerRadius = cornerRadius
+        layer.cornerRadius = cornerRadius
         return self
     }
     
     func clipped() -> Self {
-        self.layer.masksToBounds = true
+        layer.masksToBounds = true
         return self
     }
     
     func borderColor(_ color: UIColor) -> Self {
-        self.layer.borderColor = color.cgColor
+        layer.borderColor = color.cgColor
         return self
     }
     
     func borderWidth(_ width: CGFloat) -> Self {
-        self.layer.borderWidth = width >= 0 ? width : 0
+        layer.borderWidth = width >= 0 ? width : 0
         return self
     }
     
     func border(width: CGFloat, color: UIColor) -> Self {
-        return self.borderWidth(width).borderColor(color)
+        return borderWidth(width).borderColor(color)
     }
     
 //    func store(in view: inout UIView?) -> Self {
@@ -57,17 +57,17 @@ public extension UILabel {
     }
     
     func textColor(_ color: UIColor) -> Self {
-        self.textColor = color
+        textColor = color
         return self
     }
     
     func textAlignment(_ alignment: NSTextAlignment) -> Self {
-        self.textAlignment = alignment
+        textAlignment = alignment
         return self
     }
     
     func numberOfLines(_ lines: Int) -> Self {
-        self.numberOfLines = lines
+        numberOfLines = lines
         return self
     }
     
@@ -86,8 +86,8 @@ public extension UIControl {
     }
     
     func action(for event: Event = .touchUpInside, _ action: @escaping ActionBlock) -> Self {
-        self.zk_actionBlock = action
-        self.addTarget(self, action: #selector(zk_selfTapAction), for: event)
+        zk_actionBlock = action
+        addTarget(self, action: #selector(zk_selfTapAction), for: event)
         return self
     }
     
@@ -103,29 +103,29 @@ public extension UIControl {
     }
     
     @objc private func zk_selfTapAction() {
-        self.zk_actionBlock?()
+        zk_actionBlock?()
     }
     
     func textAlignment(_ alignment: ContentHorizontalAlignment) -> Self {
-        self.contentHorizontalAlignment = alignment
+        contentHorizontalAlignment = alignment
         return self
     }
 }
 
 public extension UIButton {
     func font(_ font: UIFont) -> Self {
-        self.titleLabel?.font = font
+        titleLabel?.font = font
         return self
     }
     
     // states
     func text(_ text: String, for state: UIControl.State = .normal) -> Self {
-        self.setTitle(text, for: state)
+        setTitle(text, for: state)
         return self
     }
     
     func textColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self {
-        self.setTitleColor(color, for: state)
+        setTitleColor(color, for: state)
         return self
     }
 }
@@ -133,26 +133,26 @@ public extension UIButton {
 public extension UIScrollView {
     func bounce(_ axis: NSLayoutConstraint.Axis, bounce: Bool = true) -> Self {
         if axis == .vertical {
-            self.alwaysBounceVertical = bounce
+            alwaysBounceVertical = bounce
         } else if axis == .horizontal {
-            self.alwaysBounceHorizontal = bounce
+            alwaysBounceHorizontal = bounce
         }
         return self
     }
     
     func pageEnabled(_ enabled: Bool) -> Self {
-        self.isPagingEnabled = enabled
+        isPagingEnabled = enabled
         return self
     }
     
     func contentOffsetObserve(handler: @escaping (CGPoint) -> Void) -> Self {
-        self.zk_scrollViewDelegate.scrollDidScrollHandler = handler
-        self.delegate = self.zk_scrollViewDelegate
+        zk_scrollViewDelegate.scrollDidScrollHandler = handler
+        delegate = zk_scrollViewDelegate
         return self
     }
     
     func pageObserve(handler: @escaping (CGFloat) -> Void) -> Self {
-        return self.contentOffsetObserve { [weak self] point in
+        return contentOffsetObserve { [weak self] point in
             if let size = self?.frame.size.width, size > 0 {
                 let page = point.x / size
                 handler(page)
@@ -163,12 +163,12 @@ public extension UIScrollView {
 
 public extension UITextField {
     func textColor(_ color: UIColor) -> Self {
-        self.textColor = color
+        textColor = color
         return self
     }
     
     func textAlignment(_ alignment: NSTextAlignment) -> Self {
-        self.textAlignment = alignment
+        textAlignment = alignment
         return self
     }
     
@@ -218,14 +218,14 @@ public extension UITextField {
     }
     
     @objc private func selfTextDidChanged() {
-        self.zk_textBlock?(self.text ?? "")
+        zk_textBlock?(text ?? "")
     }
     
     func text(binding text: Binding<String>?) -> Self {
-        self.addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
+        addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
         let state = text?.wrapper
         var shouldObserve = true
-        self.zk_textBlock = { [weak state] text in
+        zk_textBlock = { [weak state] text in
             shouldObserve = false
             state?.wrappedValue = text
             shouldObserve = true
@@ -239,7 +239,7 @@ public extension UITextField {
     }
     
     func borderStyle(_ style: BorderStyle) -> Self {
-        self.borderStyle = style
+        borderStyle = style
         return self
     }
 }

@@ -42,7 +42,7 @@ class StateTestViewController: UIViewController {
                 }
         }
         
-        self.view.arrangeViews {
+        view.arrangeViews {
             
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 foodForTitle("Tea 🍵")

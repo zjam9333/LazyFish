@@ -19,7 +19,7 @@ class ForEachScrollTestViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.arrangeViews { [weak self] in
+        view.arrangeViews { [weak self] in
             UIScrollView (.vertical, spacing: 10) {
                 // section 1
                 UILabel().text("Header").backgroundColor(.lightGray)

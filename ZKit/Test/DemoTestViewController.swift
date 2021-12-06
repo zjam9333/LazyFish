@@ -17,7 +17,7 @@ class DemoTestViewController: UIViewController {
             return color
         }
 
-        self.view.arrangeViews {
+        view.arrangeViews {
             UITableView(style: .plain, array: Array(0..<100)) { row in
                     UIView {
                         UIStackView(axis: .horizontal, alignment: .center, spacing: 10) {

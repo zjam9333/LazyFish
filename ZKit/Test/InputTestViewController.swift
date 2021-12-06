@@ -14,12 +14,12 @@ class InputTestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIView() {
                 UIStackView(axis: .vertical, spacing: 10) {
                     UILabel().text("your input:")
-                    UILabel().text(binding: self.$text)
-                    UITextField().text(binding: self.$text).borderStyle(.roundedRect)
+                    UILabel().text(binding: $text)
+                    UITextField().text(binding: $text).borderStyle(.roundedRect)
                 }
                 .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
                 .alignment(.allEdges)

@@ -69,21 +69,17 @@ internal enum AssociatedKey {
 public extension UIView {
 
     func onAppear(_ action: @escaping OnAppearBlock) -> Self {
-        self.zk_attribute.attrs.append(.onAppear(action))
+        zk_attribute.attrs.append(.onAppear(action))
         return self
     }
     
     internal var zk_attribute: Attribute {
-        set {
-            let obj = newValue
-            objc_setAssociatedObject(self, &AssociatedKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
         get {
             if let obj = objc_getAssociatedObject(self, &AssociatedKey.attributeKey) as? Attribute {
                 return obj
             }
             let newone = Attribute()
-            self.zk_attribute = newone
+            objc_setAssociatedObject(self, &AssociatedKey.attributeKey, newone, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return newone
         }
     }
@@ -100,7 +96,7 @@ public extension UIView {
     }
     
     func frame(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
-        let att = self.zk_attribute
+        let att = zk_attribute
         if let w = width {
             att.attrs.append(.width(.equalTo(w)))
         }
@@ -111,7 +107,7 @@ public extension UIView {
     }
     
     func frame(width: SizeFill = .unknown, height: SizeFill = .unknown) -> Self {
-        let att = self.zk_attribute
+        let att = zk_attribute
         att.attrs.append(.width(width))
         att.attrs.append(.height(height))
         return self
@@ -140,7 +136,7 @@ public extension UIView {
         if edges.isEmpty {
             return self
         }
-        self.zk_attribute.attrs.append(.alignment(align))
+        zk_attribute.attrs.append(.alignment(align))
         return self
     }
     
@@ -150,7 +146,7 @@ public extension UIView {
         if p == .zero {
             return self
         }
-        self.zk_attribute.attrs.append(.offset(p))
+        zk_attribute.attrs.append(.offset(p))
         return self
     }
     
@@ -164,11 +160,11 @@ public extension UIView {
         if mar.isEmpty {
             return self
         }
-        self.zk_attribute.attrs.append(.padding(mar))
+        zk_attribute.attrs.append(.padding(mar))
         return self
     }
     
     func padding(_ pad: CGFloat) -> Self {
-        return self.padding(top: pad, leading: pad, bottom: pad, trailing: pad)
+        return padding(top: pad, leading: pad, bottom: pad, trailing: pad)
     }
 }

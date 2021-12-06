@@ -15,12 +15,12 @@ public extension UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: 100, height: 100)
         self.init(frame: .zero, collectionViewLayout: layout)
-        self.bounces = true
-        self.alwaysBounceVertical = true
+        bounces = true
+        alwaysBounceVertical = true
         let delegate = DataSourceDelegate(collectionView: self)
         self.delegate = delegate
         self.dataSource = delegate
-        self.zk_collectionViewViewDelegate = delegate
+        zk_collectionViewViewDelegate = delegate
         delegate.sections = sectionBuilder()
         for (offset, element) in delegate.sections.enumerated() {
             element.didUpdate = { [weak self] in
@@ -67,14 +67,14 @@ extension UICollectionView {
     
     class WasteSpaceCollectionViewCell: UICollectionViewCell {
         func remakeSubviews(_ views: [UIView]) {
-            let olds = self.contentView.subviews
+            let olds = contentView.subviews
             for i in olds {
                 i.removeFromSuperview()
             }
             for i in views {
                 i.removeFromSuperview()
             }
-            self.contentView.arrangeViews {
+            contentView.arrangeViews {
                 views
             }
             // TODO: 反复移除添加必然造成浪费

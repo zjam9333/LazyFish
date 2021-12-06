@@ -12,7 +12,7 @@ class PPTTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIView {
                 UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
                     UIView().backgroundColor(.white)

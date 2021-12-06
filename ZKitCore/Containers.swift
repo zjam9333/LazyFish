@@ -55,11 +55,20 @@ extension FakeInternalContainer {
         return nil
     }
     
-    func excuteAllActionsWhileMoveToWindow() {
+    fileprivate func excuteAllActionsWhileMoveToWindow() {
         for i in actionWhileMoveToWindow {
             i()
         }
         actionWhileMoveToWindow.removeAll()
+    }
+    
+    func excuteActionWhileMoveToWindow(_ action: @escaping () -> Void) {
+        guard let view = self as? UIView, let _ = view.window else {
+            actionWhileMoveToWindow.append(action)
+            return
+        }
+        // 已有window，立即执行
+        action()
     }
 
     func didAddToSuperStackView(_ superStack: UIStackView) {
@@ -79,7 +88,7 @@ extension FakeInternalContainer {
 internal class PaddingContainerView: UIView, ObserveContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
     func addContentView(_ content: UIView, padding: [Edge: CGFloat] = [:], offset: CGPoint = .zero) {
-        self.addSubview(content)
+        addSubview(content)
         observe(obj: content, keyPath: \.isHidden) { [weak self] isHidden in
             self?.isHidden = self?.hasNoSubviewShown(self?.subviews ?? []) ?? false
         }
@@ -92,10 +101,10 @@ internal class PaddingContainerView: UIView, ObserveContainer {
         let leading = offset.x + (padding[.leading] ?? 0)
         let trailing = offset.x - (padding[.trailing] ?? 0)
         
-        content.topAnchor.constraint(equalTo: self.topAnchor, constant: top).isActive = true
-        content.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottom).isActive = true
-        content.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leading).isActive = true
-        content.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: trailing).isActive = true
+        content.topAnchor.constraint(equalTo: topAnchor, constant: top).isActive = true
+        content.bottomAnchor.constraint(equalTo: bottomAnchor, constant: bottom).isActive = true
+        content.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leading).isActive = true
+        content.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailing).isActive = true
     }
 }
 
@@ -130,9 +139,6 @@ public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents:
     models?.wrapper.addObserver(target: container) { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
-//    container.actionWhileMoveToWindow.append { [weak container] in
-//        container?.reloadSubviews(models?.wrapper.wrappedValue ?? [], contentBuilder: contents)
-//    }
     return container
 }
 
@@ -146,9 +152,6 @@ internal class ForEachView: UIView, FakeInternalContainer {
     }
     
     func reloadSubviews<T>(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
-//        guard let _ = self.window else {
-//            return
-//        }
         let allSubviews = subviews
         for i in allSubviews {
             i.removeFromSuperview()
@@ -164,7 +167,7 @@ internal class ForEachView: UIView, FakeInternalContainer {
         }
         
         if views.isEmpty {
-            self.isHidden = true
+            isHidden = true
             return
         }
         
@@ -172,7 +175,7 @@ internal class ForEachView: UIView, FakeInternalContainer {
             views
         }
         userCreatedContents.append(contentsOf: views)
-        if let stack = self.superview as? UIStackView {
+        if let stack = superview as? UIStackView {
             didAddToSuperStackView(stack)
         }
         

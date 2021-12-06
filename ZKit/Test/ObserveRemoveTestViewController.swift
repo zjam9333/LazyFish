@@ -16,7 +16,7 @@ class ObserveRemoveTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIStackView(axis: .vertical, spacing: 5) {
                 UILabel("Check the @State observers count after refresh Objects")
                     .numberOfLines(0)

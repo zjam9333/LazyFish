@@ -16,7 +16,7 @@ public class Section {
     var didClick: ((Int) -> Void)?
     
     public init<T>(_ array: [T], @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
-        self.resetArray(array, cellContent: cellContent, action: action)
+        resetArray(array, cellContent: cellContent, action: action)
     }
     
     public init<T>(binding: Binding<[T]>?, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
@@ -36,9 +36,9 @@ public class Section {
     private var cellCaches = [Int: Cache]()
     
     private func resetArray<T>(_ array: [T], @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
-        self.cellCaches.removeAll()
-        self.rowCount = array.count
-        self.viewsForRow = { [weak self] row in
+        cellCaches.removeAll()
+        rowCount = array.count
+        viewsForRow = { [weak self] row in
             // TODO: - 这里需要做一个缓存机制！！
             // TODO: - 但是缓存了又如何刷新内部view的内容（文案、图片等）？？
             // 直接重新创建subviews，简单粗暴，浪费时间
@@ -56,7 +56,7 @@ public class Section {
             }
             return cacheContents
         }
-        self.didClick = { row in
+        didClick = { row in
             let obj = array[row]
             action?(obj)
         }
@@ -68,11 +68,11 @@ public class Section {
         }
         // 缓存中，超出屏幕的view移除
         let threshold = 10
-        let allKeyToRemove = self.cellCaches.keys.filter { i in
+        let allKeyToRemove = cellCaches.keys.filter { i in
             return i < minValue - threshold || i > maxValue + threshold
         }
         for i in allKeyToRemove {
-            self.cellCaches[i] = nil
+            cellCaches[i] = nil
         }
     }
     
@@ -83,22 +83,22 @@ public class Section {
     var footerViewsGetter: (ViewBuilder.ContentBlock)?
     
     public func headerTitle(getter: @escaping () -> String?) -> Self {
-        self.headerTitleGetter = getter
+        headerTitleGetter = getter
         return self
     }
     
     public func headerViews(@ViewBuilder getter: @escaping ViewBuilder.ContentBlock) -> Self {
-        self.headerViewsGetter = getter
+        headerViewsGetter = getter
         return self
     }
     
     public func footerTitle(getter: @escaping () -> String?) -> Self {
-        self.footerTitleGetter = getter
+        footerTitleGetter = getter
         return self
     }
     
     public func footerViews(@ViewBuilder getter: @escaping ViewBuilder.ContentBlock) -> Self {
-        self.footerViewsGetter = getter
+        footerViewsGetter = getter
         return self
     }
 }

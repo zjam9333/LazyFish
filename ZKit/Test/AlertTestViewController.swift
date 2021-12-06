@@ -118,8 +118,8 @@ fileprivate class TestAlertView: UIView {
     }
 
     func testShow() {
-        let mySelfAlert = self.arrangeViews {
-            self.alertContent
+        let mySelfAlert = arrangeViews {
+            alertContent
         }
         .alignment(.allEdges)
         .backgroundColor(.black.withAlphaComponent(0.3))
@@ -134,7 +134,7 @@ class AlertTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIButton()
                 .text("Show an Alert", for: .normal)
                 .textColor(.black)

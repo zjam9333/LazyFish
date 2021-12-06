@@ -14,7 +14,7 @@ class TableViewTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.arrangeViews {
+        view.arrangeViews {
             UITableView(style: .grouped) {
                 // 动态section
                 Section(binding: $arr) { str in
@@ -72,18 +72,18 @@ class TableViewTestViewController: UIViewController {
         }
         // Do any additional setup after loading the view.
         
-        self.navigationItem.rightBarButtonItems = [
+        navigationItem.rightBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewObject)),
             UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(cleanObjects))
         ]
     }
     
     @objc func addNewObject() {
-        self.arr.append(Int.random(in: 0...255))
+        arr.append(Int.random(in: 0...255))
     }
     
     @objc func cleanObjects() {
-        self.arr.removeAll()
+        arr.removeAll()
     }
 
     /*

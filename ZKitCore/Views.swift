@@ -15,14 +15,14 @@ public extension UIStackView {
         self.distribution = distribution
         self.alignment = alignment
         self.spacing = spacing
-        self.arrangeViews(content)
+        arrangeViews(content)
     }
 }
 
 public extension UIView {
     convenience init(_ comment: String = "nothing", @ViewBuilder content: ViewBuilder.ContentBlock) {
         self.init()
-        self.arrangeViews(content)
+        arrangeViews(content)
     }
 }
 
@@ -60,7 +60,7 @@ public extension UIScrollView {
         static var attributeKey: Int = 0
         var scrollDidScrollHandler: ((CGPoint) -> Void)?
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            self.scrollDidScrollHandler?(scrollView.contentOffset)
+            scrollDidScrollHandler?(scrollView.contentOffset)
         }
     }
     
@@ -69,11 +69,11 @@ public extension UIScrollView {
         
         let views = content()
         if direction == .vertical {
-            self.showsHorizontalScrollIndicator = false
+            showsHorizontalScrollIndicator = false
         } else {
-            self.showsVerticalScrollIndicator = false
+            showsVerticalScrollIndicator = false
         }
-        self.arrangeViews {
+        arrangeViews {
             let stack = InternalLayoutStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
                     views
                 }
