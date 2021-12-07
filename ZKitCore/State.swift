@@ -8,9 +8,20 @@
 import Foundation
 
 public struct Changed<T> {
-    let old: T
-    let new: T
-    public typealias ObserverHandler = (Changed<T>) -> Void
+    internal typealias ValueGetter = () -> T
+    var old: T {
+        _oldGetter()
+    }
+    var new: T {
+        _newGetter()
+    }
+    let _oldGetter: ValueGetter
+    let _newGetter: ValueGetter
+    init(old: @escaping @autoclosure ValueGetter, new: @escaping @autoclosure ValueGetter) {
+        _oldGetter = old
+        _newGetter = new
+    }
+    public typealias ObserverHandler = (Changed) -> Void
 }
 
 @propertyWrapper public class State<T> {
@@ -50,7 +61,8 @@ extension State {
             return
         }
         observers.append(.init(target: target, action: observer))
-        let changed = Changed(old: wrappedValue, new: wrappedValue)
+        let val = wrappedValue
+        let changed = Changed(old: val, new: val)
         observer(changed)
     }
     
@@ -114,10 +126,7 @@ private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
     public override func addObserver(target: AnyObject?, observer: @escaping Changed<ResultElement>.ObserverHandler) {
         let map = self.map
         source.addObserver(target: target) { changed in
-            // 这个map运行了两遍，有没有可能只需一遍
-            let oldValueMap = map(changed.old)
-            let newValueMap = map(changed.new)
-            let changedMap = Changed<ResultElement>(old: oldValueMap, new: newValueMap)
+            let changedMap = Changed<ResultElement>(old: map(changed.old), new: map(changed.new))
             observer(changedMap)
         }
     }
