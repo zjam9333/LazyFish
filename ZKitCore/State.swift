@@ -108,8 +108,8 @@ public class Binding<Element> {
         }
     }
     
-    public func map<ResultElement>(translation: @escaping (Element) -> ResultElement) -> Binding<ResultElement> {
-        let bindMap = MapBinding<Element, ResultElement>(source: self, map: translation)
+    public func map<ResultElement>(_ transform: @escaping (Element) -> ResultElement) -> Binding<ResultElement> {
+        let bindMap = MapBinding<Element, ResultElement>(source: self, map: transform)
         return bindMap
     }
 }

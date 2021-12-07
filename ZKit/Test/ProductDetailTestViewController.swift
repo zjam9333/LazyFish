@@ -103,9 +103,9 @@ class ProductDetailTestViewController: UIViewController {
                         }
                         
                         UIScrollView(.horizontal, spacing: 10) {
-                            ForEachEnumerated(self?.$product.map(translation: { pro in
+                            ForEachEnumerated(self?.$product.map { pro in
                                 return pro.images
-                            })) { index, img in
+                            }) { index, img in
                                 let height: CGFloat = 120
                                 UIView()
                                     .frame(width: height, height: height)
@@ -134,9 +134,10 @@ class ProductDetailTestViewController: UIViewController {
                                     .font(.systemFont(ofSize: 16, weight: .regular))
                                     .textColor(.lightGray)
                                 UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
-                                    UILabel().text(binding: self?.$product.map(translation: { pro in
-                                        return pro.name
-                                    }))
+                                    UILabel()
+                                        .text(binding: self?.$product.map { pro in
+                                            return pro.name
+                                        })
                                         .font(.systemFont(ofSize: 16, weight: .regular))
                                         .numberOfLines(0)
                                         .textColor(.black)
@@ -174,9 +175,10 @@ class ProductDetailTestViewController: UIViewController {
                         .alignment(.allEdges)
                     case .moreImages:
                         UIView {
-                            UILabel().text(binding: self?.$product.map(translation: { pro in
-                                return "更多商品图片(\(pro.moreImages.count)/20)"
-                            }))
+                            UILabel()
+                                .text(binding: self?.$product.map { pro in
+                                    return "更多商品图片(\(pro.moreImages.count)/20)"
+                                })
                                 .font(.systemFont(ofSize: 16, weight: .semibold))
                                 .textColor(.black)
                                 .alignment([.centerY, .top, .leading])
