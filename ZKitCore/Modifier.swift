@@ -252,3 +252,16 @@ public extension UITextField {
         return self
     }
 }
+
+public extension UISwitch {
+    func isOn(_ on: Bool) -> Self {
+        isOn = on
+        return self
+    }
+    func toggle(action: @escaping (Bool) -> Void) -> Self {
+        let swi = self.action(for: .valueChanged) { [weak self] in
+            action(self?.isOn ?? false)
+        }
+        return swi
+    }
+}
