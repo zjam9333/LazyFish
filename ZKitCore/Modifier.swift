@@ -193,7 +193,7 @@ public extension UITextField {
 public extension UILabel {
     // stateText
     func text(binding stateText: Binding<String>?) -> Self {
-        stateText?.wrapper.addObserver(target: self) { [weak self] changed in
+        stateText?.addObserver(target: self) { [weak self] changed in
             self?.text = changed.new
         }
         return self
@@ -202,7 +202,7 @@ public extension UILabel {
 
 public extension UIButton {
     func text(binding stateText: Binding<String>?, for state: UIControl.State = .normal) -> Self {
-        stateText?.wrapper.addObserver(target: self) { [weak self] changed in
+        stateText?.addObserver(target: self) { [weak self] changed in
             self?.setTitle(changed.new, for: state)
         }
         return self
@@ -233,14 +233,13 @@ public extension UITextField {
     
     func text(binding text: Binding<String>?) -> Self {
         addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
-        let state = text?.wrapper
         var shouldObserve = true
-        zk_textBlock = { [weak state] text in
+        zk_textBlock = { newText in
             shouldObserve = false
-            state?.wrappedValue = text
+            text?.assignValue(newText)
             shouldObserve = true
         }
-        state?.addObserver(target: self) { [weak self] changed in
+        text?.addObserver(target: self) { [weak self] changed in
             if shouldObserve {
                 self?.text = changed.new
             }

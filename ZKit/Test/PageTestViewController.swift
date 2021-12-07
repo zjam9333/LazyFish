@@ -48,11 +48,9 @@ class PageTestViewController: UIViewController {
                 let ballWidth: CGFloat = 4
                 UIStackView(axis: .horizontal, spacing: ballWidth) {
                     ForEach($pages) { [weak self] i in
-                        IfBlock(self?.$currentPage) { currentPage in
-//                    for i in 0..<pageCount {
-//                        IfBlock($currentPage) { currentPage in
+                        IfBlock(self?.$currentPage.map { [weak self] currentPage in
                             return Int(currentPage + 0.5) == self?.pages.firstIndex(of: i) ?? 0
-                        } contentIf: {
+                        }) {
                             UIView().backgroundColor(UIColor(white: 0.7, alpha: 1)).frame(width: ballWidth * 2, height: ballWidth)
                                 .cornerRadius(ballWidth / 2)
                         } contentElse: {

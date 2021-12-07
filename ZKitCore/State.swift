@@ -7,6 +7,12 @@
 
 import Foundation
 
+public struct Changed<T> {
+    let old: T
+    let new: T
+    public typealias ObserverHandler = (Changed<T>) -> Void
+}
+
 @propertyWrapper public class State<T> {
     public var wrappedValue: T {
         didSet {
@@ -16,6 +22,7 @@ import Foundation
             callAllObservers(changed: changed)
         }
     }
+    
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
     }
@@ -26,31 +33,18 @@ import Foundation
     }
 }
 
-public struct Binding<T> {
-    var wrapper: State<T>
-}
-
 extension State {
-    public typealias ObserverHandler = (Changed<T>) -> Void
-    public struct Changed<T> {
-        let old: T
-        let new: T
-    }
     
     private class ObserverTargetAction {
         weak var target: AnyObject?
-        var action: ObserverHandler
-        init(target: AnyObject, action: @escaping ObserverHandler) {
+        var action: Changed<T>.ObserverHandler
+        init(target: AnyObject, action: @escaping Changed<T>.ObserverHandler) {
             self.target = target
             self.action = action
         }
     }
     
-    public func addObserver(observer: @escaping ObserverHandler) {
-        addObserver(target: self, observer: observer)
-    }
-    
-    public func addObserver(target: AnyObject?, observer: @escaping ObserverHandler) {
+    fileprivate func addObserver(target: AnyObject?, observer: @escaping Changed<T>.ObserverHandler) {
         removeAnyExpiredObservers()
         guard let target = target else {
             return
@@ -78,6 +72,53 @@ extension State {
                 return false
             }
             return true
+        }
+    }
+}
+
+public class Binding<Element> {
+    deinit {
+        print("deinit Binding<\(Element.self)>")
+    }
+    private weak var wrapper: State<Element>?
+    
+    init(wrapper: State<Element>?) {
+        self.wrapper = wrapper
+    }
+    
+    func assignValue(_ value: Element) {
+        wrapper?.wrappedValue = value
+    }
+    
+    public func addObserver(target: AnyObject?, observer: @escaping Changed<Element>.ObserverHandler) {
+        wrapper?.addObserver(target: target) { changed in
+            observer(changed)
+        }
+    }
+    
+    public func map<ResultElement>(translation: @escaping (Element) -> ResultElement) -> Binding<ResultElement> {
+        let bindMap = MapBinding<Element, ResultElement>(source: self, map: translation)
+        return bindMap
+    }
+}
+
+private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
+    var source: Binding<SourceElement>
+    var map: (SourceElement) -> ResultElement
+    init(source: Binding<SourceElement>, map: @escaping (SourceElement) -> ResultElement) {
+        self.source = source
+        self.map = map
+        super.init(wrapper: nil)
+    }
+    
+    public override func addObserver(target: AnyObject?, observer: @escaping Changed<ResultElement>.ObserverHandler) {
+        let map = self.map
+        source.addObserver(target: target) { changed in
+            // 这个map运行了两遍，有没有可能只需一遍
+            let oldValueMap = map(changed.old)
+            let newValueMap = map(changed.new)
+            let changedMap = Changed<ResultElement>(old: oldValueMap, new: newValueMap)
+            observer(changedMap)
         }
     }
 }

@@ -23,9 +23,9 @@ class ObserveRemoveTestViewController: UIViewController {
                 ForEachEnumerated($objects) { [weak self] index, _ in
 //                    UIStackView(axis: .horizontal, alignment: .center, spacing: 5) {
 //                        UILabel("Title \(index)")
-                        IfBlock(self?.$random) { v in
+                        IfBlock(self?.$random.map { v in
                             index >= v
-                        } contentIf: {
+                        }) {
                             UILabel("Title \(index)").backgroundColor(.red)
                         } contentElse: {
                             UILabel("Title \(index)").backgroundColor(.gray)

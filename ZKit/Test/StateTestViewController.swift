@@ -68,9 +68,10 @@ class StateTestViewController: UIViewController {
                 
                 UIStackView(axis: .horizontal) {
                     UILabel().text("label with bool state: ")
-                    IfBlock($addNum) { i in
+                    let numberMap = $addNum.map { i in
                         i % 2 == 0
-                    } contentIf: {
+                    }
+                    IfBlock(numberMap) {
                         foodForTitle("Hello!")
                             .borderColor(.red).borderWidth(1)
                     } contentElse: {

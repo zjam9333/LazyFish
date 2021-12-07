@@ -20,8 +20,7 @@ public class Section {
     }
     
     public init<T>(binding: Binding<[T]>?, @ViewBuilder cellContent: @escaping ((T) -> [UIView]), action: ((T) -> Void)? = nil) {
-        let wrapper = binding?.wrapper
-        wrapper?.addObserver(target: self) { [weak self] changed in
+        binding?.addObserver(target: self) { [weak self] changed in
             // binding的array发生变化，则更新datasource
             let arr = changed.new
             self?.resetArray(arr, cellContent: cellContent, action: action)

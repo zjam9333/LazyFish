@@ -137,7 +137,7 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
     let container = ForEachView()
         .alignment(.allEdges)
-    models?.wrapper.addObserver(target: container) { [weak container] changed in
+    models?.addObserver(target: container) { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
     return container
@@ -195,36 +195,12 @@ internal class ForEachView: TouchIgnoreContainerView, FakeInternalContainer {
 
 // MARK: IF
 
-public func IfBlock(_ present: Binding<Bool>?, @ViewBuilder content: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    IfBlock(present, map: { a in
-        return a
-    }, contentIf: content, contentElse: contentElse)
-}
-
-public func IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    return _View_IfBlock(observe, map: map, contentIf: contentIf, contentElse: contentElse)
-}
-
-// old without view container
-private func _No_View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    let viewsIf = contentIf()
-    let viewsElse = contentElse()
-    let all = viewsIf + viewsElse
-    let allCount = all.count
-    let ifCount = viewsIf.count
-    for i in 0..<allCount {
-        let vi = all[i]
-        let isIf = i < ifCount
-        observe?.wrapper.addObserver { [weak vi] changed in
-            let present = map(changed.new)
-            vi?.isHidden = isIf ? !present : present
-        }
-    }
-    return all
+public func IfBlock(_ present: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+    _View_IfBlock(present, contentIf: contentIf, contentElse: contentElse)
 }
 
 // new ifblock using container
-private func _View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+private func _View_IfBlock(_ observe: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
     let ifview = IfBlockView(conditionContents: contentIf)?
         .alignment(.allEdges)
     let elseview = ElseBlockView(conditionContents: contentElse)?
@@ -234,15 +210,15 @@ private func _View_IfBlock<T>(_ observe: Binding<T>?, map: @escaping (T) -> Bool
     }
     var views = [UIView]()
     if let ifview = ifview {
-        observe?.wrapper.addObserver(target: ifview) { [weak ifview] changed in
-            let present = map(changed.new)
+        observe?.addObserver(target: ifview) { [weak ifview] changed in
+            let present = changed.new
             ifview?.isHidden = !present
         }
         views.append(ifview)
     }
     if let elseview = elseview {
-        observe?.wrapper.addObserver(target: elseview) { [weak elseview] changed in
-            let present = map(changed.new)
+        observe?.addObserver(target: elseview) { [weak elseview] changed in
+            let present = changed.new
             elseview?.isHidden = present
         }
         views.append(elseview)
