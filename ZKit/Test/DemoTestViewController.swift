@@ -38,12 +38,6 @@ class DemoTestViewController: UIViewController {
                         .alignment([.leading, .centerY])
                         .alignment(.top, value: 12)
                         .padding(leading: 12)
-
-                        UIView()
-                            .backgroundColor(.lightGray)
-                            .frame(height: 0.5)
-                            .alignment([.leading, .bottom, .trailing])
-                            .padding(leading: 12)
                         
                         if #available(iOS 13.0, *) {
                             UIImageView(image: UIImage(systemName: "chevron.right"))

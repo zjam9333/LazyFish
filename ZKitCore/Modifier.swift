@@ -30,6 +30,11 @@ public extension UIView {
         return self
     }
     
+    func clipped(_ clip: Bool) -> Self {
+        layer.masksToBounds = clip
+        return self
+    }
+    
     func borderColor(_ color: UIColor) -> Self {
         layer.borderColor = color.cgColor
         return self
@@ -44,6 +49,11 @@ public extension UIView {
         return borderWidth(width).borderColor(color)
     }
     
+    func tintColor(_ color: UIColor) -> Self {
+        tintColor = color
+        return self
+    }
+    
 //    func store(in view: inout UIView?) -> Self {
 //        view = self
 //        return self
@@ -51,8 +61,8 @@ public extension UIView {
 }
 
 public extension UILabel {
-    func text(_ text: String) -> Self {
-        self.text = text
+    func text(_ txt: String) -> Self {
+        text = txt
         return self
     }
     
@@ -71,8 +81,8 @@ public extension UILabel {
         return self
     }
     
-    func font(_ font: UIFont) -> Self {
-        self.font = font
+    func font(_ fnt: UIFont) -> Self {
+        font = fnt
         return self
     }
 }
@@ -172,8 +182,8 @@ public extension UITextField {
         return self
     }
     
-    func font(_ font: UIFont) -> Self {
-        self.font = font
+    func font(_ fnt: UIFont) -> Self {
+        font = fnt
         return self
     }
 }
