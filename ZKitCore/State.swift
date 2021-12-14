@@ -89,9 +89,7 @@ extension State {
 }
 
 public class Binding<Element> {
-    deinit {
-        print("deinit Binding<\(Element.self)>")
-    }
+
     private weak var wrapper: State<Element>?
     
     init(wrapper: State<Element>?) {

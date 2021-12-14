@@ -26,6 +26,18 @@ class ContainerCoverTestViewController: UIViewController {
                 .alignment(.bottom, value: -64)
                 .frame(width: 200)
             
+            UIScrollView(.vertical, spacing: 5) {
+                for i in 0...50 {
+                    UILabel("\(i)")
+                        .textAlignment(.center)
+                        .border(width: 2, color: .black)
+                }
+            }
+            .border(width: 1, color: .yellow)
+            .alignment(.leading, value: 20)
+            .alignment(.top, value: 100)
+            .frame(width: 50, height: 200)
+            
             UIStackView(axis: .vertical, alignment: .leading, spacing: 5) {
                 UILabel("If In Stack")
                 IfBlock($condition) {
@@ -34,6 +46,13 @@ class ContainerCoverTestViewController: UIViewController {
                         .action {
                             print("StackIf Button Click")
                         }
+                    IfBlock($condition) {
+                        UIButton("ButtonOnStackIfIf")
+                            .textColor(.red)
+                            .action {
+                                print("StackIfIf Button Click")
+                            }
+                    }
                 }
                 
                 UILabel("ForEach In Stack")

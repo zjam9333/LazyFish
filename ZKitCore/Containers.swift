@@ -196,7 +196,8 @@ internal class ForEachView: TouchIgnoreContainerView, FakeInternalContainer {
 // MARK: IF
 
 public func IfBlock(_ present: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    _View_IfBlock(present, contentIf: contentIf, contentElse: contentElse)
+//    _View_IfBlock(present, contentIf: contentIf, contentElse: contentElse)
+    _View_IfBlock_UsingOneContainer(present, contentIf: contentIf, contentElse: contentElse)
 }
 
 // new ifblock using container
@@ -296,5 +297,67 @@ internal class TouchIgnoreContainerView: UIView {
             }
         }
         return superHit
+    }
+}
+
+private func _View_IfBlock_UsingOneContainer(_ observe: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+    let ifContents = contentIf()
+    let elseContents = contentElse()
+    let ifview = IfElseBlockView {
+        ifContents
+        elseContents
+    }?.alignment(.allEdges)
+    observe?.addObserver(target: ifview) { [weak ifview] changed in
+        guard let ifview = ifview else {
+            return
+        }
+        let present = changed.new
+        for i in ifContents {
+            i.isHidden = !present
+        }
+        for i in elseContents {
+            i.isHidden = present
+        }
+        ifview.setHiddenDependOnChildren()
+    }
+    var views = [UIView]()
+    if let ifview = ifview {
+        views.append(ifview)
+    }
+    return views
+}
+
+internal class IfElseBlockView: TouchIgnoreContainerView, FakeInternalContainer {
+//    deinit {
+//        print("IfElseBlockView deinit", self)
+//    }
+    
+    var observeSubviewTokens: [NSKeyValueObservation] = []
+    var actionWhileMoveToWindow: [() -> Void] = []
+    var userCreatedContents: [UIView] = []
+    
+    override var viewsAcceptedTouches: [UIView] {
+        return userCreatedContents
+    }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        excuteAllActionsWhileMoveToWindow()
+    }
+    
+    convenience init?(@ViewBuilder conditionContents: ViewBuilder.ContentBlock) {
+        let contents = conditionContents()
+        if contents.isEmpty {
+            return nil
+        }
+        self.init()
+        userCreatedContents = contents
+        arrangeViews {
+            contents
+        }
+    }
+    
+    func setHiddenDependOnChildren() {
+        isHidden = hasNoSubviewShown(userCreatedContents)
     }
 }
