@@ -4,6 +4,13 @@
 
 暂未完善，勿用于工业生产
 
+# 更新日志
+
+- 2021-12-16 添加Binding的join方法
+- 2021-12-7 添加Binding的map方法
+- 2021-12-6 IfElseView、ForEachView遮挡问题
+- 2021-10-9 First Commit
+
 # How to Use
 
 Edit your Podfile file
@@ -49,6 +56,16 @@ Result shown below:
 
 ![tableview](doc/tableview.png)
 
+例如在视图中央展示一个文本：
+
+```swift
+self.view.arrangeViews {
+    UILabel()
+    .text("Hello World")
+    .alignment(.center)
+}
+```
+
 Pros:
 
 - you can still use your ViewController stuff
@@ -61,40 +78,7 @@ Cons:
 - lack of animation modifier
 - lack of .. a lot of features
 
-# ResultBuilder基础
 
-`UIView`拓展了`arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self`方法，是进入声明布局的入口
-
-其中`@ViewBuilder`修饰的方法和闭包将实现`DSL`功能并返回`Array<UIView>`，得到`UIView`数组后进行`addSubview()`或`addArrangedSubview()`，并使用`AutoLayout`约束
-
-```swift
-public typealias ViewBuilder = ResultBuilder<UIView>
-@resultBuilder public struct ResultBuilder<MyReturnType> {
-    public typealias ContentBlock = () -> [MyReturnType]
-    // MARK: 组合全部表达式的返回值
-    public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
-        let res = components.flatMap { r in
-            return r
-        }
-        return res
-    }
-    // MARK: 其他语法支持的buildBlock
-    // static func buildBlock...
-    // if\else\for..in..\while\等等等
-}
-```
-关于`@resultBuilder`的更多内容可以参考[Swift Result Builder](https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md)
-
-
-在`@ViewBuilder`修饰的闭包中写入各种`view`，以及`alignment`、`frame`、`padding`等参数，甚至是`modifier`链式方法，即可实现布局和展示，例如在视图中央展示一个文本：
-
-```swift
-self.view.arrangeViews {
-    UILabel()
-    .text("Hello World")
-    .alignment(.center)
-}
-```
 
 # 已实现的拓展
 
