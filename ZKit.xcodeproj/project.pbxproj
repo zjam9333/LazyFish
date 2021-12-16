@@ -15,6 +15,7 @@
 		1C04001427041213008F025B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001227041213008F025B /* LaunchScreen.storyboard */; };
 		1C087F1927589B6700BE24C5 /* PPTTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C087F1827589B6600BE24C5 /* PPTTestViewController.swift */; };
 		1C09DBCA2730DEFC006E20AF /* TableViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */; };
+		1C35DAF4276AD962007A3C88 /* JoinBindingTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C35DAF3276AD962007A3C88 /* JoinBindingTestViewController.swift */; };
 		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
 		1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F6274F69CE00DF13A4 /* Section.swift */; };
 		1C4981F9274F6AF200DF13A4 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F8274F6AF200DF13A4 /* CollectionView.swift */; };
@@ -77,6 +78,7 @@
 		1C04001527041213008F025B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C087F1827589B6600BE24C5 /* PPTTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPTTestViewController.swift; sourceTree = "<group>"; };
 		1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTestViewController.swift; sourceTree = "<group>"; };
+		1C35DAF3276AD962007A3C88 /* JoinBindingTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinBindingTestViewController.swift; sourceTree = "<group>"; };
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1C4981F8274F6AF200DF13A4 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				1C9FAF76275A153200105EF8 /* ObserveRemoveTestViewController.swift */,
 				1C9FAF78275DDFC700105EF8 /* ContainerCoverTestViewController.swift */,
 				1CBB6D91275E0F1200148F36 /* ProductDetailTestViewController.swift */,
+				1C35DAF3276AD962007A3C88 /* JoinBindingTestViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 			files = (
 				1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */,
 				1C087F1927589B6700BE24C5 /* PPTTestViewController.swift in Sources */,
+				1C35DAF4276AD962007A3C88 /* JoinBindingTestViewController.swift in Sources */,
 				1C9FAF79275DDFC700105EF8 /* ContainerCoverTestViewController.swift in Sources */,
 				1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */,
 				1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */,

@@ -231,12 +231,12 @@ public extension UITextField {
         zk_textBlock?(text ?? "")
     }
     
-    func text(binding text: Binding<String>?) -> Self {
+    func text(binding text: Binding<String>?, changed: @escaping (String) -> Void) -> Self {
         addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
         var shouldObserve = true
         zk_textBlock = { newText in
             shouldObserve = false
-            text?.assignValue(newText)
+            changed(newText)
             shouldObserve = true
         }
         text?.addObserver(target: self) { [weak self] changed in

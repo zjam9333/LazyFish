@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         
         typealias VCModel = (name: String, classType: UIViewController.Type)
         var testClasses: [VCModel] = [
+            ("Join Binding Test", JoinBindingTestViewController.self),
             ("Product Detail Test", ProductDetailTestViewController.self),
             ("Container Cover Test", ContainerCoverTestViewController.self),
             ("Observe Remove Test", ObserveRemoveTestViewController.self),

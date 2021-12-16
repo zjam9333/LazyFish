@@ -27,11 +27,15 @@ public struct Changed<T> {
 @propertyWrapper public class State<T> {
     public var wrappedValue: T {
         didSet {
-            let newValue = wrappedValue
-            let oldValue = oldValue
-            let changed = Changed(old: oldValue, new: newValue)
-            callAllObservers(changed: changed)
+            sendChanged(oldValue)
         }
+    }
+    
+    fileprivate func sendChanged(_ old: T?) {
+        let val = wrappedValue
+        let oldVal = old ?? val
+        let changed = Changed(old: oldVal, new: val)
+        callAllObservers(changed: changed)
     }
     
     public init(wrappedValue: T) {
@@ -96,10 +100,6 @@ public class Binding<Element> {
         self.wrapper = wrapper
     }
     
-    func assignValue(_ value: Element) {
-        wrapper?.wrappedValue = value
-    }
-    
     public func addObserver(target: AnyObject?, observer: @escaping Changed<Element>.ObserverHandler) {
         wrapper?.addObserver(target: target) { changed in
             observer(changed)
@@ -109,6 +109,11 @@ public class Binding<Element> {
     public func map<ResultElement>(_ transform: @escaping (Element) -> ResultElement) -> Binding<ResultElement> {
         let bindMap = MapBinding<Element, ResultElement>(source: self, map: transform)
         return bindMap
+    }
+    
+    public func join<OtherElement>(_ other: Binding<OtherElement>) -> Binding<(Element, OtherElement)> {
+        let bindJoin = JoinBinding<Element, OtherElement>(join: self, with: other)
+        return bindJoin
     }
 }
 
@@ -126,6 +131,35 @@ private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
         source.addObserver(target: target) { changed in
             let changedMap = Changed<ResultElement>(old: map(changed.old), new: map(changed.new))
             observer(changedMap)
+        }
+    }
+}
+
+private class JoinBinding<S1, S2>: Binding<(S1, S2)> {
+    var source1: Binding<S1>
+    var source2: Binding<S2>
+    init(join source1: Binding<S1>, with source2: Binding<S2>) {
+        self.source1 = source1
+        self.source2 = source2
+        super.init(wrapper: nil)
+    }
+    
+    public override func addObserver(target: AnyObject?, observer: @escaping Changed<(S1, S2)>.ObserverHandler) {
+        var c1: Changed<S1>?
+        var c2: Changed<S2>?
+        let performChanges = {
+            if let c1 = c1, let c2 = c2 {
+                let changedAll = Changed<(S1, S2)>(old: (c1.old, c2.old), new: (c1.new, c2.new))
+                observer(changedAll)
+            }
+        }
+        source1.addObserver(target: target) { change1 in
+            c1 = change1
+            performChanges()
+        }
+        source2.addObserver(target: target) { change2 in
+            c2 = change2
+            performChanges()
         }
     }
 }

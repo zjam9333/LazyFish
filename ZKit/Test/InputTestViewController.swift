@@ -19,7 +19,9 @@ class InputTestViewController: UIViewController {
                 UIStackView(axis: .vertical, spacing: 10) {
                     UILabel().text("your input:")
                     UILabel().text(binding: $text)
-                    UITextField().text(binding: $text).borderStyle(.roundedRect)
+                    UITextField().text(binding: $text, changed: { [weak self] t in
+                        self?.text = t
+                    }).borderStyle(.roundedRect)
                 }
                 .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
                 .alignment(.allEdges)
