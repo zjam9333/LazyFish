@@ -8,86 +8,67 @@
 import Foundation
 import UIKit
 
-public extension UIView {
-    internal func zk_alignSubview(_ subview: UIView, alignment: [Edge: CGFloat]) {
+fileprivate struct Layout {
+    static func alignSubview(_ view: UIView, subview: UIView, alignment: [Edge: CGFloat]) {
         // 对齐
         if let const = alignment[.centerY] {
-            subview.centerYAnchor.constraint(equalTo: centerYAnchor, constant: const).isActive = true
+            subview.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: const).isActive = true
         }
         if let const = alignment[.centerX] {
-            subview.centerXAnchor.constraint(equalTo: centerXAnchor, constant: const).isActive = true
+            subview.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: const).isActive = true
         }
         if let const = alignment[.leading] {
-            subview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: const).isActive = true
+            subview.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: const).isActive = true
         }
         if let const = alignment[.trailing] {
-            subview.trailingAnchor.constraint(equalTo: trailingAnchor, constant: const).isActive = true
+            subview.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: const).isActive = true
         }
         if let const = alignment[.top] {
-            subview.topAnchor.constraint(equalTo: topAnchor, constant: const).isActive = true
+            subview.topAnchor.constraint(equalTo: view.topAnchor, constant: const).isActive = true
         }
         if let const = alignment[.bottom] {
-            subview.bottomAnchor.constraint(equalTo: bottomAnchor, constant: const).isActive = true
+            subview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: const).isActive = true
         }
     }
     
-    internal func zk_containerPaddingIfNeed(padding: EdgeValuePair, offset: CGPoint) -> UIView {
+    static func containerPaddingIfNeed(_ view: UIView, padding: EdgeValuePair, offset: CGPoint) -> UIView {
         if padding.isEmpty && offset == .zero {
-            return self
+            return view
         }
         let paddingContainer = PaddingContainerView()
-        paddingContainer.addContentView(self, padding: padding, offset: offset)
+        paddingContainer.addContentView(view, padding: padding, offset: offset)
         return paddingContainer
     }
     
-    internal func old_descre_zk_containerPaddingIfNeed(attributes: [Attribute._Attribute]) -> UIView {
-        var paddingView = self
-        for i in attributes {
-            switch i {
-            case .padding(let pad):
-                let paddingContainer = PaddingContainerView()
-                paddingContainer.addContentView(paddingView, padding: pad)
-                paddingView = paddingContainer
-            case .offset(let point):
-                let paddingContainer = PaddingContainerView()
-                paddingContainer.addContentView(paddingView, offset: point)
-                paddingView = paddingContainer
-            default:
-                continue
-            }
-        }
-        return paddingView
-    }
-    
-    internal func zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView) {
+    static func sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?, target: UIView) {
         if let targetSuper = target as? FakeInternalContainer {
-            targetSuper.excuteActionWhileMoveToWindow { [weak self] in
+            targetSuper.excuteActionWhileMoveToWindow { [weak view] in
                 // 如果一个view有window，那么一定有superview？
-                if let superSuperView = targetSuper.seekTrullyContainer() {
-                    self?.private_zk_sizeFill(width: width, height: height, target: superSuperView)
+                if let superSuperView = targetSuper.seekTrullyContainer(), let view = view {
+                    private_sizeFill(view, width: width, height: height, target: superSuperView)
                 }
             }
         } else {
-            private_zk_sizeFill(width: width, height: height, target: target)
+            private_sizeFill(view, width: width, height: height, target: target)
         }
     }
     
-    private func private_zk_sizeFill(width: SizeFill?, height: SizeFill?, target: UIView) {
-        guard isDescendant(of: target) else {
+    static func private_sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?, target: UIView) {
+        guard view.isDescendant(of: target) else {
             return
         }
         if let si = width {
             if case .equalTo(let size) = si {
-                widthAnchor.constraint(equalToConstant: size).isActive = true
+                view.widthAnchor.constraint(equalToConstant: size).isActive = true
             } else if case .fillParent(let mul, let con) = si {
-                widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
+                view.widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
         if let si = height {
             if case .equalTo(let size) = si {
-                heightAnchor.constraint(equalToConstant: size).isActive = true
+                view.heightAnchor.constraint(equalToConstant: size).isActive = true
             } else if case .fillParent(let mul, let con) = si {
-                heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
+                view.heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
             }
         }
     }
@@ -128,7 +109,7 @@ public extension UIView {
                     }
                 }
             }
-            let container = view.zk_containerPaddingIfNeed(padding: padding, offset: offset)
+            let container = Layout.containerPaddingIfNeed(view, padding: padding, offset: offset)
             container.translatesAutoresizingMaskIntoConstraints = false
             if let stack = self as? UIStackView {
                 stack.addArrangedSubview(container)
@@ -139,11 +120,11 @@ public extension UIView {
             } else {
                 addSubview(container)
                 if ignoreAlignments == false && !alignment.isEmpty {
-                    zk_alignSubview(container, alignment: alignment)
+                    Layout.alignSubview(self, subview: container, alignment: alignment)
                 }
             }
             
-            container.zk_sizeFill(width: widthFill, height: heightFill, target: self)
+            Layout.sizeFill(container, width: widthFill, height: heightFill, target: self)
         }
         
         for action in allActionsOnAppear {
