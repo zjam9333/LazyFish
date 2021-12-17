@@ -10,8 +10,8 @@ import ZKitCore
 
 class JoinBindingTestViewController: UIViewController {
 
-    @State var text1: String = "abc"
-    @State var text2: String = "123"
+    @State var text1: String = "cde"
+    @State var text2: String = "fgab"
     @State var number3: Int = 100
 
     override func viewDidLoad() {
@@ -27,21 +27,26 @@ class JoinBindingTestViewController: UIViewController {
 //            <#code#>
 //        }
         
-        let joined3Obj = $text1.join($text2).join($number3)
-        
-        let joinedMapString = joined3Obj.map { obj in
-            return "\(obj)"
+        let joined3Obj = $text1.join($text2) { s1, s2 in
+            return s1 + "_" + s2
+        }.join($number3) { s1, n1 in
+            return s1 + "_\(n1)"
         }
         view.arrangeViews {
             UIView() {
                 UIStackView(axis: .vertical, spacing: 10) {
                     UILabel().text("joined input result:")
-                    UILabel().text(binding: joinedMapString)
+                    UILabel().text(binding: joined3Obj)
                     UITextField().text(binding: $text1, changed: { [weak self] t in
                         self?.text1 = t
                     }).borderStyle(.roundedRect)
                     UITextField().text(binding: $text2, changed: { [weak self] t in
                         self?.text2 = t
+                    }).borderStyle(.roundedRect)
+                    UITextField().text(binding: $number3.map({ i in
+                        return String(i)
+                    }), changed: { [weak self] t in
+                        self?.number3 = Int(t) ?? 0
                     }).borderStyle(.roundedRect)
                 }
                 .padding(top: 10, leading: 10, bottom: 10, trailing: 10)

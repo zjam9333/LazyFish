@@ -115,6 +115,11 @@ public class Binding<Element> {
         let bindJoin = JoinBinding<Element, OtherElement>(join: self, with: other)
         return bindJoin
     }
+    
+    public func join<OtherElement, ResultElement>(_ other: Binding<OtherElement>, transform: @escaping (Element, OtherElement) -> ResultElement) -> Binding<ResultElement> {
+        let joinMap = join(other).map(transform)
+        return joinMap
+    }
 }
 
 private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
