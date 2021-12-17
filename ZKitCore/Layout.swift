@@ -53,7 +53,7 @@ fileprivate struct Layout {
         }
     }
     
-    static func private_sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?, target: UIView) {
+    private static func private_sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?, target: UIView) {
         guard view.isDescendant(of: target) else {
             return
         }
@@ -81,7 +81,7 @@ public extension UIView {
         var allActionsOnAppear = [() -> Void]()
         
         for view in views {
-            let attribute = view.zk_attribute
+            let attribute = Attribute.attribute(from: view)
             var alignment: EdgeValuePair = [:]
             var widthFill: SizeFill?
             var heightFill: SizeFill?
