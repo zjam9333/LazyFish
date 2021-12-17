@@ -71,25 +71,26 @@ public extension UIView {
         return self
     }
     
-    func frame(filledWidth: Bool? = false, filledHeight: Bool? = false) -> Self {
+    func frame(width: CGFloat, height: CGFloat) -> Self {
         let att = Attribute.attribute(from: self)
-        if filledWidth == true {
-            att.attrs.append(.width(.fillParent()))
-        }
-        if filledHeight == true {
-            att.attrs.append(.height(.fillParent()))
-        }
+        att.attrs.append(.width(.equalTo(width)))
+        att.attrs.append(.height(.equalTo(height)))
         return self
     }
     
-    func frame(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
+    func frame(size: CGSize) -> Self {
+        return frame(width: size.width, height: size.height)
+    }
+    
+    func frame(width: CGFloat) -> Self {
         let att = Attribute.attribute(from: self)
-        if let w = width {
-            att.attrs.append(.width(.equalTo(w)))
-        }
-        if let h = height {
-            att.attrs.append(.height(.equalTo(h)))
-        }
+        att.attrs.append(.width(.equalTo(width)))
+        return self
+    }
+    
+    func frame(height: CGFloat) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.height(.equalTo(height)))
         return self
     }
     

@@ -79,9 +79,9 @@ public extension UIScrollView {
                 }
                 .alignment(.allEdges)
             if direction == .vertical {
-                _ = stack.frame(filledWidth: true)
+                _ = stack.frame(width: .fillParent())
             } else {
-                _ = stack.frame(filledHeight: true)
+                _ = stack.frame(height: .fillParent())
             }
             stack
         }
