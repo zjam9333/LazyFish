@@ -76,234 +76,12 @@ class ProductDetailTestViewController: UIViewController {
             style = .insetGrouped
         }
         
-        
-        let imageViewChevronRightCircle = { () -> UIImageView in
-            var imageChevronRightCircle: UIImage?
-            if #available(iOS 13.0, *) {
-                imageChevronRightCircle = UIImage(systemName: "chevron.right.circle")?.withRenderingMode(.alwaysTemplate)
-            } else {
-                // Fallback on earlier versions
-            }
-            return UIImageView(image: imageChevronRightCircle).tintColor(.lightGray)
-        }
-        
         view.arrangeViews {
-            UITableView(style: style) { [weak self] in
-                Section(section1) { item in
-                    UIStackView(axis: .vertical, spacing: 20) {
-                        UIView {
-                            UILabel("商品主要图片")
-                                .font(.systemFont(ofSize: 20, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .leading, .top])
-                            UILabel("查看全部")
-                                .font(.systemFont(ofSize: 16, weight: .regular))
-                                .textColor(.systemBlue)
-                                .alignment([.centerY, .trailing])
-                        }
-                        
-                        UIScrollView(.horizontal, spacing: 10) {
-                            ForEachEnumerated(self?.$product.map { pro in
-                                return pro.images
-                            }) { index, img in
-                                let height: CGFloat = 120
-                                UIView()
-                                    .frame(width: height, height: height)
-                                    .backgroundColor(.lightGray)
-                                    .cornerRadius(6)
-                            }
-                        }
-                        .clipped(false)
-                        .bounce(.horizontal)
-                    }
-                    .padding(16)
-                    .alignment(.allEdges)
-                } action: { item in
-                    
-                }
-                
-                Section(section2) { item in
-                    switch item {
-                    case .name:
-                        UIStackView(axis: .vertical, spacing: 20) {
-                            UILabel("商品信息")
-                                .font(.systemFont(ofSize: 20, weight: .semibold))
-                                .textColor(.black)
-                            UIStackView(axis: .vertical, spacing: 10) {
-                                UILabel("商品名称")
-                                    .font(.systemFont(ofSize: 16, weight: .regular))
-                                    .textColor(.lightGray)
-                                UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
-                                    UILabel()
-                                        .text(binding: self?.$product.map { pro in
-                                            return pro.name
-                                        })
-                                        .font(.systemFont(ofSize: 16, weight: .regular))
-                                        .numberOfLines(0)
-                                        .textColor(.black)
-                                    UILabel("更多")
-                                        .font(.systemFont(ofSize: 16, weight: .regular))
-                                        .textColor(.systemBlue)
-                                        .frame(width: 48).textAlignment(.right)
-                                }
-                            }
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .summary:
-                        UIView {
-                            UILabel("编辑商品摘要")
-                                .font(.systemFont(ofSize: 16, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .top, .leading])
-                            imageViewChevronRightCircle()
-                                .alignment([.centerY, .trailing])
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .description:
-                        UIView {
-                            UILabel("编辑商品描述")
-                                .font(.systemFont(ofSize: 16, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .top, .leading])
-                            imageViewChevronRightCircle()
-                                .alignment([.centerY, .trailing])
-                            
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .moreImages:
-                        UIView {
-                            UILabel()
-                                .text(binding: self?.$product.map { pro in
-                                    return "更多商品图片(\(pro.moreImages.count)/20)"
-                                })
-                                .font(.systemFont(ofSize: 16, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .top, .leading])
-                            imageViewChevronRightCircle()
-                                .alignment([.centerY, .trailing])
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    default:
-                        []
-                    }
-                } action: { item in
-                    
-                }
-
-                Section(binding: self?.$section3) { item in
-                    switch item {
-                    case .spu:
-                        UIStackView(axis: .vertical, spacing: 20) {
-                            UILabel("价格与库存")
-                                .font(.systemFont(ofSize: 20, weight: .semibold))
-                                .textColor(.black)
-//                                .frame(height: 20)
-                            
-                            UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
-                                
-                                UIStackView(axis: .vertical, spacing: 10) {
-                                    UILabel("主商品")
-                                        .font(.systemFont(ofSize: 16, weight: .regular))
-                                        .textColor(.black)
-                                
-                                    UILabel("商品货号：\n原价格：\n特价：\n成本价：")
-                                        .font(.systemFont(ofSize: 16, weight: .regular))
-                                        .numberOfLines(0)
-                                        .textColor(.lightGray)
-                                }
-                                UILabel("更多")
-                                    .font(.systemFont(ofSize: 16, weight: .regular))
-                                    .textColor(.systemBlue)
-                                    .frame(width: 48).textAlignment(.right)
-                            }
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .sku:
-                        UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
-                            UIView().backgroundColor(.lightGray)
-                                .frame(width: 60, height: 60)
-                                .cornerRadius(5)
-                            UIStackView(axis: .vertical, spacing: 10) {
-                                UILabel("款式")
-                                    .font(.systemFont(ofSize: 16, weight: .semibold))
-                                    .textColor(.black)
-                                UILabel("商品货号：\n原价格：\n特价：\n成本价：")
-                                    .font(.systemFont(ofSize: 16, weight: .regular))
-                                    .numberOfLines(0)
-                                    .textColor(.lightGray)
-                            }
-                            UILabel("更多")
-                                .font(.systemFont(ofSize: 16, weight: .regular))
-                                .textColor(.systemBlue)
-                                .frame(width: 48).textAlignment(.right)
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .moreSku(let opened):
-                        UILabel(opened ? "收起全部规格" : "查看全部规格")
-                            .font(.systemFont(ofSize: 16, weight: .regular))
-                            .textColor(.systemBlue)
-                            .padding(top: 0, leading: 16, bottom: 16, trailing: 16)
-                            .alignment(.allEdges)
-                    default:
-                        []
-                    }
-                } action: { item in
-                    if case .moreSku(let opened) = item {
-                        self?.openAllSkuList(!opened)
-                    }
-                }
-                
-                Section(section4) { item in
-                    switch item {
-                    case .onSell:
-                        UIView {
-                            UILabel("网店上架商品")
-                                .font(.systemFont(ofSize: 16, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .top, .leading])
-                            UISwitch()
-                                .isOn(self?.product.onSell ?? false)
-                                .toggle { bi in
-                                    self?.product.onSell = bi
-                                }
-                                .alignment([.centerY, .trailing])
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .category:
-                        UIView {
-                            UILabel("分类")
-                                .font(.systemFont(ofSize: 16, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .top, .leading])
-                            imageViewChevronRightCircle()
-                                .alignment([.centerY, .trailing])
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    case .setting:
-                        UIView {
-                            UILabel("设定")
-                                .font(.systemFont(ofSize: 16, weight: .semibold))
-                                .textColor(.black)
-                                .alignment([.centerY, .top, .leading])
-                            imageViewChevronRightCircle()
-                                .alignment([.centerY, .trailing])
-                        }
-                        .padding(16)
-                        .alignment(.allEdges)
-                    default:
-                        []
-                    }
-                } action: { item in
-                    
-                }
+            UITableView(style: style) {
+                tableViewSection1()
+                tableViewSection2()
+                tableViewSection3()
+                tableViewSection4()
             }
             .alignment(.allEdges)
         }
@@ -330,6 +108,226 @@ class ProductDetailTestViewController: UIViewController {
                 .sku,
                 .moreSku(false),
             ]
+        }
+    }
+    
+    func simpleCellContent(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> UIView {
+        return UIView {
+            content()
+            UIImageView(image: UIImage(named: "next"))
+                .alignment([.centerY, .trailing])
+        }
+        .padding(16)
+        .alignment(.allEdges)
+    }
+    
+    func tableViewSection1() -> Section {
+        return Section(section1) { [weak self] item in
+            UIStackView(axis: .vertical, spacing: 20) {
+                UIView {
+                    UILabel("商品主要图片")
+                        .font(.systemFont(ofSize: 20, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .leading, .top])
+                    UILabel("查看全部")
+                        .font(.systemFont(ofSize: 16, weight: .regular))
+                        .textColor(.systemBlue)
+                        .alignment([.centerY, .trailing])
+                }
+                
+                UIScrollView(.horizontal, spacing: 10) {
+                    ForEachEnumerated(self?.$product.map { pro in
+                        return pro.images
+                    }) { index, img in
+                        let height: CGFloat = 120
+                        UIView()
+                            .frame(width: height, height: height)
+                            .backgroundColor(.lightGray)
+                            .cornerRadius(6)
+                    }
+                }
+                .clipped(false)
+                .bounce(.horizontal)
+            }
+            .padding(16)
+            .alignment(.allEdges)
+        } action: { item in
+            
+        }
+    }
+    
+    func tableViewSection2() -> Section {
+        return Section(section2) { [weak self] item in
+            switch item {
+            case .name:
+                UIStackView(axis: .vertical, spacing: 20) {
+                    UILabel("商品信息")
+                        .font(.systemFont(ofSize: 20, weight: .semibold))
+                        .textColor(.black)
+                    UIStackView(axis: .vertical, spacing: 10) {
+                        UILabel("商品名称")
+                            .font(.systemFont(ofSize: 16, weight: .regular))
+                            .textColor(.lightGray)
+                        UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
+                            UILabel()
+                                .text(binding: self?.$product.map { pro in
+                                    return pro.name
+                                })
+                                .font(.systemFont(ofSize: 16, weight: .regular))
+                                .numberOfLines(0)
+                                .textColor(.black)
+                            UILabel("更多")
+                                .font(.systemFont(ofSize: 16, weight: .regular))
+                                .textColor(.systemBlue)
+                                .frame(width: 48).textAlignment(.right)
+                        }
+                    }
+                }
+                .padding(16)
+                .alignment(.allEdges)
+            case .summary:
+                self?.simpleCellContent {
+                    UILabel("编辑商品摘要")
+                        .font(.systemFont(ofSize: 16, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .top, .leading])
+                }
+            case .description:
+                self?.simpleCellContent {
+                    UILabel("编辑商品描述")
+                        .font(.systemFont(ofSize: 16, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .top, .leading])
+                }
+            case .moreImages:
+                self?.simpleCellContent {
+                    UILabel()
+                        .text(binding: self?.$product.map { pro in
+                            return "更多商品图片(\(pro.moreImages.count)/20)"
+                        })
+                        .font(.systemFont(ofSize: 16, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .top, .leading])
+                }
+            default:
+                []
+            }
+        } action: { item in
+            
+        }
+    }
+    
+    func tableViewSection3() -> Section {
+        return Section(binding: self.$section3) { [weak self] item in
+            switch item {
+            case .spu:
+                UIStackView(axis: .vertical, spacing: 20) {
+                    UILabel("价格与库存")
+                        .font(.systemFont(ofSize: 20, weight: .semibold))
+                        .textColor(.black)
+//                                .frame(height: 20)
+                    
+                    UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
+                        
+                        UIStackView(axis: .vertical, spacing: 10) {
+                            UILabel("主商品")
+                                .font(.systemFont(ofSize: 16, weight: .regular))
+                                .textColor(.black)
+                        
+                            UILabel()
+                                .text(binding: self?.$product.map({ p in
+                                    return "商品货号：\(100)\n原价格：\(200)\n特价：\(300)\n成本价：\(10)"
+                                }))
+                                .font(.systemFont(ofSize: 16, weight: .regular))
+                                .numberOfLines(0)
+                                .textColor(.lightGray)
+                        }
+                        UILabel("更多")
+                            .font(.systemFont(ofSize: 16, weight: .regular))
+                            .textColor(.systemBlue)
+                            .frame(width: 48).textAlignment(.right)
+                    }
+                }
+                .padding(16)
+                .alignment(.allEdges)
+            case .sku:
+                UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
+                    UIView().backgroundColor(.lightGray)
+                        .frame(width: 60, height: 60)
+                        .cornerRadius(5)
+                    UIStackView(axis: .vertical, spacing: 10) {
+                        UILabel("款式")
+                            .font(.systemFont(ofSize: 16, weight: .semibold))
+                            .textColor(.black)
+                        UILabel()
+                            .text(binding: self?.$product.map({ p in
+                                return "商品货号：\(100)\n原价格：\(200)\n特价：\(300)\n成本价：\(10)"
+                            }))
+                            .font(.systemFont(ofSize: 16, weight: .regular))
+                            .numberOfLines(0)
+                            .textColor(.lightGray)
+                    }
+                    UILabel("更多")
+                        .font(.systemFont(ofSize: 16, weight: .regular))
+                        .textColor(.systemBlue)
+                        .frame(width: 48).textAlignment(.right)
+                }
+                .padding(16)
+                .alignment(.allEdges)
+            case .moreSku(let opened):
+                UILabel(opened ? "收起全部规格" : "查看全部规格")
+                    .font(.systemFont(ofSize: 16, weight: .regular))
+                    .textColor(.systemBlue)
+                    .padding(top: 0, leading: 16, bottom: 16, trailing: 16)
+                    .alignment(.allEdges)
+            default:
+                []
+            }
+        } action: { [weak self] item in
+            if case .moreSku(let opened) = item {
+                self?.openAllSkuList(!opened)
+            }
+        }
+    }
+    
+    func tableViewSection4() -> Section {
+        return Section(section4) { [ weak self] item in
+            switch item {
+            case .onSell:
+                UIView {
+                    UILabel("网店上架商品")
+                        .font(.systemFont(ofSize: 16, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .top, .leading])
+                    UISwitch()
+                        .isOn(binding: self?.$product.map { b in
+                            return b.onSell
+                        }) { fi in
+                            self?.product.onSell = fi
+                        }
+                        .alignment([.centerY, .trailing])
+                }
+                .padding(16)
+                .alignment(.allEdges)
+            case .category:
+                self?.simpleCellContent {
+                    UILabel("分类")
+                        .font(.systemFont(ofSize: 16, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .top, .leading])
+                }
+            case .setting:
+                self?.simpleCellContent {
+                    UILabel("设定")
+                        .font(.systemFont(ofSize: 16, weight: .semibold))
+                        .textColor(.black)
+                        .alignment([.centerY, .top, .leading])
+                }
+            default:
+                []
+            }
+        } action: { item in
+            
         }
     }
 }

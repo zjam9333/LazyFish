@@ -258,10 +258,14 @@ public extension UISwitch {
         isOn = on
         return self
     }
-    func toggle(action: @escaping (Bool) -> Void) -> Self {
-        let swi = self.action(for: .valueChanged) { [weak self] in
-            action(self?.isOn ?? false)
+    
+    func isOn(binding: Binding<Bool>?, toggle: @escaping (Bool) -> Void) -> Self {
+        binding?.addObserver(target: self) { [weak self] changed in
+            self?.isOn = changed.new
         }
-        return swi
+        let _ = self.action(for: .valueChanged) { [weak self] in
+            toggle(self?.isOn ?? false)
+        }
+        return self
     }
 }
