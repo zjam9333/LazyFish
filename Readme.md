@@ -2,16 +2,68 @@
 
 类似SwiftUI，使用DSL布局UIView，但并非单纯的描述view，而是真正的创建view并布局
 
+@State修饰符用于刷新已添加binding函数的相关属性
+
 暂未完善，勿用于工业生产
+
+## Pros:
+
+- you can still use your UIViewController, UIView stuffs
+- writing UI code like SwiftUI DSL
+
+## Cons:
+
+- can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
+- need to test
+- lack of many UIView modifier
+- lack of animation modifier
+- lack of .. a lot of features
 
 # 更新日志
 
 - 2021-12-16 添加Binding的join方法
+
+可将两个Binding类型合并
+
+```swift
+@State var text1: String = "cde"
+@State var text2: String = "fgab"
+@State var number3: Int = 100
+
+let joined2Ojb: Binding<(String, Int)> = $text1.join($number3)
+
+let joined3Obj: Binding<String> = $text1.join($text2) { s1, s2 in
+    return s1 + "_" + s2
+}
+
+label.text(binding: joined3Obj)
+```
+
 - 2021-12-7 添加Binding的map方法
+
+可将`Binding<A>`类型转换为`Binding<B>`
+
+```swift
+@State var text1: String = "abcdefg"
+
+let mapCondition: Binding<Bool> = $text.map { s in
+    return s.hasPrefix("abc")
+}
+
+IfBlock(mapCondition) {
+    ...
+}
+```
+
 - 2021-12-6 IfElseView、ForEachView遮挡问题
+
+- 2021-11-18 使用UIView封装If、Else条件语句
+
+- 2021-10-28 使用UIView封装ForEach条件语句
+
 - 2021-10-9 First Commit
 
-# How to Use
+# 怎么用
 
 Edit your Podfile file
 ```ruby
@@ -22,9 +74,17 @@ target 'ZKitTest' do
 end
 ```
 
-Insert code in your `ViewControllers`
+例如在视图中央展示一个文本：
 
-here is an example to create a `tableView` with sample `label` in his cells
+```swift
+self.view.arrangeViews {
+    UILabel()
+    .text("Hello World")
+    .alignment(.center)
+}
+```
+
+创建一个简单的`tableView`，展示文本
 
 ```swift
 class ViewController: UIViewController {
@@ -55,28 +115,6 @@ class ViewController: UIViewController {
 Result shown below: 
 
 ![tableview](doc/tableview.png)
-
-例如在视图中央展示一个文本：
-
-```swift
-self.view.arrangeViews {
-    UILabel()
-    .text("Hello World")
-    .alignment(.center)
-}
-```
-
-Pros:
-
-- you can still use your ViewController stuff
-- writing UI code like SwiftUI DSL
-
-Cons:
-
-- can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
-- need to test
-- lack of animation modifier
-- lack of .. a lot of features
 
 
 
@@ -415,27 +453,6 @@ func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = ni
 
 ## 一些状态监听
 
-写了一个`propertyWrapper`用于修饰成员变量，模仿`SwiftUI`里的`@State`，但不完全一样，无需`Combine`框架
-
-```swift
-@propertyWrapper public class State<T> {
-    public var wrappedValue: T
-    public var projectedValue: Binding<T> {
-        return Binding(wrapper: self)
-    }
-    public struct Changed<T> {
-        let old: T
-        let new: T
-    }
-    // 一些变量改动监听相关逻辑省略
-    // ......
-}
-
-public struct Binding<T> {
-    var wrapper: State<T>
-}
-```
-
 在任意成员变量前使用`@State`修饰，例如
 ```swift
 @State var text: String = "abc"
@@ -500,80 +517,3 @@ ForEach($titles) { str in
 当`ForEach`传入的`Binding<[T]>`变量发生改变时，将重新使用`@ViewBuilder contents: @escaping (T) -> [UIView]`再次创建新的`view`
 
 注意：因为存在刷新的可能，`contents`需要被引用，必要时主动标记`[weak self]`。刷新时全部内容会重新创建，仍需优化
-
-# 一些简单Demos
-
-## 文本输入和绑定
-
-![text input example](doc/textinput.png)
-
-Passing `$text` into a `UITextField`, will auto assign to the label which observes the `text` value
-
-```swift
-    @State var text: String = "abc"
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        self.view.arrangeViews {
-            UIView() {
-                UIStackView(axis: .vertical, spacing: 10) {
-                    UILabel().text("your input:")
-                    UILabel().text(self.$text)
-                    UITextField().text(self.$text).borderStyle(.roundedRect)
-                }
-                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
-            }
-            .borderWidth(1)
-            .borderColor(.black)
-            .alignment([.top, .centerX])
-            .frame(width: 200)
-            .padding(top: 160)
-        }
-        // Do any additional setup after loading the view.
-    }
-```
-
-## 静态列表
-
-![scrollview](doc/scrollview.png)
-
-Using `UIScrollView`, `UIStackView`, `for..in..` ...
-
-```swift
-self.view.arrangeViews {
-    UIScrollView(.vertical) {
-        for row in 0..<10 {
-            UIView {
-                UIStackView(axis: .horizontal, alignment: .center, spacing: 10) {
-                    UIView()
-                        .backgroundColor(UIColor(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
-                        .cornerRadius(4)
-                        .frame(width: 40, height: 40)
-                    
-                    UIStackView(axis: .vertical, alignment: .leading) {
-                        UILabel().text("Title text \(row)")
-                            .textColor(.label)
-                            .font(.systemFont(ofSize: 17, weight: .semibold))
-                        UILabel().text("Detail text Detail text Detail text \(row)")
-                            .textColor(.lightGray)
-                            .font(.systemFont(ofSize: 14, weight: .regular))
-                    }
-                }
-                .frame(alignment: [.leading, .centerY])
-                .margin(leading: 12)
-                
-                UIView()
-                    .backgroundColor(.lightGray)
-                    .frame(height: 0.5, alignment: [.leading, .bottom, .trailing])
-                    .margin(leading: 12)
-            }.frame(height: 60)
-            
-        }
-    }
-    .frame(alignment: .allEdges)
-    .bounce(.vertical)
-}
-
-```
-
