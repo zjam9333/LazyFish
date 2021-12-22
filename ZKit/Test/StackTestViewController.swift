@@ -92,7 +92,7 @@ class StackTestViewController: UIViewController {
             }
         }
         
-        self.view.arrangeViews {
+        view.arrangeViews {
             stackView.alignment(.center)
         }
     }

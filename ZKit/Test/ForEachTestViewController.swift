@@ -17,7 +17,7 @@ class ForEachTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIStackView(axis: .vertical, spacing: 10) {
                 UIStackView(axis: .horizontal, spacing: 10) {
                     // section 1

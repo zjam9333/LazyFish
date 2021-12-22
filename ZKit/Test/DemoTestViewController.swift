@@ -17,9 +17,8 @@ class DemoTestViewController: UIViewController {
             return color
         }
 
-        self.view.arrangeViews {
-            UIScrollView(.vertical) {
-                for row in 0..<10 {
+        view.arrangeViews {
+            UITableView(style: .plain, array: Array(0..<100)) { row in
                     UIView {
                         UIStackView(axis: .horizontal, alignment: .center, spacing: 10) {
                             UIView()
@@ -27,7 +26,7 @@ class DemoTestViewController: UIViewController {
                                 .cornerRadius(4)
                                 .frame(width: 40, height: 40)
 
-                            UIStackView(axis: .vertical, alignment: .leading) {
+                            UIStackView(axis: .vertical, alignment: .leading, spacing: 6) {
                                 UILabel().text("Title text \(row)")
                                     .textColor(randomColor())
                                     .font(.systemFont(ofSize: 17, weight: .semibold))
@@ -37,34 +36,23 @@ class DemoTestViewController: UIViewController {
                             }
                         }
                         .alignment([.leading, .centerY])
+                        .alignment(.top, value: 12)
                         .padding(leading: 12)
-
-                        UIView()
-                            .backgroundColor(.lightGray)
-                            .frame(height: 0.5)
-                            .alignment([.leading, .bottom, .trailing])
-                            .padding(leading: 12)
                         
                         if #available(iOS 13.0, *) {
                             UIImageView(image: UIImage(systemName: "chevron.right"))
                                 .alignment([.trailing, .centerY])
                                 .offset(x: -10, y: 0)
                         }
-                        
-                        UIControl()
-                            .alignment(.allEdges)
-                            .action { [weak self] in
-                                let vc = UIViewController()
-                                self?.navigationController?.pushViewController(vc, animated: true)
-                                vc.navigationItem.title = "nothing title"
-                                vc.view.backgroundColor = randomColor()
-                            }
                     }
-                    .frame(height: 60)
-                }
+                    .alignment(.allEdges)
+            } action: { [weak self] item in
+                let vc = UIViewController()
+                self?.navigationController?.pushViewController(vc, animated: true)
+                vc.navigationItem.title = "nothing title"
+                vc.view.backgroundColor = randomColor()
             }
             .alignment(.allEdges)
-            .bounce(.vertical)
         }
         
         // Do any additional setup after loading the view.

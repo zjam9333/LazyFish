@@ -13,10 +13,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Some Tests"
+        navigationItem.title = "Some Tests"
         
         typealias VCModel = (name: String, classType: UIViewController.Type)
         var testClasses: [VCModel] = [
+            ("Join Binding Test", JoinBindingTestViewController.self),
+            ("Product Detail Test", ProductDetailTestViewController.self),
+            ("Container Cover Test", ContainerCoverTestViewController.self),
+            ("Observe Remove Test", ObserveRemoveTestViewController.self),
+            ("PPT Test", PPTTestViewController.self),
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
@@ -30,7 +35,7 @@ class ViewController: UIViewController {
         ]
         testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 1000))
         
-        self.view.arrangeViews {
+        view.arrangeViews {
             UITableView(style: .plain, array: testClasses) { item in
                 let title = item.name
                 UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)

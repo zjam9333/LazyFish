@@ -11,16 +11,16 @@ import UIKit
 public extension UICollectionView {
     
     // 若干个section
-    convenience init(@ResultBuilder<Section> sectionBuilder: ResultBuilder<Section>.ContentBlock) {
+    convenience init(@ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
         let layout = UICollectionViewFlowLayout()
         layout.estimatedItemSize = CGSize(width: 100, height: 100)
         self.init(frame: .zero, collectionViewLayout: layout)
-        self.bounces = true
-        self.alwaysBounceVertical = true
+        bounces = true
+        alwaysBounceVertical = true
         let delegate = DataSourceDelegate(collectionView: self)
         self.delegate = delegate
         self.dataSource = delegate
-        self.zk_collectionViewViewDelegate = delegate
+        zk_collectionViewViewDelegate = delegate
         delegate.sections = sectionBuilder()
         for (offset, element) in delegate.sections.enumerated() {
             element.didUpdate = { [weak self] in
@@ -67,14 +67,14 @@ extension UICollectionView {
     
     class WasteSpaceCollectionViewCell: UICollectionViewCell {
         func remakeSubviews(_ views: [UIView]) {
-            let olds = self.contentView.subviews
+            let olds = contentView.subviews
             for i in olds {
                 i.removeFromSuperview()
             }
             for i in views {
                 i.removeFromSuperview()
             }
-            self.contentView.arrangeViews {
+            contentView.arrangeViews {
                 views
             }
             // TODO: 反复移除添加必然造成浪费
@@ -113,6 +113,14 @@ extension UICollectionView {
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             sections[indexPath.section].didClick?(indexPath.row)
             collectionView.deselectItem(at: indexPath, animated: true)
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+            let showingRows = collectionView.indexPathsForVisibleItems.map { indexpath in
+                indexpath.row
+            }
+            let section = sections[indexPath.section]
+            section.removeCacheIfNeed(withShowingRows: showingRows)
         }
         
         /*

@@ -13,11 +13,16 @@
 		1C04000F27041212008F025B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04000D27041212008F025B /* Main.storyboard */; };
 		1C04001127041213008F025B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001027041213008F025B /* Assets.xcassets */; };
 		1C04001427041213008F025B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C04001227041213008F025B /* LaunchScreen.storyboard */; };
+		1C087F1927589B6700BE24C5 /* PPTTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C087F1827589B6600BE24C5 /* PPTTestViewController.swift */; };
 		1C09DBCA2730DEFC006E20AF /* TableViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */; };
+		1C35DAF4276AD962007A3C88 /* JoinBindingTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C35DAF3276AD962007A3C88 /* JoinBindingTestViewController.swift */; };
 		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
 		1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F6274F69CE00DF13A4 /* Section.swift */; };
 		1C4981F9274F6AF200DF13A4 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F8274F6AF200DF13A4 /* CollectionView.swift */; };
+		1C9FAF77275A153200105EF8 /* ObserveRemoveTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9FAF76275A153200105EF8 /* ObserveRemoveTestViewController.swift */; };
+		1C9FAF79275DDFC700105EF8 /* ContainerCoverTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9FAF78275DDFC700105EF8 /* ContainerCoverTestViewController.swift */; };
 		1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF527229408009CFCDD /* InputTestViewController.swift */; };
+		1CBB6D92275E0F1200148F36 /* ProductDetailTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB6D91275E0F1200148F36 /* ProductDetailTestViewController.swift */; };
 		1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2627102C6400FE41E8 /* StackTestViewController.swift */; };
 		1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2827102CB200FE41E8 /* AlertTestViewController.swift */; };
 		1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2A27102D0D00FE41E8 /* MarginTestViewController.swift */; };
@@ -71,13 +76,18 @@
 		1C04001027041213008F025B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C04001327041213008F025B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C04001527041213008F025B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1C087F1827589B6600BE24C5 /* PPTTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPTTestViewController.swift; sourceTree = "<group>"; };
 		1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewTestViewController.swift; sourceTree = "<group>"; };
+		1C35DAF3276AD962007A3C88 /* JoinBindingTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinBindingTestViewController.swift; sourceTree = "<group>"; };
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1C4981F8274F6AF200DF13A4 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		1C9FAF76275A153200105EF8 /* ObserveRemoveTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserveRemoveTestViewController.swift; sourceTree = "<group>"; };
+		1C9FAF78275DDFC700105EF8 /* ContainerCoverTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerCoverTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF527229408009CFCDD /* InputTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF72722B3BF009CFCDD /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		1CB1EF7827041776007CE1F3 /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
+		1CBB6D91275E0F1200148F36 /* ProductDetailTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailTestViewController.swift; sourceTree = "<group>"; };
 		1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBuilder.swift; sourceTree = "<group>"; };
 		1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
 		1CD8FE20270FEE0700FE41E8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
@@ -160,6 +170,11 @@
 				1CFBC27A272A9BB900AE64C4 /* ForEachTestViewController.swift */,
 				1CFBC27C272AA5A400AE64C4 /* ForEachScrollTestViewController.swift */,
 				1C09DBC92730DEFC006E20AF /* TableViewTestViewController.swift */,
+				1C087F1827589B6600BE24C5 /* PPTTestViewController.swift */,
+				1C9FAF76275A153200105EF8 /* ObserveRemoveTestViewController.swift */,
+				1C9FAF78275DDFC700105EF8 /* ContainerCoverTestViewController.swift */,
+				1CBB6D91275E0F1200148F36 /* ProductDetailTestViewController.swift */,
+				1C35DAF3276AD962007A3C88 /* JoinBindingTestViewController.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -241,7 +256,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					1C04000327041212008F025B = {
 						CreatedOnToolsVersion = 13.0;
@@ -296,6 +311,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CAD9CF627229408009CFCDD /* InputTestViewController.swift in Sources */,
+				1C087F1927589B6700BE24C5 /* PPTTestViewController.swift in Sources */,
+				1C35DAF4276AD962007A3C88 /* JoinBindingTestViewController.swift in Sources */,
+				1C9FAF79275DDFC700105EF8 /* ContainerCoverTestViewController.swift in Sources */,
 				1CD8FE2727102C6400FE41E8 /* StackTestViewController.swift in Sources */,
 				1CD8FE8227201AED00FE41E8 /* StateTestViewController.swift in Sources */,
 				1C04000C27041212008F025B /* ViewController.swift in Sources */,
@@ -303,6 +321,8 @@
 				1C04000827041212008F025B /* AppDelegate.swift in Sources */,
 				1CFBC27B272A9BB900AE64C4 /* ForEachTestViewController.swift in Sources */,
 				1CD8FE2F27118B4A00FE41E8 /* DemoTestViewController.swift in Sources */,
+				1C9FAF77275A153200105EF8 /* ObserveRemoveTestViewController.swift in Sources */,
+				1CBB6D92275E0F1200148F36 /* ProductDetailTestViewController.swift in Sources */,
 				1CD8FE2927102CB200FE41E8 /* AlertTestViewController.swift in Sources */,
 				1CE6351C2727F0090051BF9F /* PageTestViewController.swift in Sources */,
 				1CD8FE2B27102D0D00FE41E8 /* MarginTestViewController.swift in Sources */,
@@ -409,7 +429,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -464,7 +484,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

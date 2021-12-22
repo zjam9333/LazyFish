@@ -10,29 +10,28 @@ import ZKitCore
 
 class PageTestViewController: UIViewController {
 
-    @State var pages = Array(0..<5)
+    @State var pages = (0..<5).map { i in
+        "page\(i)"
+    }
     @State var currentPage: CGFloat = 0
     @State var showPage1: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.arrangeViews {
+        view.arrangeViews {
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 UIScrollView(.horizontal) {
-                    ForEach($pages) { [weak self] i in
+                    ForEachEnumerated($pages) { i, name in
                         let lab = UILabel()
-                            .text("page: \(i)")
+                            .text(name)
                             .textAlignment(.center)
                             .textColor(.black)
                             .border(width: 1, color: .black)
                             .frame(width: .fillParent())
                             .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
-//                        lab
-                        if i == 2 {
-                            IfBlock(self?.$showPage1) {
-                                lab.border(width: 3, color: .red).backgroundColor(.yellow)
-                            }
+                        if name == "page2" {
+                            lab.border(width: 3, color: .red).backgroundColor(.yellow)
                         } else {
                             lab
                         }
@@ -49,11 +48,9 @@ class PageTestViewController: UIViewController {
                 let ballWidth: CGFloat = 4
                 UIStackView(axis: .horizontal, spacing: ballWidth) {
                     ForEach($pages) { [weak self] i in
-                        IfBlock(self?.$currentPage) { currentPage in
-//                    for i in 0..<pageCount {
-//                        IfBlock($currentPage) { currentPage in
-                            return Int(currentPage + 0.5) == i
-                        } contentIf: {
+                        IfBlock(self?.$currentPage.map { [weak self] currentPage in
+                            return Int(currentPage + 0.5) == self?.pages.firstIndex(of: i) ?? 0
+                        }) {
                             UIView().backgroundColor(UIColor(white: 0.7, alpha: 1)).frame(width: ballWidth * 2, height: ballWidth)
                                 .cornerRadius(ballWidth / 2)
                         } contentElse: {
@@ -67,6 +64,13 @@ class PageTestViewController: UIViewController {
                     .textColor(.black).font(.systemFont(ofSize: 17, weight: .bold))
                     .action(for: .touchUpInside) { [weak self] in
                         self?.showPage1.toggle()
+                        var arr = Array(0..<5).map { i in
+                            "page\(i)"
+                        }
+                        if self?.showPage1 == false {
+                            arr.remove(at: 2)
+                        }
+                        self?.pages = arr
                     }
                     .text("toggle page 2")
             }

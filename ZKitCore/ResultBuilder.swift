@@ -1,5 +1,5 @@
 //
-//  ZKitResultBuilder.swift
+//  ZKitArrayBuilder.swift
 //  ZKit
 //
 //  Created by zjj on 2021/10/8.
@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 
-public typealias ViewBuilder = ResultBuilder<UIView>
-public typealias LayoutBuilder = ResultBuilder<NSLayoutConstraint>
+public typealias ViewBuilder = ArrayBuilder<UIView>
+public typealias LayoutBuilder = ArrayBuilder<NSLayoutConstraint>
 
-@resultBuilder public struct ResultBuilder<MyReturnType> {
+@resultBuilder public struct ArrayBuilder<MyReturnType> {
     public typealias ContentBlock = () -> [MyReturnType]
     // MARK: 组合全部表达式的返回值
     public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
@@ -22,7 +22,7 @@ public typealias LayoutBuilder = ResultBuilder<NSLayoutConstraint>
     }
 }
 
-public extension ResultBuilder {
+public extension ArrayBuilder {
     // MARK: 处理空白block
     static func buildOptional<T>(_ component: [T]?) -> [MyReturnType] {
         return []

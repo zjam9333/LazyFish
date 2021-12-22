@@ -7,15 +7,31 @@
 
 import UIKit
 
+internal typealias EdgeValuePair = [Edge: CGFloat]
+
 internal class Attribute {
-    var padding: [Edge: CGFloat]?
-    var offset: CGPoint = .zero
+    enum _Attribute {
+        case width(SizeFill)
+        case height(SizeFill)
+        
+        case alignment(EdgeValuePair)
+        case padding(EdgeValuePair)
+        case offset(CGPoint)
+        
+        case onAppear(OnAppearBlock?)
+    }
+    var attrs: [_Attribute] = []
     
-    var alignment: [Edge: CGFloat]?
-    var width: SizeFill = .unknown
-    var height: SizeFill = .unknown
+    private static var attributeKey: Int = 0
     
-    var onAppear: OnAppearBlock?
+    internal static func attribute(from view: UIView) -> Attribute {
+        if let obj = objc_getAssociatedObject(view, &attributeKey) as? Attribute {
+            return obj
+        }
+        let newone = Attribute()
+        objc_setAssociatedObject(view, &attributeKey, newone, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return newone
+    }
 }
 
 public enum SizeFill {
@@ -48,6 +64,95 @@ internal enum Edge {
     case top, leading, bottom, trailing, centerX, centerY
 }
 
-internal enum AssociatedKey {
-    static var attributeKey: Int = 0
+public extension UIView {
+
+    func onAppear(_ action: @escaping OnAppearBlock) -> Self {
+        Attribute.attribute(from: self).attrs.append(.onAppear(action))
+        return self
+    }
+    
+    func frame(width: CGFloat, height: CGFloat) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.width(.equalTo(width)))
+        att.attrs.append(.height(.equalTo(height)))
+        return self
+    }
+    
+    func frame(size: CGSize) -> Self {
+        return frame(width: size.width, height: size.height)
+    }
+    
+    func frame(width: CGFloat) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.width(.equalTo(width)))
+        return self
+    }
+    
+    func frame(height: CGFloat) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.height(.equalTo(height)))
+        return self
+    }
+    
+    func frame(width: SizeFill = .unknown, height: SizeFill = .unknown) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.width(width))
+        att.attrs.append(.height(height))
+        return self
+    }
+    
+    func alignment(_ edges: Alignment, value: CGFloat? = 0) -> Self {
+        var align = EdgeValuePair()
+        if edges.contains(.centerY) {
+            align[.centerY] = value
+        }
+        if edges.contains(.centerX) {
+            align[.centerX] = value
+        }
+        if edges.contains(.leading) {
+            align[.leading] = value
+        }
+        if edges.contains(.trailing) {
+            align[.trailing] = value
+        }
+        if edges.contains(.top) {
+            align[.top] = value
+        }
+        if edges.contains(.bottom) {
+            align[.bottom] = value
+        }
+        if edges.isEmpty {
+            return self
+        }
+        Attribute.attribute(from: self).attrs.append(.alignment(align))
+        return self
+    }
+    
+    // 未完善
+    func offset(x: CGFloat, y: CGFloat) -> Self {
+        let p = CGPoint(x: x, y: y)
+        if p == .zero {
+            return self
+        }
+        Attribute.attribute(from: self).attrs.append(.offset(p))
+        return self
+    }
+    
+    // padding将封装一个containerview
+    func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
+        var mar = EdgeValuePair()
+        mar[.top] = top
+        mar[.leading] = leading
+        mar[.bottom] = bottom
+        mar[.trailing] = trailing
+        if mar.isEmpty {
+            return self
+        }
+        Attribute.attribute(from: self).attrs.append(.padding(mar))
+        return self
+    }
+    
+    func padding(_ pad: CGFloat) -> Self {
+        return padding(top: pad, leading: pad, bottom: pad, trailing: pad)
+    }
 }

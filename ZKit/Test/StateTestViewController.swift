@@ -22,7 +22,28 @@ class StateTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.arrangeViews {
+        let foodForTitle: (String) -> UILabel = { str in
+            UILabel().text(str).textColor(.black).font(.systemFont(ofSize: 30, weight: .black)).alignment(.center)
+        }
+        let buttonForTitle: (String, @escaping () -> Void) -> UIButton = { str, action in
+            UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
+                .textColor(.black)
+                .textColor(.gray, for: .highlighted)
+                .action {
+                    action()
+                }
+        }
+        let buttonForTitleBinding: (Binding<String>?, @escaping () -> Void) -> UIButton = { str, action in
+            UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
+                .textColor(.black)
+                .textColor(.gray, for: .highlighted)
+                .action {
+                    action()
+                }
+        }
+        
+        view.arrangeViews {
+            
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
                 foodForTitle("Tea 🍵")
                 IfBlock($showCake) {
@@ -47,9 +68,10 @@ class StateTestViewController: UIViewController {
                 
                 UIStackView(axis: .horizontal) {
                     UILabel().text("label with bool state: ")
-                    IfBlock($addNum) { i in
+                    let numberMap = $addNum.map { i in
                         i % 2 == 0
-                    } contentIf: {
+                    }
+                    IfBlock(numberMap) {
                         foodForTitle("Hello!")
                             .borderColor(.red).borderWidth(1)
                     } contentElse: {
@@ -71,7 +93,7 @@ class StateTestViewController: UIViewController {
                 buttonForTitle("Toggle Animals 🙊") { [weak self] in
                     self?.showAnimals.toggle()
                 }
-                buttonForTitle($sayWhat) { [weak self] in
+                buttonForTitleBinding($sayWhat) { [weak self] in
                     self?.addNum += 1
                     if self?.sayWhat == "Hello" {
                         self?.sayWhat = "World"
@@ -84,25 +106,5 @@ class StateTestViewController: UIViewController {
         }
     }
     
-    func foodForTitle(_ str: String) -> UILabel {
-        UILabel().text(str).textColor(.black).font(.systemFont(ofSize: 30, weight: .black)).alignment(.center)
-    }
     
-    func buttonForTitle(_ str: String, action: @escaping () -> Void) -> UIButton {
-        UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
-            .textColor(.black)
-            .textColor(.gray, for: .highlighted)
-            .action {
-                action()
-            }
-    }
-    
-    func buttonForTitle(_ str: Binding<String>?, action: @escaping () -> Void) -> UIButton {
-        UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
-            .textColor(.black)
-            .textColor(.gray, for: .highlighted)
-            .action {
-                action()
-            }
-    }
 }

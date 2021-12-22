@@ -10,12 +10,12 @@ import UIKit
 public extension UITableView {
     
     // 若干个section
-    convenience init(style: Style, @ResultBuilder<Section> sectionBuilder: ResultBuilder<Section>.ContentBlock) {
+    convenience init(style: Style, @ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
         self.init(frame: .zero, style: style)
         let delegate = DataSourceDelegate()
         self.delegate = delegate
         self.dataSource = delegate
-        self.zk_tableViewViewDelegate = delegate
+        zk_tableViewViewDelegate = delegate
         delegate.sections = sectionBuilder()
         for (offset, element) in delegate.sections.enumerated() {
             element.didUpdate = { [weak self] in
@@ -25,10 +25,10 @@ public extension UITableView {
             }
         }
         if #available(iOS 15.0, *) {
-            self.sectionHeaderTopPadding = 0
+            sectionHeaderTopPadding = 0
         }
         
-        self.estimatedRowHeight = 44
+        estimatedRowHeight = 44
     }
     
     // 一个动态section
@@ -67,14 +67,14 @@ extension UITableView {
     
     private class WasteSpaceTableViewCell: UITableViewCell {
         func remakeSubviews(_ views: [UIView]) {
-            let olds = self.contentView.subviews
+            let olds = contentView.subviews
             for i in olds {
                 i.removeFromSuperview()
             }
             for i in views {
                 i.removeFromSuperview()
             }
-            self.contentView.arrangeViews {
+            contentView.arrangeViews {
                 views
             }
             // TODO: 反复移除添加必然造成浪费
@@ -160,6 +160,17 @@ extension UITableView {
             }
             return nil
         }
+        
+        // MARK: Cell rolling
+        
+        func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+            let showingRows = tableView.indexPathsForVisibleRows?.map { indexpath in
+                indexpath.row
+            } ?? []
+            let section = sections[indexPath.section]
+            section.removeCacheIfNeed(withShowingRows: showingRows)
+        }
+        
     }
 }
 
