@@ -12,6 +12,31 @@ import UIKit
 ///
 ///摘抄了一些常用属性，修改后返回self，达到链式调用的效果
 ///
+///
+///
+
+public protocol KeyPathBinding {
+}
+
+extension UIView: KeyPathBinding {
+}
+
+public extension KeyPathBinding where Self: UIView {
+    func bindingKeyPath<Value>(_ keyPath: WritableKeyPath<Self, Value>, with binding: Binding<Value>?) -> Self {
+        binding?.addObserver(target: self, observer: { [weak self] change in
+            self?[keyPath: keyPath] = change.new
+        })
+        return self
+    }
+    
+    func setKeyPath<Value>(_ keyPath: WritableKeyPath<Self, Value>, value newValue: Value) -> Self {
+        // self[keyPath: keyPath] = newValue
+        // 收到警告？？？Cannot assign through subscript: 'self' is immutable
+        var weakself = self as Self?
+        weakself?[keyPath: keyPath] = newValue
+        return self
+    }
+}
 
 public extension UIView {
     
@@ -232,7 +257,7 @@ public extension UITextField {
     }
     
     func text(binding text: Binding<String>?, changed: @escaping (String) -> Void) -> Self {
-        addTarget(self, action: #selector(selfTextDidChanged), for: .allEditingEvents)
+        addTarget(self, action: #selector(selfTextDidChanged), for: .editingChanged)
         var shouldObserve = true
         zk_textBlock = { newText in
             shouldObserve = false

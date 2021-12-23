@@ -120,6 +120,12 @@ public class Binding<Element> {
         let joinMap = join(other).map(transform)
         return joinMap
     }
+    
+    public func asOptional() -> Binding<Element?> {
+        return self.map { e -> Element? in
+            e
+        }
+    }
 }
 
 private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
