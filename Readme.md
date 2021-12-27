@@ -1,4 +1,4 @@
-# ZKit介绍
+# 这个什么框架的介绍
 
 类似SwiftUI，使用DSL布局UIView，但并非单纯的描述view，而是真正的创建view并布局
 
@@ -6,12 +6,13 @@
 
 暂未完善，勿用于工业生产
 
-## Pros:
+## 优势:
 
-- you can still use your UIViewController, UIView stuffs
-- writing UI code like SwiftUI DSL
+- 仍可使用`UIViewController`, `UIView`
+- 像`SwiftUI DSL`那样的思维写`UI`
+- iOS 9 !!!
 
-## Cons:
+## 缺点:
 
 - can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
 - need to test
@@ -23,7 +24,7 @@
 
 - 2021-12-16 添加Binding的join方法
 
-可将两个Binding类型合并
+可将两个Binding类型合并，`A + B = (A, B)`，或 `A + B = C`，极大的提升灵活性
 
 ```swift
 @State var text1: String = "cde"
@@ -41,17 +42,25 @@ label.text(binding: joined3Obj)
 
 - 2021-12-7 添加Binding的map方法
 
-可将`Binding<A>`类型转换为`Binding<B>`
+可将`Binding<A>`类型转换为`Binding<B>`，例如`IfBlock`需要的`Binding<Bool>`可由其他类型转化得来，极大的提升灵活性
 
 ```swift
 @State var text1: String = "abcdefg"
 
+// 把Binding<String>转化为Binding<Bool>
 let mapCondition: Binding<Bool> = $text.map { s in
     return s.hasPrefix("abc")
 }
 
 IfBlock(mapCondition) {
-    ...
+    // views...
+}
+
+// 或者直接写成：
+IfBlock($text.map { s in
+    return s.hasPrefix("abc")
+}) {
+    // views...
 }
 ```
 
@@ -65,12 +74,13 @@ IfBlock(mapCondition) {
 
 # 怎么用
 
-Edit your Podfile file
+添加pod
+
 ```ruby
 platform :ios, '9.0'
 target 'ZKitTest' do
 	use_frameworks!
-	pod 'ZKit', :git => 'https://github.com/ZJamm1993/ZKit', :branch => 'pod'
+	pod 'ZKit', :git => 'https://whereIsThePodGit', :branch => 'whichBranch'
 end
 ```
 
@@ -84,7 +94,7 @@ self.view.arrangeViews {
 }
 ```
 
-创建一个简单的`tableView`，展示文本
+创建一个简单的`tableView`，展示文本（`tableView`功能实现尚未完善）
 
 ```swift
 class ViewController: UIViewController {
@@ -112,11 +122,9 @@ class ViewController: UIViewController {
 }
 ```
 
-Result shown below: 
+运行结果: 
 
 ![tableview](doc/tableview.png)
-
-
 
 # 已实现的拓展
 

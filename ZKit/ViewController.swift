@@ -30,7 +30,7 @@ class ViewController: UIViewController {
             ("Demo Test", DemoTestViewController.self),
             ("State Test", StateTestViewController.self),
             ("Input Test", InputTestViewController.self),
-            ("Stack Test", StackTestViewController.self),
+//            ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
         testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 1000))
