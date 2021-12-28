@@ -31,6 +31,11 @@ class JoinBindingTestViewController: UIViewController {
                         .setKeyPath(\.backgroundColor, value: .lightGray)
                         .setKeyPath(\.layer.borderColor, value: UIColor.black.cgColor)
                         .setKeyPath(\.layer.borderWidth, value: 2)
+                    UILabel().text("text1 is Empty?")
+                        .bindingKeyPath(\.textColor, with: $text1.map({ s in
+                            s.isEmpty ? .red : .green
+                        }))
+                    
                     // 这里的label.text是optional的，但编译器却允许传入binding<String> ？？
                     UILabel()
                         .bindingKeyPath(\.text, with: $text1.join($text2).join($number3).map { i -> String in
