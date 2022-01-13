@@ -1,17 +1,40 @@
-# ZKit介绍
+# 这个什么框架的介绍
 
 类似SwiftUI，使用DSL布局UIView，但并非单纯的描述view，而是真正的创建view并布局
 
 @State修饰符用于刷新已添加binding函数的相关属性
 
-暂未完善，勿用于工业生产
+处于实验阶段，勿用于工业生产
 
-## Pros:
+# 怎么用
 
-- you can still use your UIViewController, UIView stuffs
-- writing UI code like SwiftUI DSL
+添加pod
 
-## Cons:
+```ruby
+platform :ios, '9.0'
+target 'LazyFishTest' do
+	use_frameworks!
+	pod 'LazyFish', :git => 'https://whereIsThePodGit', :branch => 'whichBranch'
+end
+```
+
+例如在视图中央展示一个文本：
+
+```swift
+self.view.arrangeViews {
+    UILabel()
+        .text("Hello World")
+        .alignment(.center)
+}
+```
+
+## 优势:
+
+- 仍可使用`UIViewController`, `UIView`
+- 像`SwiftUI DSL`那样的思维写`UI`
+- 支持`iOS 9`
+
+## 缺点:
 
 - can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
 - need to test
@@ -21,9 +44,42 @@
 
 # 更新日志
 
-- 2021-12-16 添加Binding的join方法
+- 2022-01-13 keyPath方法改为property方法，添加动画绑定demo
 
-可将两个Binding类型合并
+```swift
+@State private var alertScale: CGFloat = 0.1
+
+view.property(\.transform, binding: $alertScale.map {
+    scale -> CGAffineTransform in
+    return .identity.scaledBy(x: scale, y: scale)
+})
+
+alertScale = 1
+```
+
+- 2021-12-23 添加`UIView`使用`keyPath`结合`binding`的属性修改，用以暂时解决当前链式属性修改齐不够用的问题
+
+例如`UILabel`绑定颜色
+
+```swift
+// 直接修改
+UILabel()
+    .setKeyPath(\.textColor, value: .lightGray)
+    // 其他属性...
+
+// Binding修改
+@State var isTrue: Bool = true
+UILabel()
+    .bindingKeyPath(\.textColor, value: $isTrue.map { b -> UIColor in 
+    // 这里的UIColor推测可能不成功
+        b ? .green : .red
+    })
+    // 其他属性...
+```
+
+- 2021-12-16 添加`Binding`的`join`方法
+
+可将两个Binding类型合并，`A + B = (A, B)`，或 `A + B = C`，极大的提升灵活性
 
 ```swift
 @State var text1: String = "cde"
@@ -39,19 +95,27 @@ let joined3Obj: Binding<String> = $text1.join($text2) { s1, s2 in
 label.text(binding: joined3Obj)
 ```
 
-- 2021-12-7 添加Binding的map方法
+- 2021-12-7 添加`Binding`的`map`方法
 
-可将`Binding<A>`类型转换为`Binding<B>`
+可将`Binding<A>`类型转换为`Binding<B>`，例如`IfBlock`需要的`Binding<Bool>`可由其他类型转化得来，极大的提升灵活性
 
 ```swift
 @State var text1: String = "abcdefg"
 
+// 把Binding<String>转化为Binding<Bool>
 let mapCondition: Binding<Bool> = $text.map { s in
     return s.hasPrefix("abc")
 }
 
 IfBlock(mapCondition) {
-    ...
+    // views...
+}
+
+// 或者直接写成：
+IfBlock($text.map { s in
+    return s.hasPrefix("abc")
+}) {
+    // views...
 }
 ```
 
@@ -62,61 +126,6 @@ IfBlock(mapCondition) {
 - 2021-10-28 使用UIView封装ForEach条件语句
 
 - 2021-10-9 First Commit
-
-# 怎么用
-
-Edit your Podfile file
-```ruby
-platform :ios, '9.0'
-target 'ZKitTest' do
-	use_frameworks!
-	pod 'ZKit', :git => 'https://github.com/ZJamm1993/ZKit', :branch => 'pod'
-end
-```
-
-例如在视图中央展示一个文本：
-
-```swift
-self.view.arrangeViews {
-    UILabel()
-    .text("Hello World")
-    .alignment(.center)
-}
-```
-
-创建一个简单的`tableView`，展示文本
-
-```swift
-class ViewController: UIViewController {
-    @State var models = Array(0...10)
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.navigationItem.title = "Test"
-        
-        self.view.arrangeViews {
-            UITableView(style: .grouped, binding: $models) { item in
-                UILabel().text("model row \(item)")
-                    .alignment(.leading, value: 20)
-                    .alignment(.centerY)
-
-            } action: { [weak self] item in
-                let vc = UIViewController()
-                self?.navigationController?.pushViewController(vc, animated: true)
-                vc.navigationItem.title = "model row \(item)"
-                vc.view.backgroundColor = .white
-            }
-            .alignment(.allEdges)
-        }
-    }
-}
-```
-
-Result shown below: 
-
-![tableview](doc/tableview.png)
-
-
 
 # 已实现的拓展
 
