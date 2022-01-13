@@ -12,9 +12,9 @@
 
 ```ruby
 platform :ios, '9.0'
-target 'ZKitTest' do
+target 'LazyFishTest' do
 	use_frameworks!
-	pod 'ZKit', :git => 'https://whereIsThePodGit', :branch => 'whichBranch'
+	pod 'LazyFish', :git => 'https://whereIsThePodGit', :branch => 'whichBranch'
 end
 ```
 
