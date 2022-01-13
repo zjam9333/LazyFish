@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         
         typealias VCModel = (name: String, classType: UIViewController.Type)
         var testClasses: [VCModel] = [
+            ("Alert Test", AlertTestViewController.self),
             ("Join Binding Test", JoinBindingTestViewController.self),
             ("Product Detail Test", ProductDetailTestViewController.self),
             ("Container Cover Test", ContainerCoverTestViewController.self),
@@ -26,14 +27,13 @@ class ViewController: UIViewController {
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
             ("Page Test", PageTestViewController.self),
-            ("Alert Test", AlertTestViewController.self),
             ("Demo Test", DemoTestViewController.self),
             ("State Test", StateTestViewController.self),
             ("Input Test", InputTestViewController.self),
 //            ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
-        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 1000))
+        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 2))
         
         view.arrangeViews {
             UITableView(style: .plain, array: testClasses) { item in

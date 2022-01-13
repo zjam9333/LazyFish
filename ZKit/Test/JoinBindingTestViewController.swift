@@ -26,19 +26,19 @@ class JoinBindingTestViewController: UIViewController {
             UIView() {
                 UIStackView(axis: .vertical, spacing: 10) {
                     UILabel().text("joined input result:")
-                        .setKeyPath(\.textColor, value: .blue)
+                        .property(\.textColor, value: .blue)
                         .padding(10)
-                        .setKeyPath(\.backgroundColor, value: .lightGray)
-                        .setKeyPath(\.layer.borderColor, value: UIColor.black.cgColor)
-                        .setKeyPath(\.layer.borderWidth, value: 2)
+                        .property(\.backgroundColor, value: .lightGray)
+                        .property(\.layer.borderColor, value: UIColor.black.cgColor)
+                        .property(\.layer.borderWidth, value: 2)
                     UILabel().text("text1 is Empty?")
-                        .bindingKeyPath(\.textColor, with: $text1.map({ s in
+                        .property(\.textColor, binding: $text1.map({ s in
                             s.isEmpty ? .red : .green
                         }))
                     
                     // 这里的label.text是optional的，但编译器却允许传入binding<String> ？？
                     UILabel()
-                        .bindingKeyPath(\.text, with: $text1.join($text2).join($number3).map { i -> String in
+                        .property(\.text, binding: $text1.join($text2).join($number3).map { i -> String in
                             let ((s1, s2), n1) = i
                             let s = s1 + "_" + s2 + "_\(n1)"
                             return s

@@ -43,9 +43,10 @@ public struct Changed<T> {
     }
     private var observers = [ObserverTargetAction]()
     
-    public var projectedValue: Binding<T> {
-        return Binding(wrapper: self)
-    }
+    public lazy var projectedValue: Binding<T> = Binding(wrapper: self) // 这样可以强饮用第一个binding
+    // {
+//        return Binding(wrapper: self)
+//    }
 }
 
 extension State {
@@ -100,6 +101,10 @@ public class Binding<Element> {
         self.wrapper = wrapper
     }
     
+    deinit {
+        print("deinit", self)
+    }
+    
     public func addObserver(target: AnyObject?, observer: @escaping Changed<Element>.ObserverHandler) {
         wrapper?.addObserver(target: target) { changed in
             observer(changed)
@@ -112,7 +117,7 @@ public class Binding<Element> {
     }
     
     public func join<OtherElement>(_ other: Binding<OtherElement>) -> Binding<(Element, OtherElement)> {
-        let bindJoin = JoinBinding<Element, OtherElement>(join: self, with: other)
+        let bindJoin = JoinBinding<Element, OtherElement>(self, with: other)
         return bindJoin
     }
     
@@ -121,10 +126,9 @@ public class Binding<Element> {
         return joinMap
     }
     
-    public func asOptional() -> Binding<Element?> {
-        return self.map { e -> Element? in
-            e
-        }
+    public func zip<OtherElement, ResultElement>(_ other: Binding<OtherElement>, transform: @escaping (Element, OtherElement) -> ResultElement) -> Binding<ResultElement> {
+        let joinMap = ZipBinding<Element, OtherElement>(self, with: other).map(transform)
+        return joinMap
     }
 }
 
@@ -149,7 +153,7 @@ private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
 private class JoinBinding<S1, S2>: Binding<(S1, S2)> {
     var source1: Binding<S1>
     var source2: Binding<S2>
-    init(join source1: Binding<S1>, with source2: Binding<S2>) {
+    init(_ source1: Binding<S1>, with source2: Binding<S2>) {
         self.source1 = source1
         self.source2 = source2
         super.init(wrapper: nil)
@@ -158,19 +162,28 @@ private class JoinBinding<S1, S2>: Binding<(S1, S2)> {
     public override func addObserver(target: AnyObject?, observer: @escaping Changed<(S1, S2)>.ObserverHandler) {
         var c1: Changed<S1>?
         var c2: Changed<S2>?
+        let shouldClean = (self as? ZipBinding<S1, S2>) != nil
         let performChanges = {
-            if let c1 = c1, let c2 = c2 {
-                let changedAll = Changed<(S1, S2)>(old: (c1.old, c2.old), new: (c1.new, c2.new))
+            if let c1obj = c1, let c2obj = c2 {
+                if shouldClean {
+                    c1 = nil
+                    c2 = nil
+                }
+                let changedAll = Changed<(S1, S2)>(old: (c1obj.old, c2obj.old), new: (c1obj.new, c2obj.new))
                 observer(changedAll)
             }
         }
-        source1.addObserver(target: target) { change1 in
-            c1 = change1
+        source1.addObserver(target: target) { change in
+            c1 = change
             performChanges()
         }
-        source2.addObserver(target: target) { change2 in
-            c2 = change2
+        source2.addObserver(target: target) { change in
+            c2 = change
             performChanges()
         }
     }
+}
+
+/// The Zip 要求全部元素都变化才打包发送
+private class ZipBinding<S1, S2>: JoinBinding<S1, S2> {
 }

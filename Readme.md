@@ -44,6 +44,19 @@ self.view.arrangeViews {
 
 # 更新日志
 
+- 2022-01-13 keyPath方法改为property方法，添加动画绑定demo
+
+```swift
+@State private var alertScale: CGFloat = 0.1
+
+view.property(\.transform, binding: $alertScale.map {
+    scale -> CGAffineTransform in
+    return .identity.scaledBy(x: scale, y: scale)
+})
+
+alertScale = 1
+```
+
 - 2021-12-23 添加`UIView`使用`keyPath`结合`binding`的属性修改，用以暂时解决当前链式属性修改齐不够用的问题
 
 例如`UILabel`绑定颜色

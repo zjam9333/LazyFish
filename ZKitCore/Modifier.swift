@@ -22,14 +22,14 @@ extension UIView: KeyPathBinding {
 }
 
 public extension KeyPathBinding where Self: UIView {
-    func bindingKeyPath<Value>(_ keyPath: WritableKeyPath<Self, Value>, with binding: Binding<Value>?) -> Self {
+    func property<Value>(_ keyPath: WritableKeyPath<Self, Value>, binding: Binding<Value>?) -> Self {
         binding?.addObserver(target: self, observer: { [weak self] change in
             self?[keyPath: keyPath] = change.new
         })
         return self
     }
     
-    func setKeyPath<Value>(_ keyPath: WritableKeyPath<Self, Value>, value newValue: Value) -> Self {
+    func property<Value>(_ keyPath: WritableKeyPath<Self, Value>, value newValue: Value) -> Self {
         // self[keyPath: keyPath] = newValue
         // 收到警告？？？Cannot assign through subscript: 'self' is immutable
         var weakself = self as Self?

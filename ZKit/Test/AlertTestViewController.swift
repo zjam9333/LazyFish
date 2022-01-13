@@ -52,17 +52,10 @@ fileprivate class TestAlertView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var alertContent: UIView? = UIView("center Card") {
-        
-        let hideAlert = { [weak self] in
-            UIView.animate(withDuration: 0.25) {
-                self?.alpha = 0
-                self?.alertContent?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-            } completion: { fi in
-                self?.removeFromSuperview()
-            }
-        }
-        
+    @State private var alertAlpha: CGFloat = 0
+    @State private var alertScale: CGFloat = 0.1
+    
+    lazy var alertContent: UIView = UIView("center Card") {
         //
         UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
             UIStackView(axis: .vertical, distribution: .fill, alignment: .leading, spacing: 12) {
@@ -90,27 +83,19 @@ fileprivate class TestAlertView: UIView {
                         .textColor(i.style.color, for: .normal)
                         .textColor(i.style.color.withAlphaComponent(0.5), for: .highlighted)
                         .font(i.style.font)
-                        .action {
-                            hideAlert()
+                        .action { [weak self] in
                             i.action()
+                            ActionWithAnimation(.default) {
+                                self?.alertScale = 0.1
+                                self?.alertAlpha = 0
+                            } completion: { fi in
+                                self?.removeFromSuperview()
+                            }
                         }
                 }
             }.frame(height: 48)
         }
         .alignment(.allEdges)
-    }
-    .backgroundColor(.white)
-    .cornerRadius(10).clipped()
-    .frame(width: 300)
-    .alignment(.center)
-    .onAppear { [weak self] someview in
-        print("apppp")
-        self?.alpha = 0
-        self?.alertContent?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-        UIView.animate(withDuration: 0.25) {
-            self?.alpha = 1
-            self?.alertContent?.transform = CGAffineTransform.identity
-        }
     }
     
     deinit {
@@ -120,7 +105,25 @@ fileprivate class TestAlertView: UIView {
     func testShow() {
         let mySelfAlert = arrangeViews {
             alertContent
+                .backgroundColor(.white)
+                .cornerRadius(10).clipped()
+                .frame(width: 300)
+                .alignment(.center)
+                .property(\.transform, binding: $alertScale.map {
+                    scale -> CGAffineTransform in
+                    return .identity.scaledBy(x: scale, y: scale)
+                })
+                .property(\.alpha, binding: $alertAlpha)
+                .onAppear { [weak self] someview in
+                    ActionWithAnimation(.default) {
+                        self?.alertScale = 1
+                        self?.alertAlpha = 1
+                    } completion: { fi in
+                        print("fi")
+                    }
+                }
         }
+        .property(\.alpha, binding: $alertAlpha)
         .alignment(.allEdges)
         .backgroundColor(.black.withAlphaComponent(0.3))
         UIApplication.shared.keyWindow?.arrangeViews {
