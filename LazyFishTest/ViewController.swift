@@ -45,7 +45,8 @@ class ViewController: UIViewController {
                 let vc = item.classType.init()
                 vc.view.backgroundColor = .white
                 vc.navigationItem.title = item.name
-                self?.navigationController?.pushViewController(vc, animated: true)
+                self?.splitViewController?.showDetailViewController(vc, sender: nil)
+//                self?.navigationController?.pushViewController(vc, animated: true)
             }
             .alignment(.allEdges)
         }

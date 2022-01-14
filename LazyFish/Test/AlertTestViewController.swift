@@ -34,77 +34,66 @@ fileprivate struct AlertAction {
     let style: AlertStyle
     let action: () -> Void
 }
+
 fileprivate typealias AlertActionBuilder = ArrayBuilder<AlertAction>
 
-fileprivate class TestAlertView: UIView {
+fileprivate class AlertViewShow: UIView {
     
     let alertActions: [AlertAction]
     let title: String
     let message: String
-    init(title: String, message: String, @AlertActionBuilder actions: () -> [AlertAction]) {
+    
+    @State var alertAlpha: CGFloat = 0
+    @State var alertScale: CGFloat = 0.1
+    
+    @discardableResult init(inView view: UIView?,title: String, message: String, @AlertActionBuilder actions: () -> [AlertAction]) {
         self.title = title
         self.message = message
-        alertActions = actions()
+        self.alertActions = actions()
         super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @State private var alertAlpha: CGFloat = 0
-    @State private var alertScale: CGFloat = 0.1
-    
-    lazy var alertContent: UIView = UIView("center Card") {
-        //
-        UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
-            UIStackView(axis: .vertical, distribution: .fill, alignment: .leading, spacing: 12) {
-                UILabel()
-                    .text(title)
-                    .textColor(.black)
-                    .font(UIFont.systemFont(ofSize: 16, weight: .bold))
-                
-                UILabel()
-                    .text(message)
-                    .textColor(.darkGray)
-                    .font(UIFont.systemFont(ofSize: 14, weight: .regular))
-            }
-            .alignment(.allEdges)
-            .padding(top: 20, leading: 20, bottom: 20, trailing: 20)
-            
-            UIView()
-                .backgroundColor(.lightGray)
-                .frame(height: 0.5)
-            
-            UIStackView(axis: .horizontal, distribution: .fillEqually, alignment: .fill, spacing: 0) {
-                for i in alertActions {
-                    UIButton()
-                        .text(i.name)
-                        .textColor(i.style.color, for: .normal)
-                        .textColor(i.style.color.withAlphaComponent(0.5), for: .highlighted)
-                        .font(i.style.font)
-                        .action { [weak self] in
-                            i.action()
-                            ActionWithAnimation(.default) {
-                                self?.alertScale = 0.1
-                                self?.alertAlpha = 0
-                            } completion: { fi in
-                                self?.removeFromSuperview()
-                            }
+        view?.arrangeViews {
+            self.arrangeViews { // self作为背景
+                UIView { // 中间的内容
+                    UIStackView(axis: .vertical, distribution: .fill, alignment: .fill, spacing: 0) {
+                        UIStackView(axis: .vertical, distribution: .fill, alignment: .leading, spacing: 12) {
+                            UILabel()
+                                .text(title)
+                                .textColor(.black)
+                                .font(UIFont.systemFont(ofSize: 16, weight: .bold))
+                            
+                            UILabel()
+                                .text(message)
+                                .textColor(.darkGray)
+                                .font(UIFont.systemFont(ofSize: 14, weight: .regular))
                         }
+                        .alignment(.allEdges)
+                        .padding(top: 20, leading: 20, bottom: 20, trailing: 20)
+                        
+                        UIView()
+                            .backgroundColor(.lightGray)
+                            .frame(height: 0.5)
+                        
+                        UIStackView(axis: .horizontal, distribution: .fillEqually, alignment: .fill, spacing: 0) {
+                            for i in alertActions {
+                                UIButton()
+                                    .text(i.name)
+                                    .textColor(i.style.color, for: .normal)
+                                    .textColor(i.style.color.withAlphaComponent(0.5), for: .highlighted)
+                                    .font(i.style.font)
+                                    .action { [weak self] in
+                                        i.action()
+                                        ActionWithAnimation(.default) {
+                                            self?.alertScale = 0.1
+                                            self?.alertAlpha = 0
+                                        } completion: { fi in
+                                            self?.removeFromSuperview()
+                                        }
+                                    }
+                            }
+                        }.frame(height: 48)
+                    }
+                    .alignment(.allEdges)
                 }
-            }.frame(height: 48)
-        }
-        .alignment(.allEdges)
-    }
-    
-    deinit {
-        print("deinit alert")
-    }
-
-    func testShow() {
-        let mySelfAlert = arrangeViews {
-            alertContent
                 .backgroundColor(.white)
                 .cornerRadius(10).clipped()
                 .frame(width: 300)
@@ -122,13 +111,15 @@ fileprivate class TestAlertView: UIView {
                         print("fi")
                     }
                 }
+            }
+            .property(\.alpha, binding: $alertAlpha)
+            .alignment(.allEdges)
+            .backgroundColor(.black.withAlphaComponent(0.3))
         }
-        .property(\.alpha, binding: $alertAlpha)
-        .alignment(.allEdges)
-        .backgroundColor(.black.withAlphaComponent(0.3))
-        UIApplication.shared.keyWindow?.arrangeViews {
-            mySelfAlert
-        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -145,15 +136,15 @@ class AlertTestViewController: UIViewController {
                 .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
                 .backgroundColor(.gray)
                 .alignment(.center)
-                .action {
-                    TestAlertView(title: "Logout", message: "Are you sure?") {
+                .action { [weak self] in
+                    AlertViewShow(inView: self?.view, title: "Logout", message: "Are you sure?") {
                         AlertAction(name: "Cancel", style: .cancel) {
                             print("cancelled")
                         }
                         AlertAction(name: "OK", style: .default) {
                             print("comfirmed")
                         }
-                    }.testShow()
+                    }
                 }
         }
         // Do any additional setup after loading the view.
