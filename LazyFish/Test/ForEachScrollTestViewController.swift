@@ -19,28 +19,32 @@ class ForEachScrollTestViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.arrangeViews { [weak self] in
-            UIScrollView (.vertical, spacing: 10) {
-                // section 1
-                UILabel().text("Header").backgroundColor(.lightGray)
-                
-                ForEach(self?.$section1) { str in
-                    if str == "bird" {
-                        IfBlock(self?.$showBirds) {
-                            UILabel().text(str).alignment(.allEdges).backgroundColor(.cyan)
+            GeometryReader { [weak self] geo in
+                UIScrollView (.vertical, spacing: 10) {
+                    // section 1
+                    UILabel().text("Header").backgroundColor(.lightGray)
+                    
+                    ForEach(self?.$section1) { str in
+                        if str == "bird" {
+                            IfBlock(self?.$showBirds) {
+                                UILabel().text(str).alignment(.allEdges).backgroundColor(.cyan)
+                            }
+                        } else {
+                        UILabel().text(str).alignment(.allEdges).backgroundColor(.yellow)
                         }
-                    } else {
-                    UILabel().text(str).alignment(.allEdges).backgroundColor(.yellow)
                     }
+                    .border(width: 1, color: .red)
+                    
+                    UILabel().text("Footer").backgroundColor(.lightGray)
                 }
-                .border(width: 1, color: .red)
-                
-                UILabel().text("Footer").backgroundColor(.lightGray)
+                .alignment([.top], value: 60)
+                .alignment(.centerX)
+                .frame(width: geo.size.width * 0.5, height: geo.size.height)
+                .bounce(.vertical)
             }
-            .alignment([.leading, .top], value: 60)
-            .alignment(.centerX)
-            .frame(height: .fillParent(multipy: 0.7, constant: 0))
-            .bounce(.vertical)
+            .alignment(.allEdges)
             
             UIStackView(axis: .horizontal, alignment: .fill, spacing: 10) {
                 UIStackView(axis: .horizontal) {

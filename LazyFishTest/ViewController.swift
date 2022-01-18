@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         
         typealias VCModel = (name: String, classType: UIViewController.Type)
         var testClasses: [VCModel] = [
+            ("Geometry Test", GeoTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
             ("Join Binding Test", JoinBindingTestViewController.self),
             ("Product Detail Test", ProductDetailTestViewController.self),
@@ -45,8 +46,8 @@ class ViewController: UIViewController {
                 let vc = item.classType.init()
                 vc.view.backgroundColor = .white
                 vc.navigationItem.title = item.name
-                self?.splitViewController?.showDetailViewController(vc, sender: nil)
-//                self?.navigationController?.pushViewController(vc, animated: true)
+//                self?.splitViewController?.showDetailViewController(vc, sender: nil)
+                self?.navigationController?.pushViewController(vc, animated: true)
             }
             .alignment(.allEdges)
         }

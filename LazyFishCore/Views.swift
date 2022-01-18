@@ -73,17 +73,20 @@ public extension UIScrollView {
         } else {
             showsVerticalScrollIndicator = false
         }
-        arrangeViews {
-            let stack = InternalLayoutStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
-                    views
-                }
-                .alignment(.allEdges)
-            if direction == .vertical {
-                _ = stack.frame(width: .fillParent())
-            } else {
-                _ = stack.frame(height: .fillParent())
+        
+        let stack = InternalLayoutStackView(axis: direction, distribution: .fill, alignment: .fill, spacing: spacing) {
+                views
             }
-            stack
+        self.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        if direction == .vertical {
+            self.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
+        } else {
+            self.heightAnchor.constraint(equalTo: stack.heightAnchor).isActive = true
         }
+        self.topAnchor.constraint(equalTo: stack.topAnchor).isActive = true
+        self.bottomAnchor.constraint(equalTo: stack.bottomAnchor).isActive = true
+        self.leadingAnchor.constraint(equalTo: stack.leadingAnchor).isActive = true
+        self.trailingAnchor.constraint(equalTo: stack.trailingAnchor).isActive = true
     }
 }

@@ -21,27 +21,30 @@ class PageTestViewController: UIViewController {
 
         view.arrangeViews {
             UIStackView(axis: .vertical, alignment: .center, spacing: 10) {
-                UIScrollView(.horizontal) {
-                    ForEachEnumerated($pages) { i, name in
-                        let lab = UILabel()
-                            .text(name)
-                            .textAlignment(.center)
-                            .textColor(.black)
-                            .border(width: 1, color: .black)
-                            .frame(width: .fillParent())
-                            .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
-                        if name == "page2" {
-                            lab.border(width: 3, color: .red).backgroundColor(.yellow)
-                        } else {
-                            lab
+                GeometryReader { geo in
+                    UIScrollView(.horizontal) {
+                        ForEachEnumerated($pages) { i, name in
+                            let lab = UILabel()
+                                .text(name)
+                                .textAlignment(.center)
+                                .textColor(.black)
+                                .border(width: 1, color: .black)
+                                .frame(width: geo.size.width, height: geo.size.height)
+                                .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
+                            if name == "page2" {
+                                lab.border(width: 3, color: .red).backgroundColor(.yellow)
+                            } else {
+                                lab
+                            }
                         }
                     }
-                }
-                .frame(width: 240, height: 240)
-                .pageEnabled(true)
-                .pageObserve { [weak self] page in
-                    self?.currentPage = page
-//                    print(page)
+                    .frame(width: 240, height: 240)
+                    .alignment(.allEdges)
+                    .pageEnabled(true)
+                    .pageObserve { [weak self] page in
+                        self?.currentPage = page
+    //                    print(page)
+                    }
                 }
                 
                 // page control

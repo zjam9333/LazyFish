@@ -37,10 +37,6 @@ extension Animation {
         static let allowUserInteraction = Options(rawValue: 1 << 5)
         static let beginFromCurrentState = Options(rawValue: 1 << 6)
         
-        // reverse
-        static let autoreverse = Options(rawValue: 1 << 7)
-        internal static let `repeat` = Options(rawValue: 1 << 8)
-        
         var toUIViewAnimationOptions: UIView.AnimationOptions {
             var options = UIView.AnimationOptions.init(rawValue: 0)
             let map: [Options: UIView.AnimationOptions] = [
@@ -51,8 +47,6 @@ extension Animation {
                 .layoutSubviews: .layoutSubviews,
                 .allowUserInteraction: .allowUserInteraction,
                 .beginFromCurrentState: .beginFromCurrentState,
-                .autoreverse: .autoreverse,
-                .repeat: .repeat
             ]
             for i in map {
                 if self.contains(i.key) {
@@ -66,7 +60,6 @@ extension Animation {
         internal var duration: TimeInterval = 0.25
         internal var delay: TimeInterval = 0
         internal var options: Options = .curveEaseInOut
-        internal var repeatCount: Int = 1
         
         public static let `default` = Self()
         
@@ -88,19 +81,6 @@ extension Animation {
             if speed != 0 {
                 newOne.duration /= speed
             }
-            return newOne
-        }
-        
-        public func `repeat`(_ count: Int) -> Self {
-            var newOne = self
-//            newOne.options.formUnion(.repeat)
-            newOne.repeatCount = count
-            return newOne
-        }
-        
-        public func autoReverse() -> Self {
-            var newOne = self
-            newOne.options.formUnion(.autoreverse)
             return newOne
         }
     }
@@ -146,25 +126,11 @@ extension Animation {
 
 extension Animation {
     public class Runner {
-        internal var leftCount = 1
-        
-        public func stopRepeat() {
-            leftCount = 0
-        }
-        
         internal func performAnimation(option: Animation.Arguments, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
             UIView.animate(withDuration: option.duration, delay: option.delay, options: option.options.toUIViewAnimationOptions) {
                 animation()
             } completion: { fi in
-                if self.leftCount <= 0 && option.repeatCount != 0 {
-                    completion?(fi)
-                } else {
-                    if option.repeatCount > 0 {
-                        self.leftCount -= 1
-                    }
-                    self.performAnimation(option: option, animation: animation, completion: completion)
-                    return
-                }
+                completion?(fi)
             }
         }
     }
@@ -172,7 +138,6 @@ extension Animation {
 
 @discardableResult public func ActionWithAnimation(_ option: Animation.Arguments = .default, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) -> Animation.Runner {
     let runner = Animation.Runner()
-    runner.leftCount = option.repeatCount
     runner.performAnimation(option: option, animation: animation, completion: completion)
     return runner
 }

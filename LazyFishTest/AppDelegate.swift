@@ -14,10 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         let root = UINavigationController(rootViewController: ViewController())
-        let sp = UISplitViewController()
-        sp.viewControllers = [root]
-        sp.preferredPrimaryColumnWidthFraction = 0.45
-        self.window?.rootViewController = sp
+//        let sp = UISplitViewController()
+//        sp.viewControllers = [root]
+//        sp.preferredPrimaryColumnWidthFraction = 0.45
+        self.window?.rootViewController = root
         self.window?.makeKeyAndVisible()
         return true
     }

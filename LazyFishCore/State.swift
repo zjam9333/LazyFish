@@ -101,9 +101,9 @@ public class Binding<Element> {
         self.wrapper = wrapper
     }
     
-    deinit {
-        print("deinit", self)
-    }
+//    deinit {
+//        print("deinit", self)
+//    }
     
     public func addObserver(target: AnyObject?, observer: @escaping Changed<Element>.ObserverHandler) {
         wrapper?.addObserver(target: target) { changed in

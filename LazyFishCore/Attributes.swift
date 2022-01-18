@@ -7,6 +7,11 @@
 
 import UIKit
 
+public enum ValueBinding<T> {
+    case constant(T)
+    case binding(Binding<T>)
+}
+
 internal typealias EdgeValuePair = [Edge: CGFloat]
 
 internal class Attribute {
@@ -34,10 +39,13 @@ internal class Attribute {
     }
 }
 
-public enum SizeFill {
+internal enum SizeFill {
+    internal enum Dimension {
+        case x, y
+    }
+    
     case unknown
-    case fillParent(multipy: CGFloat = 1, constant: CGFloat = 0)
-    case equalTo(_ size: CGFloat)
+    case equal(_ size: ValueBinding<CGFloat>)
     // 更多规则未完待续
 }
 
@@ -73,31 +81,40 @@ public extension UIView {
     
     func frame(width: CGFloat, height: CGFloat) -> Self {
         let att = Attribute.attribute(from: self)
-        att.attrs.append(.width(.equalTo(width)))
-        att.attrs.append(.height(.equalTo(height)))
+        att.attrs.append(.width(.equal(.constant(width))))
+        att.attrs.append(.height(.equal(.constant(width))))
         return self
     }
-    
-    func frame(size: CGSize) -> Self {
-        return frame(width: size.width, height: size.height)
-    }
+
     
     func frame(width: CGFloat) -> Self {
         let att = Attribute.attribute(from: self)
-        att.attrs.append(.width(.equalTo(width)))
+        att.attrs.append(.width(.equal(.constant(width))))
         return self
     }
     
     func frame(height: CGFloat) -> Self {
         let att = Attribute.attribute(from: self)
-        att.attrs.append(.height(.equalTo(height)))
+        att.attrs.append(.height(.equal(.constant(height))))
         return self
     }
     
-    func frame(width: SizeFill = .unknown, height: SizeFill = .unknown) -> Self {
+    func frame(width: Binding<CGFloat>) -> Self {
         let att = Attribute.attribute(from: self)
-        att.attrs.append(.width(width))
-        att.attrs.append(.height(height))
+        att.attrs.append(.width(.equal(.binding(width))))
+        return self
+    }
+    
+    func frame(height: Binding<CGFloat>) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.height(.equal(.binding(height))))
+        return self
+    }
+    
+    func frame(width: Binding<CGFloat>, height: Binding<CGFloat>) -> Self {
+        let att = Attribute.attribute(from: self)
+        att.attrs.append(.width(.equal(.binding(width))))
+        att.attrs.append(.height(.equal(.binding(height))))
         return self
     }
     

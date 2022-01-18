@@ -39,37 +39,10 @@ extension ObserveContainer {
 }
 
 protocol FakeInternalContainer: ObserveContainer {
-    var actionWhileMoveToWindow: [() -> Void] { get set }
     var userCreatedContents: [UIView] { get set }
 }
 
 extension FakeInternalContainer {
-    func seekTrullyContainer() -> UIView? {
-        if let view = self as? UIView {
-            let par = view.superview
-            if let fakePar = par as? FakeInternalContainer {
-                return fakePar.seekTrullyContainer()
-            }
-            return par
-        }
-        return nil
-    }
-    
-    fileprivate func excuteAllActionsWhileMoveToWindow() {
-        for i in actionWhileMoveToWindow {
-            i()
-        }
-        actionWhileMoveToWindow.removeAll()
-    }
-    
-    func excuteActionWhileMoveToWindow(_ action: @escaping () -> Void) {
-        guard let view = self as? UIView, let _ = view.window else {
-            actionWhileMoveToWindow.append(action)
-            return
-        }
-        // 已有window，立即执行
-        action()
-    }
 
     func didAddToSuperStackView(_ superStack: UIStackView) {
         if let view = self as? UIView {
@@ -110,12 +83,7 @@ internal class PaddingContainerView: UIView, ObserveContainer {
 
 internal class InternalLayoutStackView: UIStackView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    var actionWhileMoveToWindow: [() -> Void] = []
     var userCreatedContents: [UIView] = []
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        excuteAllActionsWhileMoveToWindow()
-    }
     
     override func addArrangedSubview(_ view: UIView) {
         super.addArrangedSubview(view)
@@ -145,12 +113,7 @@ public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents:
 
 internal class ForEachView: TouchIgnoreContainerView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    var actionWhileMoveToWindow: [() -> Void] = []
     var userCreatedContents: [UIView] = []
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        excuteAllActionsWhileMoveToWindow()
-    }
     
     override var viewsAcceptedTouches: [UIView] {
         return userCreatedContents
@@ -233,16 +196,10 @@ internal class ElseBlockView: IfBlockView {
 
 internal class IfBlockView: TouchIgnoreContainerView, FakeInternalContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    var actionWhileMoveToWindow: [() -> Void] = []
     var userCreatedContents: [UIView] = []
     
     override var viewsAcceptedTouches: [UIView] {
         return userCreatedContents
-    }
-    
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        excuteAllActionsWhileMoveToWindow()
     }
     
     convenience init?(@ViewBuilder conditionContents: ViewBuilder.ContentBlock) {
@@ -333,16 +290,10 @@ internal class IfElseBlockView: TouchIgnoreContainerView, FakeInternalContainer 
 //    }
     
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    var actionWhileMoveToWindow: [() -> Void] = []
     var userCreatedContents: [UIView] = []
     
     override var viewsAcceptedTouches: [UIView] {
         return userCreatedContents
-    }
-    
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        excuteAllActionsWhileMoveToWindow()
     }
     
     convenience init?(@ViewBuilder conditionContents: ViewBuilder.ContentBlock) {

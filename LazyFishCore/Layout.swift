@@ -40,36 +40,44 @@ fileprivate struct Layout {
         return paddingContainer
     }
     
-    static func sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?, target: UIView) {
-        if let targetSuper = target as? FakeInternalContainer {
-            targetSuper.excuteActionWhileMoveToWindow { [weak view] in
-                // 如果一个view有window，那么一定有superview？
-                if let superSuperView = targetSuper.seekTrullyContainer(), let view = view {
-                    private_sizeFill(view, width: width, height: height, target: superSuperView)
-                }
-            }
-        } else {
-            private_sizeFill(view, width: width, height: height, target: target)
-        }
+    static func sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?) {
+        private_sizeFill(view, width: width, height: height)
     }
     
-    private static func private_sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?, target: UIView) {
-        guard view.isDescendant(of: target) else {
-            return
-        }
-        if let si = width {
-            if case .equalTo(let size) = si {
-                view.widthAnchor.constraint(equalToConstant: size).isActive = true
-            } else if case .fillParent(let mul, let con) = si {
-                view.widthAnchor.constraint(equalTo: target.widthAnchor, multiplier: mul, constant: con).isActive = true
+    private static func private_sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?) {
+        
+        func dimensionAnchor(view: UIView, di: SizeFill.Dimension) -> NSLayoutDimension {
+            switch di {
+            case .x:
+                return view.widthAnchor
+            case .y:
+                return view.heightAnchor
             }
+        }
+        
+        func fillDimension(view: UIView, di: SizeFill.Dimension, sizefill: SizeFill) {
+            switch sizefill {
+            case .unknown:
+                break
+            case .equal(let valueBind):
+                switch valueBind {
+                case .constant(let value):
+                    dimensionAnchor(view: view, di: di).constraint(equalToConstant: value).isActive = true
+                case .binding(let bind):
+                    let constraint = dimensionAnchor(view: view, di: di).constraint(equalToConstant: 0)
+                    constraint.isActive = true
+                    bind.addObserver(target: view) { [weak constraint] change in
+                        constraint?.constant = change.new
+                    }
+                }
+            }
+        }
+        
+        if let si = width {
+            fillDimension(view: view, di: .x, sizefill: si)
         }
         if let si = height {
-            if case .equalTo(let size) = si {
-                view.heightAnchor.constraint(equalToConstant: size).isActive = true
-            } else if case .fillParent(let mul, let con) = si {
-                view.heightAnchor.constraint(equalTo: target.heightAnchor, multiplier: mul, constant: con).isActive = true
-            }
+            fillDimension(view: view, di: .y, sizefill: si)
         }
     }
 }
@@ -124,7 +132,7 @@ public extension UIView {
                 }
             }
             
-            Layout.sizeFill(container, width: widthFill, height: heightFill, target: self)
+            Layout.sizeFill(container, width: widthFill, height: heightFill)
         }
         
         for action in allActionsOnAppear {
