@@ -26,6 +26,7 @@
 		1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFA2790354B00535498 /* StateTestViewController.swift */; };
 		1C2B6D092790354B00535498 /* ProductDetailTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFB2790354B00535498 /* ProductDetailTestViewController.swift */; };
 		1C2B6D0A2790354B00535498 /* PPTTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */; };
+		1C3113512797BC1000CF4973 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 1C3113502797BC1000CF4973 /* Readme.md */; };
 		1C45313E2791219400C72757 /* LazyFishCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; platformFilter = ios; };
 		1C45313F2791219400C72757 /* LazyFishCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
@@ -88,6 +89,7 @@
 		1C2B6CFA2790354B00535498 /* StateTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CFB2790354B00535498 /* ProductDetailTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductDetailTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPTTestViewController.swift; sourceTree = "<group>"; };
+		1C3113502797BC1000CF4973 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1C4981F8274F6AF200DF13A4 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		1C04FFFB27041212008F025B = {
 			isa = PBXGroup;
 			children = (
+				1C3113502797BC1000CF4973 /* Readme.md */,
 				1CE6349C2726A8A20051BF9F /* LazyFishCore */,
 				1C2B6CBF279034B700535498 /* LazyFishTest */,
 				1C04000527041212008F025B /* Products */,
@@ -304,6 +307,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C3113512797BC1000CF4973 /* Readme.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

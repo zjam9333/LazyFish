@@ -48,29 +48,6 @@ internal class GeometryReaderView: TouchIgnoreContainerView {
     }
 }
 
-// MARK: size, width, height
-
-extension Binding where Element == GeometryProxy {
-    public var size: Binding<CGSize> {
-        return self.map { g in
-            return g.size
-        }
-    }
-}
-
-extension Binding where Element == CGSize {
-    public var width: Binding<CGFloat> {
-        return self.map { s in
-            return s.width
-        }
-    }
-    public var height: Binding<CGFloat> {
-        return self.map { s in
-            return s.height
-        }
-    }
-}
-
 // MARK: math
 
 extension Binding where Element == CGFloat {

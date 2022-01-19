@@ -93,6 +93,7 @@ extension State {
     }
 }
 
+@dynamicMemberLookup
 public class Binding<Element> {
 
     private weak var wrapper: State<Element>?
@@ -101,9 +102,14 @@ public class Binding<Element> {
         self.wrapper = wrapper
     }
     
-//    deinit {
-//        print("deinit", self)
-//    }
+    // 这个可以直接访问Element的properties！！
+    public subscript<Value>(dynamicMember keyPath: KeyPath<Element, Value>) -> Binding<Value> {
+        get {
+            return self.map { ele in
+                return ele[keyPath: keyPath]
+            }
+        }
+    }
     
     public func addObserver(target: AnyObject?, observer: @escaping Changed<Element>.ObserverHandler) {
         wrapper?.addObserver(target: target) { changed in

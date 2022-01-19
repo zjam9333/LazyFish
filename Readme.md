@@ -1,14 +1,12 @@
-# 这个什么框架的介绍
+# About This Light-weight Kit
 
-类似SwiftUI，使用DSL布局UIView，但并非单纯的描述view，而是真正的创建view并布局
+Looks like SwiftUI, define and layout the UIView using Swift DSL.
 
-@State修饰符用于刷新已添加binding函数的相关属性
+Under Construction! Get Away From Production!
 
-处于实验阶段，勿用于工业生产
+# How to Use
 
-# 怎么用
-
-添加pod
+add something in your Podfile
 
 ```ruby
 platform :ios, '9.0'
@@ -18,7 +16,7 @@ target 'LazyFishTest' do
 end
 ```
 
-例如在视图中央展示一个文本：
+show a Text Label in center:
 
 ```swift
 self.view.arrangeViews {
@@ -28,23 +26,43 @@ self.view.arrangeViews {
 }
 ```
 
-## 优势:
+## pros:
 
-- 仍可使用`UIViewController`, `UIView`
-- 像`SwiftUI DSL`那样的思维写`UI`
-- 支持`iOS 9`
+- you can keep all your old `UIViewController`s, `UIView`s and anything
+- writing UIView like SwiftUI
+- support `iOS 9`
 
-## 缺点:
+## cons:
 
 - can not automatically refresh UI using if/else/for..in.. statements, using IfBlock(...)/ForEach(...) instead
 - need to test
-- lack of many UIView modifier
+- lack of many UIView modifier (using KeyPath)
 - lack of animation modifier
 - lack of .. a lot of features
 
-# 更新日志
+# Updates
 
-- 2022-01-13 keyPath方法改为property方法，添加动画绑定demo
+- 2022-01-19 Add `GeometryReader`. `Binding<T>` supports `dynamic member lookup`
+
+```swift
+public struct GeometryProxy {
+    public var size: CGSize = .zero
+}
+
+GeometryReader { geo: Binding<GeometryProxy> in
+    UIButton("ABC")
+        .action {
+            print("button")
+        }
+        .frame(width: geo.size.width / 2, height: geo.size.height - 30 * 2)
+        .backgroundColor(.red)
+        .alignment([.top, .leading], value: 100)
+
+        // that "geo.size.width" is "dynamic member lookup"
+}
+```
+
+- 2022-01-13 Add a simple animation demo
 
 ```swift
 @State private var alertScale: CGFloat = 0.1
@@ -57,29 +75,26 @@ view.property(\.transform, binding: $alertScale.map {
 alertScale = 1
 ```
 
-- 2021-12-23 添加`UIView`使用`keyPath`结合`binding`的属性修改，用以暂时解决当前链式属性修改齐不够用的问题
+- 2021-12-23 `UIView` supports `keyPath` and `binding` modifier
 
-例如`UILabel`绑定颜色
+Example: `UILabel` changing a Color
 
 ```swift
-// 直接修改
+// static
 UILabel()
-    .setKeyPath(\.textColor, value: .lightGray)
-    // 其他属性...
+    .property(\.textColor, value: isTrue ? .green : .red)
 
-// Binding修改
+// dynamic
 @State var isTrue: Bool = true
 UILabel()
-    .bindingKeyPath(\.textColor, value: $isTrue.map { b -> UIColor in 
-    // 这里的UIColor推测可能不成功
+    .property(\.textColor, binding: $isTrue.map { b -> UIColor in 
         b ? .green : .red
     })
-    // 其他属性...
 ```
 
-- 2021-12-16 添加`Binding`的`join`方法
+- 2021-12-16 `Binding` supports `join`
 
-可将两个Binding类型合并，`A + B = (A, B)`，或 `A + B = C`，极大的提升灵活性
+Join 2 Binding objects, `A + B = (A, B)`, or `A + B = C`
 
 ```swift
 @State var text1: String = "cde"
@@ -95,15 +110,15 @@ let joined3Obj: Binding<String> = $text1.join($text2) { s1, s2 in
 label.text(binding: joined3Obj)
 ```
 
-- 2021-12-7 添加`Binding`的`map`方法
+- 2021-12-7 `Binding` supports `map`
 
-可将`Binding<A>`类型转换为`Binding<B>`，例如`IfBlock`需要的`Binding<Bool>`可由其他类型转化得来，极大的提升灵活性
+turn `Binding<A>` into `Binding<B>`, create a `Binding<Bool>` where `IfBlock` needs
 
 ```swift
 @State var text1: String = "abcdefg"
 
-// 把Binding<String>转化为Binding<Bool>
-let mapCondition: Binding<Bool> = $text.map { s in
+// Binding<String> -> Binding<Bool>
+let mapCondition = $text.map { s in
     return s.hasPrefix("abc")
 }
 
@@ -111,7 +126,7 @@ IfBlock(mapCondition) {
     // views...
 }
 
-// 或者直接写成：
+// or
 IfBlock($text.map { s in
     return s.hasPrefix("abc")
 }) {
@@ -119,26 +134,27 @@ IfBlock($text.map { s in
 }
 ```
 
-- 2021-12-6 IfElseView、ForEachView遮挡问题
+- 2021-12-6 IfElseView、ForEachView touches ignored
 
-- 2021-11-18 使用UIView封装If、Else条件语句
+- 2021-11-18 add If, Else condition block
 
-- 2021-10-28 使用UIView封装ForEach条件语句
+- 2021-10-28 add ForEach loop block
 
 - 2021-10-9 First Commit
 
-# 已实现的拓展
+# Basic
 
-## 任意view添加subviews
+## view add subviews
 
 ```swift
 someView.arrangeViews {
     view1
     view2
     view3
-    // 根据内容的alignment属性排版，stack则根据自己的axis、distribution、alignment、spacing属性排版
 }
 ```
+
+which will create views like this
 
 ```swift
 someView
@@ -148,41 +164,36 @@ someView
     ---view3
 ```
 
-## 普通view、UILabel、UIButton、UIImageView等
+## UIview, UILabel, UIButton, UIImageView ...
 
 ```swift
 UIView {
-    // 内容1...
-    // 内容2...
-    // 内容n...
-    // 根据内容的alignment属性排版
+    // sub1...
+    // sub2...
+    // subn...
+    // align according to .alignment(...) function
 }
 ```
 
-## 栈stack
+## Stack
 
 ```swift
 UIStackView(axis: .horizontal， distribution: .fill, alignment: .fill, spacing: 0) {
-    // 内容1...
-    // 内容2...
-    // 内容n...
-    // 根据stack的axis、distribution、alignment、spacing属性排版
+    // sub1...
+    // sub2...
+    // subn...
 }
 ```
 
-## 滚动scrollview
+## Scroll Stack
 
-暂时只有嵌套stack的样式
 ```swift
 UIScrollView(.vertical, spacing: CGFloat = 0) {
-    // 内容1...
-    // 内容2...
-    // 内容n...
-    // 排列逻辑与stack一致
+    // sub1...
+    // sub2...
+    // subn...
 }
 ```
-
-生成内容：
 
 ```
 scrollview
@@ -194,18 +205,18 @@ scrollview
         ---view3
 ```
 
-## 条件IfBlock
+## If Block
 
-传入`Binding<Bool>`作为参数, 返回`[IfBlockView]`，条件变化时自动隐藏或展示`ifContent`和`elseContent`
+Arguments: `Binding<Bool>`, returns: `[IfBlockView]`, automatically shows or hides `ifContent` and `elseContent`
 
-直接写`if ... {} else ... {}`暂未支持变量监听，因此需要动态刷新时使用`IfBlock`
+If you using `if ... {} else ... {}` condition pattern, it will not refresh. Just use this ugly `IfBlock`
 
 ```swift
 IfBlock(self?.$showPage1) {
     view1
     view2
 } 
-// 或者
+// or
 IfBlock(self?.$showPage1) {
     view1
     view2
@@ -214,42 +225,41 @@ IfBlock(self?.$showPage1) {
 }
 ```
 
-生成内容：
-
-若监测到上层view为StackView
+If the `IfBlockView` is in a Stack:
 
 ```swift
-// 上层是stack，复制一个stack
-IfBlockView // if条件
+someStack
     \
-    ---internalStackView
+    IfBlockView
         \
+        ---internalStackView
+            \
+            // if
+            ---view1
+            ---view2
+            // else
+            ---view3 // isHidden
+```
+
+Otherwise:
+
+```swift
+someNotStack
+    \
+    IfBlockView
+        \
+        // if
         ---view1
         ---view2
-IfBlockView // else条件
-    \
-    ---internalStackView
-        \
-        ---view3
+        // else
+        ---view3 // isHidden
 ```
 
-上层view为普通view
+## ForEach
 
-```swift
-IfBlockView // if条件
-    \
-    ---view1
-    ---view2
-IfBlockView // else条件
-    \
-    ---view3
-```
+arguments: `Binding<[T]>`, return `ForEachView<T>`
 
-## 遍历ForEach
-
-传入Binding<[T]>作为参数，返回ForEachView<T>
-
-直接写`for i in array {}`暂未支持变量监听，因此需要动态刷新时使用`ForEach`
+as stated above, using `for i in array {}` will not refresh. Just use the ugly `ForEach`
 
 ```swift
 ForEach($array) { item in
@@ -259,42 +269,40 @@ ForEach($array) { item in
 }
 ```
 
-生成内容：
-若监测到上层view为StackView
+```swift
+someStack
+    \
+    ForEachView<T>
+        \
+        ---internalStackView
+            \
+            ---view1
+            ---view2
+            ---view3
+```
 
 ```swift
-// 上层是stack，复制一个stack
-ForEachView<T>
+someNotStack
     \
-    ---internalStackView
+    ForEachView<T>
         \
         ---view1
         ---view2
         ---view3
 ```
 
-上层view为普通view
+## Tableview (did not finish)
 
-```swift
-ForEachView<T>
-    \
-    ---view1
-    ---view2
-    ---view3
-```
+TODO: `Cell Reuse`
 
-## 表格tableview（未完待续）
-
-未完善`Cell Reuse`等问题
-
-`Tableview`的`@ResultBuilder<TableViewSection>`内传入若干个`TableViewSection`
+Example:
 
 ```swift
 @State var arr1: String = ["Dog", "Cat", "Fish"]
 var arr2: String = ["Tom", "Jerry", "Butch"]
 
 UITableView(style: .grouped) {
-    // 使用绑定的数组section
+    // dynamic section
     TableViewSection(binding: $arr1) { item in
         UILabel()
             .text("dynamic row: \(item)")
@@ -304,7 +312,7 @@ UITableView(style: .grouped) {
         // did selected cell
     }
 
-    // 静态section（一次创建）不再动态刷新
+    // staic section
     TableViewSection(arr2) { item in
         UILabel()
             .text("static row: \(item)")
@@ -314,10 +322,9 @@ UITableView(style: .grouped) {
 }
 ```
 
-只有单个`section`的`tableview`可简写为：
+if there is only one static section:
 
 ```swift
-
 UITableView(style: .plain, array: testClasses) { item in
     let title = item.name
     UILabel().text(title)
@@ -328,25 +335,20 @@ UITableView(style: .plain, array: testClasses) { item in
 }
 ```
 
-# 注意：
+# Modifiers
 
-- `content`内声明的`view`之间并无布局依赖，仅通过`stackview`和`alignment`属性做约束
-- `content`内的`view`作为`returnValue`传递给`ViewBuilder`，若需要引用则参考以下写法
+Using function to modify some properties, and return `self`, which looks like SwiftUI
+
+Examples, defined in `modifier.swift`:
+
+if you can't find any modifier that you wanted, use this `keyPath` function:
+
 ```swift
-var myView = UILabel()
-
-UIStackView {
-    // 前面一些views
-
-    myView
-
-    // 后面一些views
+public extension UIView {
+    func property<Value>(_ keyPath: WritableKeyPath<Self, Value>, binding: Binding<Value>?) -> Self
+    func property<Value>(_ keyPath: WritableKeyPath<Self, Value>, value newValue: Value) -> Self
 }
 ```
-
-# 已实现的属性修改
-
-用于链式修改`view、button、label`等的常见属性，列举部分：
 
 ## UIView
 
@@ -385,47 +387,11 @@ public extension UIControl {
     func action(for event: Event = .touchUpInside, _ action: @escaping ActionBlock) -> Self
     func textAlignment(_ alignment: ContentHorizontalAlignment) -> Self
 }
-
-public extension UIButton {
-    func font(_ font: UIFont) -> Self
-    func text(_ text: String, for state: UIControl.State = .normal) -> Self
-    func textColor(_ color: UIColor, for state: UIControl.State = .normal) -> Self
-}
-public extension UIButton {
-    func text(binding stateText: Binding<String>, for state: UIControl.State = .normal) -> Self
-}
 ```
 
-## UIScrollView
+# Alignment Attributes
 
-```swift
-public extension UIScrollView {
-    func bounce(_ axis: NSLayoutConstraint.Axis, bounce: Bool = true) -> Self
-    func pageEnabled(_ enabled: Bool) -> Self
-    func contentOffsetObserve(handler: @escaping (CGPoint) -> Void) -> Self
-    func pageObserve(handler: @escaping (CGFloat) -> Void) -> Self
-}
-```
-
-## UITextField
-
-```swift
-public extension UITextField {
-    func textColor(_ color: UIColor) -> Self
-    func textAlignment(_ alignment: NSTextAlignment) -> Self
-    func font(_ font: UIFont) -> Self
-    func borderStyle(_ style: BorderStyle) -> Self
-}
-public extension UITextField {
-    func text(binding text: Binding<String>) -> Self
-}
-```
-
-# 布局相关Attribute
-
-## 对齐约束alignment
-
-在`非stack`中有效
+## alignments constraint
 
 ```swift
 func alignment(_ edges: Alignment, value: CGFloat? = 0) -> Self
@@ -441,88 +407,108 @@ public struct Alignment: OptionSet {
 }
 ```
 
-## 大小约束frame
+## size constraint
 
 ```swift
-func frame(width: SizeFill? = nil, height: SizeFill? = nil) -> Self
-public enum SizeFill {
-    case fillParent
-    case equalTo(_ size: CGFloat)
-    // 更多规则未完待续
-}
+func frame(width: CGFloat, height: CGFloat) -> Self
+func frame(width: Binding<CGFloat>, height: Binding<CGFloat>) -> Self
 ```
 
-## 内边距padding
+## padding container
 
-会在外部包装一个`PaddingView`
+it will create a `PaddingView` as superview
 
 ```swift 
 func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self
 ```
 
-## 一些状态监听
+# State Property
 
-在任意成员变量前使用`@State`修饰，例如
+`@State` property wrapper, makes properties observable:
+
 ```swift
 @State var text: String = "abc"
 ```
-编译器会同时生成一对变量：
+
+it will create these properties automatically:
+
 ```swift
 var _text: State<String>
 var $text: Binding<String> { get }
 ```
 
-在后续一些`UILabel`、`UIButton`、`UITextField`等传入`Binding<String>`即可自动同步可变的`text`内容，而非一次性写入的不可变`text`
+`UILabel`, `UIButton`, `UITextField` with `Binding<String>`, will refresh its text while `text` changing.
 
-例如使用`UITextField`监听并修改`text`变量
+Example: `UILabel` binds to a `text`
+
+```swift 
+public extension UILabel {
+    func text(binding stateText: Binding<String>?) -> Self {
+        stateText?.addObserver(target: self) { [weak self] changed in
+            self?.text = changed.new
+        }
+        return self
+    }
+}
+```
+
 ```swift
 @State var text: String = "abc"
 ///...
 self.view.arrangeViews {
-    UITextField().text(self.$text)
+    UIlabel().text(self.$text)
 }
 ```
 
-# 自动刷新的If、ForEach（性能未完善)
+## Binding extensions
 
-使用普通的`if`、`for..in..`等语句虽然也能根据条件创建`view`，但无法监听和刷新（SwiftUI的精华之一就在这里），因此需要另外想办法
+`Binding<T>` objects may not easy to use.
 
-因暂未能重写原始的`if`语句和`for...in...`语句，便使用简单的函数代替
+For example:
+
+In this case, we need to turn `Binding<String>` into `Binding<Bool>` which `IfBlock` required, so we use `map` function.
 
 ```swift
-public func IfBlock(_ present: Binding<Bool>, @ViewBuilder content: ViewBuilder.ContentBlock, contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView]
+@State var text: String = "abc"
 
-public func IfBlock<T>(_ observe: Binding<T>, map: @escaping (T) -> Bool, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView]
-
-// example
-IfBlock($showCake) {
-    UILabel()
-        .text("Cake")
-        .borderColor(.blue).borderWidth(1)
+IfBlock( $text.map { t in
+    return t.hasPrefix("a")
+} ) {
+    // views
 }
-UIButton()
-    .text(str)
-    .font(.systemFont(ofSize: 20, weight: .black))
-    .textColor(.black)
-    .textColor(.gray, for: .highlighted)
-    .action { [weak self] in
-        self?.showCake.toggle()
-    }
 ```
 
-当`IfBlock`传入的`Binding<T>`变量发生改变时，将自动设置`content`和`contentElse`里的`view`的`hidden`属性，达到自动展示隐藏的需要，在`UIStackView`中的`view`修改`hidden`属性会重新排列
+Other example:
 
-注意：`content`和`contentElse`的内容会同时创建，按需创建的逻辑仍需优化
+we want to combine two or more `Binding` objects into one, so we use `join` function.
 
 ```swift
-public func ForEach<T>(_ models: Binding<[T]>, @ViewBuilder contents: @escaping (T) -> [UIView]) -> ForEachView<T>
+@State var text: String = "abc"
+@State var text2: String = "efg"
 
-// example
-ForEach($titles) { str in
-    UILabel().text(str).alignment(.allEdges)
+IfBlock( $text.join($text2) { t, t2 in
+    return t.hasPrefix(t2)
+} ) {
+    // views
 }
 ```
 
-当`ForEach`传入的`Binding<[T]>`变量发生改变时，将重新使用`@ViewBuilder contents: @escaping (T) -> [UIView]`再次创建新的`view`
+# GeometryReader
 
-注意：因为存在刷新的可能，`contents`需要被引用，必要时主动标记`[weak self]`。刷新时全部内容会重新创建，仍需优化
+`GeometryReader` in SwiftUI is very hard to understand, i'm trying to make it simple.
+
+Our `GeometryReader` is a UIView, it passes a `Binding<GeometryProxy>` object in closure, you can using its `size` property to layout your views' size
+
+```swift
+GeometryReader { geo: Binding<GeometryProxy> in
+    UIButton("ABC")
+        .action {
+            print("button")
+        }
+        .frame(width: geo.size.width / 2, height: geo.size.height - 30 * 2)
+        .backgroundColor(.red)
+        .alignment([.top, .leading], value: 100)
+}
+```
+
+
