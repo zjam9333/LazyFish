@@ -22,7 +22,7 @@ class ViewController: UIViewController {
             ("Join Binding Test", JoinBindingTestViewController.self),
             ("Product Detail Test", ProductDetailTestViewController.self),
             ("Container Cover Test", ContainerCoverTestViewController.self),
-            ("Observe Remove Test", ObserveRemoveTestViewController.self),
+//            ("Observe Remove Test", ObserveRemoveTestViewController.self),
             ("PPT Test", PPTTestViewController.self),
             ("TableView Test", TableViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
@@ -34,19 +34,18 @@ class ViewController: UIViewController {
 //            ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
-        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 2))
+        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 200))
         
         view.arrangeViews {
             UITableView(style: .plain, array: testClasses) { item in
                 let title = item.name
-                UILabel().text(title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                UILabel().text(binding: title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
                     .alignment(.allEdges)
                     .padding(20)
             } action: { [weak self] item in
                 let vc = item.classType.init()
                 vc.view.backgroundColor = .white
                 vc.navigationItem.title = item.name
-//                self?.splitViewController?.showDetailViewController(vc, sender: nil)
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
             .alignment(.allEdges)

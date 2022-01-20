@@ -32,14 +32,14 @@ public extension UITableView {
     }
     
     // 一个动态section
-    convenience init<T>(style: Style, binding: Binding<[T]>?, @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    convenience init<T>(style: Style, binding: Binding<[T]>?, @ViewBuilder content: @escaping (Binding<T>) -> [UIView], action: ((T) -> Void)? = nil) {
         self.init(style: style) {
             Section(binding: binding, cellContent: content, action: action)
         }
     }
     
     // 一个静态section
-    convenience init<T>(style: Style, array: [T], @ViewBuilder content: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    convenience init<T>(style: Style, array: [T], @ViewBuilder content: @escaping (Binding<T>) -> [UIView], action: ((T) -> Void)? = nil) {
         self.init(style: style) {
             Section(array, cellContent: content, action: action)
         }
@@ -65,25 +65,23 @@ extension UITableView {
         }
     }
     
-    private class WasteSpaceTableViewCell: UITableViewCell {
-        func remakeSubviews(_ views: [UIView]) {
-            let olds = contentView.subviews
-            for i in olds {
-                i.removeFromSuperview()
+    internal class LazyFishTableViewCell: UITableViewCell {
+        @State var model: Any
+        
+        init(model: Any, reuseIdentifier: String?, viewContent: (Binding<Any>) -> [UIView]) {
+            self._model = State<Any>.init(wrappedValue: model)
+            super.init(style: .default, reuseIdentifier: reuseIdentifier)
+            self.contentView.arrangeViews {
+                viewContent($model)
             }
-            for i in views {
-                i.removeFromSuperview()
-            }
-            contentView.arrangeViews {
-                views
-            }
-            // TODO: 反复移除添加必然造成浪费
-            // 不确定view层级的变化对autolayout的影响有多大
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
     }
     
     private class DataSourceDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
-        
         
         var sections: [Section] = []
         
@@ -98,9 +96,13 @@ extension UITableView {
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? WasteSpaceTableViewCell ?? WasteSpaceTableViewCell(style: .default, reuseIdentifier: "cell")
-            let vi = sections[indexPath.section].viewsForRow?(indexPath.row) ?? []
-            cell.remakeSubviews(vi)
+            let cellId = "section:\(indexPath.section)"
+            let section = sections[indexPath.section]
+            let model = section.array[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? LazyFishTableViewCell ?? LazyFishTableViewCell(model: model, reuseIdentifier: cellId, viewContent: { anyBinding in
+                return section.content?(anyBinding) ?? []
+            })
+            cell.model = model
             return cell
         }
         
@@ -160,17 +162,6 @@ extension UITableView {
             }
             return nil
         }
-        
-        // MARK: Cell rolling
-        
-        func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-            let showingRows = tableView.indexPathsForVisibleRows?.map { indexpath in
-                indexpath.row
-            } ?? []
-            let section = sections[indexPath.section]
-            section.removeCacheIfNeed(withShowingRows: showingRows)
-        }
-        
     }
 }
 

@@ -27,7 +27,7 @@ class ProductDetailTestViewController: UIViewController {
         var onSell: Bool = true
     }
     
-    enum Item {
+    enum Item: Equatable {
         case mainImages
         case name
         case summary
@@ -35,7 +35,8 @@ class ProductDetailTestViewController: UIViewController {
         case moreImages
         case spu
         case sku
-        case moreSku(Bool)
+        case showMoreSku
+        case hideMoreSku
         case onSell
         case category
         case setting
@@ -60,7 +61,7 @@ class ProductDetailTestViewController: UIViewController {
         .spu,
         .sku,
         .sku,
-        .moreSku(false),
+        .showMoreSku,
     ]
     let section4: [Item] = [
         .onSell,
@@ -99,14 +100,14 @@ class ProductDetailTestViewController: UIViewController {
                 .sku,
                 .sku,
                 .sku,
-                .moreSku(true),
+                .hideMoreSku,
             ]
         } else {
             self.section3 = [
                 .spu,
                 .sku,
                 .sku,
-                .moreSku(false),
+                .showMoreSku,
             ]
         }
     }
@@ -158,7 +159,7 @@ class ProductDetailTestViewController: UIViewController {
     
     func tableViewSection2() -> Section {
         return Section(section2) { [weak self] item in
-            switch item {
+            switch item.currentValue() {
             case .name:
                 UIStackView(axis: .vertical, spacing: 20) {
                     UILabel("商品信息")
@@ -202,8 +203,8 @@ class ProductDetailTestViewController: UIViewController {
             case .moreImages:
                 self?.simpleCellContent {
                     UILabel()
-                        .text(binding: self?.$product.map { pro in
-                            return "更多商品图片(\(pro.moreImages.count)/20)"
+                        .text(binding: self?.$product.moreImages.count.map { pro in
+                            return "更多商品图片(\(pro)/20)"
                         })
                         .font(.systemFont(ofSize: 16, weight: .semibold))
                         .textColor(.black)
@@ -219,21 +220,48 @@ class ProductDetailTestViewController: UIViewController {
     
     func tableViewSection3() -> Section {
         return Section(binding: self.$section3) { [weak self] item in
-            switch item {
-            case .spu:
-                UIStackView(axis: .vertical, spacing: 20) {
-                    UILabel("价格与库存")
-                        .font(.systemFont(ofSize: 20, weight: .semibold))
-                        .textColor(.black)
-//                                .frame(height: 20)
-                    
-                    UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
+            UIStackView(axis: .vertical) {
+                IfBlock(item == .spu) {
+                    UIStackView(axis: .vertical, spacing: 20) {
+                        UILabel("价格与库存")
+                            .font(.systemFont(ofSize: 20, weight: .semibold))
+                            .textColor(.black)
+    //                                .frame(height: 20)
                         
-                        UIStackView(axis: .vertical, spacing: 10) {
-                            UILabel("主商品")
+                        UIStackView(axis: .horizontal, alignment: .top, spacing: 10) {
+                            
+                            UIStackView(axis: .vertical, spacing: 10) {
+                                UILabel("主商品")
+                                    .font(.systemFont(ofSize: 16, weight: .regular))
+                                    .textColor(.black)
+                            
+                                UILabel()
+                                    .text(binding: self?.$product.map({ p in
+                                        return "商品货号：\(100)\n原价格：\(200)\n特价：\(300)\n成本价：\(10)"
+                                    }))
+                                    .font(.systemFont(ofSize: 16, weight: .regular))
+                                    .numberOfLines(0)
+                                    .textColor(.lightGray)
+                            }
+                            UILabel("更多")
                                 .font(.systemFont(ofSize: 16, weight: .regular))
+                                .textColor(.systemBlue)
+                                .frame(width: 48).textAlignment(.right)
+                        }
+                    }
+                    .padding(16)
+                    .alignment(.allEdges)
+                }
+                
+                IfBlock(item == .sku) {
+                    UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
+                        UIView().backgroundColor(.lightGray)
+                            .frame(width: 60, height: 60)
+                            .cornerRadius(5)
+                        UIStackView(axis: .vertical, spacing: 10) {
+                            UILabel("款式")
+                                .font(.systemFont(ofSize: 16, weight: .semibold))
                                 .textColor(.black)
-                        
                             UILabel()
                                 .text(binding: self?.$product.map({ p in
                                     return "商品货号：\(100)\n原价格：\(200)\n特价：\(300)\n成本价：\(10)"
@@ -247,52 +275,39 @@ class ProductDetailTestViewController: UIViewController {
                             .textColor(.systemBlue)
                             .frame(width: 48).textAlignment(.right)
                     }
+                    .padding(16)
+                    .alignment(.allEdges)
                 }
-                .padding(16)
-                .alignment(.allEdges)
-            case .sku:
-                UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
-                    UIView().backgroundColor(.lightGray)
-                        .frame(width: 60, height: 60)
-                        .cornerRadius(5)
-                    UIStackView(axis: .vertical, spacing: 10) {
-                        UILabel("款式")
-                            .font(.systemFont(ofSize: 16, weight: .semibold))
-                            .textColor(.black)
-                        UILabel()
-                            .text(binding: self?.$product.map({ p in
-                                return "商品货号：\(100)\n原价格：\(200)\n特价：\(300)\n成本价：\(10)"
-                            }))
-                            .font(.systemFont(ofSize: 16, weight: .regular))
-                            .numberOfLines(0)
-                            .textColor(.lightGray)
-                    }
-                    UILabel("更多")
+                
+                IfBlock(item == .showMoreSku) {
+                    UILabel("查看全部规格")
                         .font(.systemFont(ofSize: 16, weight: .regular))
                         .textColor(.systemBlue)
-                        .frame(width: 48).textAlignment(.right)
+                        .padding(top: 0, leading: 16, bottom: 16, trailing: 16)
+                        .alignment(.allEdges)
                 }
-                .padding(16)
-                .alignment(.allEdges)
-            case .moreSku(let opened):
-                UILabel(opened ? "收起全部规格" : "查看全部规格")
-                    .font(.systemFont(ofSize: 16, weight: .regular))
-                    .textColor(.systemBlue)
-                    .padding(top: 0, leading: 16, bottom: 16, trailing: 16)
-                    .alignment(.allEdges)
-            default:
-                []
+                
+                IfBlock(item == .hideMoreSku) {
+                    UILabel("收起全部规格")
+                        .font(.systemFont(ofSize: 16, weight: .regular))
+                        .textColor(.systemBlue)
+                        .padding(top: 0, leading: 16, bottom: 16, trailing: 16)
+                        .alignment(.allEdges)
+                }
             }
+            .alignment(.allEdges)
         } action: { [weak self] item in
-            if case .moreSku(let opened) = item {
-                self?.openAllSkuList(!opened)
+            if case .showMoreSku = item {
+                self?.openAllSkuList(true)
+            } else if case .hideMoreSku = item {
+                self?.openAllSkuList(false)
             }
         }
     }
     
     func tableViewSection4() -> Section {
         return Section(section4) { [ weak self] item in
-            switch item {
+            switch item.currentValue() {
             case .onSell:
                 UIView {
                     UILabel("网店上架商品")
