@@ -1,3 +1,7 @@
+# WTF! There've already existed a simular Kit called `UIKitPlus` which has much more detail!!
+
+# Mine looks like garbage 🥲
+
 # About This Light-weight Kit
 
 Looks like SwiftUI, define and layout the UIView using Swift DSL.

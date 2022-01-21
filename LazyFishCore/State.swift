@@ -43,10 +43,13 @@ public struct Changed<T> {
     }
     private var observers = [ObserverTargetAction]()
     
-    public lazy var projectedValue: Binding<T> = Binding(wrapper: self) // 这样可以强饮用第一个binding
-    // {
-//        return Binding(wrapper: self)
-//    }
+    public var projectedValue: Binding<T> {
+        Binding(wrapper: self, currentValue: self.currentValue())
+    }
+    
+    internal func currentValue() -> T {
+        return wrappedValue
+    }
 }
 
 extension State {
@@ -94,12 +97,26 @@ extension State {
 }
 
 @dynamicMemberLookup
-public class Binding<Element> {
+public class Binding<Element>: CustomStringConvertible, CustomDebugStringConvertible {
 
+    internal var _currentValueGetter: () -> Element
+    public func currentValue() -> Element {
+        return _currentValueGetter()
+    }
+    
+    public var description: String {
+        return "\(currentValue())"
+    }
+    
+    public var debugDescription: String {
+        return "\(currentValue())"
+    }
+    
     private weak var wrapper: State<Element>?
     
-    init(wrapper: State<Element>?) {
+    init(wrapper: State<Element>?, currentValue: @escaping @autoclosure () -> Element) {
         self.wrapper = wrapper
+        self._currentValueGetter = currentValue
     }
     
     // 这个可以直接访问Element的properties！！
@@ -144,7 +161,7 @@ private class MapBinding<SourceElement, ResultElement>: Binding<ResultElement> {
     init(source: Binding<SourceElement>, map: @escaping (SourceElement) -> ResultElement) {
         self.source = source
         self.map = map
-        super.init(wrapper: nil)
+        super.init(wrapper: nil, currentValue: map(source.currentValue()))
     }
     
     public override func addObserver(target: AnyObject?, observer: @escaping Changed<ResultElement>.ObserverHandler) {
@@ -162,7 +179,7 @@ private class JoinBinding<S1, S2>: Binding<(S1, S2)> {
     init(_ source1: Binding<S1>, with source2: Binding<S2>) {
         self.source1 = source1
         self.source2 = source2
-        super.init(wrapper: nil)
+        super.init(wrapper: nil, currentValue: (source1.currentValue(), source2.currentValue()))
     }
     
     public override func addObserver(target: AnyObject?, observer: @escaping Changed<(S1, S2)>.ObserverHandler) {
