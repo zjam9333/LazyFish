@@ -24,9 +24,9 @@ public extension UITableView {
                 }
             }
         }
-        if #available(iOS 15.0, *) {
-            sectionHeaderTopPadding = 0
-        }
+//        if #available(iOS 15.0, *) {
+//            sectionHeaderTopPadding = 0
+//        }
         
         estimatedRowHeight = 44
     }
