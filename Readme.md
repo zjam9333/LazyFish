@@ -1,5 +1,3 @@
-# WTF! There've already existed a simular Kit called `UIKitPlus` which has much more detail!!
-
 # About This Light-weight Kit
 
 ### There've already existed a simular Kit called `UIKitPlus` which has much more detail.
@@ -45,6 +43,19 @@ self.view.arrangeViews {
 - lack of .. a lot of features
 
 # Updates
+
+- 2022-10-09 Add UIView to SwiftUIPreview
+
+```swift
+@available(iOS 13.0, *)
+struct Preview: PreviewProvider {
+    static var previews: some View {
+        SwiftUIViewPresent {
+            // uiviews
+        }
+    }
+}
+```
 
 - 2022-01-19 Add `GeometryReader`. `Binding<T>` supports `dynamic member lookup`
 
