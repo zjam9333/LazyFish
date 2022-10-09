@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C0F54BC28F2774F001C4048 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0F54BB28F2774F001C4048 /* SwiftUIView.swift */; };
+		1C0F54BE28F2785E001C4048 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0F54BD28F2785E001C4048 /* Preview.swift */; };
 		1C2B6CB6278C3AC700535498 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CB5278C3AC700535498 /* Animation.swift */; };
 		1C2B6CC1279034B700535498 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CC0279034B700535498 /* AppDelegate.swift */; };
 		1C2B6CC5279034B700535498 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CC4279034B700535498 /* ViewController.swift */; };
@@ -69,6 +71,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C0F54BB28F2774F001C4048 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		1C0F54BD28F2785E001C4048 /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		1C2B6CB5278C3AC700535498 /* Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		1C2B6CBE279034B700535498 /* LazyFishTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LazyFishTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C2B6CC0279034B700535498 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 				1C2B6CC9279034B900535498 /* Assets.xcassets */,
 				1C2B6CCB279034B900535498 /* LaunchScreen.storyboard */,
 				1C2B6CCE279034B900535498 /* Info.plist */,
+				1C0F54BB28F2774F001C4048 /* SwiftUIView.swift */,
 			);
 			path = LazyFishTest;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 				1CD8FE2C27102EE100FE41E8 /* Views.swift */,
 				1C7D7C422796C8E500912FE3 /* GeometryReader.swift */,
 				1C9C6DFA27993571000F4A70 /* BindingExtension.swift */,
+				1C0F54BD28F2785E001C4048 /* Preview.swift */,
 			);
 			path = LazyFishCore;
 			sourceTree = "<group>";
@@ -323,6 +329,7 @@
 			files = (
 				1C2B6D022790354B00535498 /* InputTestViewController.swift in Sources */,
 				1C2B6D002790354B00535498 /* ContainerCoverTestViewController.swift in Sources */,
+				1C0F54BC28F2774F001C4048 /* SwiftUIView.swift in Sources */,
 				1C2B6CFF2790354B00535498 /* ForEachScrollTestViewController.swift in Sources */,
 				1C2B6D092790354B00535498 /* ProductDetailTestViewController.swift in Sources */,
 				1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */,
@@ -349,6 +356,7 @@
 				1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */,
 				1C7D7C432796C8E500912FE3 /* GeometryReader.swift in Sources */,
 				1CE634A92726A8C70051BF9F /* Views.swift in Sources */,
+				1C0F54BE28F2785E001C4048 /* Preview.swift in Sources */,
 				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
 				1CE634AD2726A8C70051BF9F /* State.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
