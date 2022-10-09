@@ -92,17 +92,17 @@ extension Animation {
         
         public static let identity = Self()
         
-        public static func scale(x: CGFloat, y: CGFloat) -> Self {
-            return .identity.scale(x: x, y: y)
-        }
-        
-        public static func rotate(r: CGFloat) -> Self {
-            return .identity.rotate(r: r)
-        }
-        
-        public static func translate(x: CGFloat, y: CGFloat) -> Self {
-            return .identity.translate(x: x, y: y)
-        }
+//        public static func scale(x: CGFloat, y: CGFloat) -> Self {
+//            return self//.identity.scale(x: x, y: y)
+//        }
+//        
+//        public static func rotate(r: CGFloat) -> Self {
+//            return self//.identity.rotate(r: r)
+//        }
+//        
+//        public static func translate(x: CGFloat, y: CGFloat) -> Self {
+//            return self//.identity.translate(x: x, y: y)
+//        }
         
         public func scale(x: CGFloat, y: CGFloat) -> Self {
             var newOne = self
