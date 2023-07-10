@@ -82,7 +82,7 @@ public extension UIView {
     func frame(width: CGFloat, height: CGFloat) -> Self {
         let att = Attribute.attribute(from: self)
         att.attrs.append(.width(.equal(.constant(width))))
-        att.attrs.append(.height(.equal(.constant(width))))
+        att.attrs.append(.height(.equal(.constant(height))))
         return self
     }
 
