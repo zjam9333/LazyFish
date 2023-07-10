@@ -42,7 +42,7 @@ class DemoTestViewController: UIViewController {
                         if #available(iOS 13.0, *) {
                             UIImageView(image: UIImage(systemName: "chevron.right"))
                                 .alignment([.trailing, .centerY])
-                                .offset(x: -10, y: 0)
+                                .padding(trailing: 10)
                         }
                     }
                     .alignment(.allEdges)

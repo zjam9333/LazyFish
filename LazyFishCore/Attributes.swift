@@ -20,8 +20,6 @@ internal class Attribute {
         case height(SizeFill)
         
         case alignment(EdgeValuePair)
-        case padding(EdgeValuePair)
-        case offset(CGPoint)
         
         case onAppear(OnAppearBlock?)
     }
@@ -146,30 +144,38 @@ public extension UIView {
     }
     
     // 未完善
-    func offset(x: CGFloat, y: CGFloat) -> Self {
-        let p = CGPoint(x: x, y: y)
-        if p == .zero {
-            return self
-        }
-        Attribute.attribute(from: self).attrs.append(.offset(p))
-        return self
-    }
+//    func offset(x: CGFloat = 0, y: CGFloat = 0) -> UIView {
+//        let p = CGPoint(x: x, y: y)
+//        if p == .zero {
+//            return self
+//        }
+//
+//        return PaddingContainerView(self, offset: p)
+//    }
     
-    // padding将封装一个containerview
-    func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> Self {
+    /// padding将封装一个containerview，返回普通UIView类型
+    func padding(top: CGFloat? = nil, leading: CGFloat? = nil, bottom: CGFloat? = nil, trailing: CGFloat? = nil) -> UIView {
         var mar = EdgeValuePair()
         mar[.top] = top
         mar[.leading] = leading
         mar[.bottom] = bottom
         mar[.trailing] = trailing
-        if mar.isEmpty {
+        // 全空、全0
+        if mar.isEmpty || mar.reduce(0, { partialResult, item in
+            return partialResult + item.value
+        }) == 0 {
             return self
         }
-        Attribute.attribute(from: self).attrs.append(.padding(mar))
-        return self
+        return PaddingContainerView(self, padding: mar)
     }
     
-    func padding(_ pad: CGFloat) -> Self {
+    /// padding将封装一个containerview，返回普通UIView类型
+    func padding(_ pad: CGFloat) -> UIView {
         return padding(top: pad, leading: pad, bottom: pad, trailing: pad)
+    }
+    
+    /// padding将封装一个containerview，返回普通UIView类型
+    func padding(horizontal: CGFloat = 0, vertical: CGFloat = 0) -> UIView {
+        return padding(top: vertical, leading: horizontal, bottom: vertical, trailing: horizontal)
     }
 }

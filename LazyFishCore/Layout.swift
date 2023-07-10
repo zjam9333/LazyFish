@@ -31,15 +31,6 @@ fileprivate struct Layout {
         }
     }
     
-    static func containerPaddingIfNeed(_ view: UIView, padding: EdgeValuePair, offset: CGPoint) -> UIView {
-        if padding.isEmpty && offset == .zero {
-            return view
-        }
-        let paddingContainer = PaddingContainerView()
-        paddingContainer.addContentView(view, padding: padding, offset: offset)
-        return paddingContainer
-    }
-    
     static func sizeFill(_ view: UIView, width: SizeFill?, height: SizeFill?) {
         private_sizeFill(view, width: width, height: height)
     }
@@ -93,8 +84,6 @@ public extension UIView {
             var alignment: EdgeValuePair = [:]
             var widthFill: SizeFill?
             var heightFill: SizeFill?
-            var padding = EdgeValuePair()
-            var offset = CGPoint.zero
             for i in attribute.attrs {
                 switch i {
                 case .width(let w):
@@ -105,19 +94,13 @@ public extension UIView {
                     for (k, v) in ali {
                         alignment[k] = v
                     }
-                case .padding(let pad):
-                    for (k, v) in pad {
-                        padding[k] = v
-                    }
-                case .offset(let point):
-                    offset = point
                 case .onAppear(let block):
                     allActionsOnAppear.append {
                         block?(view)
                     }
                 }
             }
-            let container = Layout.containerPaddingIfNeed(view, padding: padding, offset: offset)
+            let container = view // Layout.containerPaddingIfNeed(view, padding: padding, offset: offset)
             container.translatesAutoresizingMaskIntoConstraints = false
             if let stack = self as? UIStackView {
                 stack.addArrangedSubview(container)

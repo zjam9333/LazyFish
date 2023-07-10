@@ -133,9 +133,6 @@ class AlertTestViewController: UIViewController {
                 .text("Show an Alert", for: .normal)
                 .textColor(.black)
                 .font(UIFont.systemFont(ofSize: 28, weight: .black))
-                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
-                .backgroundColor(.gray)
-                .alignment(.center)
                 .action { [weak self] in
                     AlertViewShow(inView: self?.view, title: "Logout", message: "Are you sure?") {
                         AlertAction(name: "Cancel", style: .cancel) {
@@ -146,6 +143,9 @@ class AlertTestViewController: UIViewController {
                         }
                     }
                 }
+                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
+                .backgroundColor(.gray)
+                .alignment(.center)
         }
         // Do any additional setup after loading the view.
     }

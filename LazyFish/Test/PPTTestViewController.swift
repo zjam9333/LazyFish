@@ -13,7 +13,7 @@ class PPTTestViewController: UIViewController {
         super.viewDidLoad()
 
         view.arrangeViews {
-            let title = UIView {
+            UIScrollView(.vertical, spacing: 12) {
                 UIStackView(axis: .horizontal, alignment: .top, spacing: 16) {
                     UIView().backgroundColor(.white)
                         .frame(width: 64, height: 64)
@@ -28,24 +28,17 @@ class PPTTestViewController: UIViewController {
                     }
                 }
                 .padding(16).alignment(.allEdges)
-            }
-            .cornerRadius(20)
-            .backgroundColor(.init(white: 0.9, alpha: 1))
-            
-            let message = UIView {
+                .cornerRadius(6)
+                .backgroundColor(.init(white: 0.9, alpha: 1))
+                
                 UIStackView(axis: .vertical, spacing: 16) {
                     UILabel("详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明详细说明")
                         .font(.systemFont(ofSize: 16, weight: .regular))
                         .numberOfLines(0)
                 }
                 .padding(16).alignment(.allEdges)
-            }
-            .cornerRadius(20)
-            .backgroundColor(.init(white: 0.9, alpha: 1))
-            
-            UIScrollView(.vertical, spacing: 12) {
-                title
-                message
+                .cornerRadius(6)
+                .backgroundColor(.init(white: 0.9, alpha: 1))
             }
             .alignment(.allEdges)
             .bounce(.vertical)

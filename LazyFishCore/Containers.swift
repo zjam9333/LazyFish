@@ -60,7 +60,9 @@ extension FakeInternalContainer {
 
 internal class PaddingContainerView: UIView, ObserveContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    func addContentView(_ content: UIView, padding: [Edge: CGFloat] = [:], offset: CGPoint = .zero) {
+    
+    init(_ content: UIView, padding: [Edge: CGFloat] = [:], offset: CGPoint = .zero) {
+        super.init(frame: .zero)
         addSubview(content)
         observe(obj: content, keyPath: \.isHidden) { [weak self] isHidden in
             self?.isHidden = self?.hasNoSubviewShown(self?.subviews ?? []) ?? false
@@ -78,6 +80,14 @@ internal class PaddingContainerView: UIView, ObserveContainer {
         content.bottomAnchor.constraint(equalTo: bottomAnchor, constant: bottom).isActive = true
         content.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leading).isActive = true
         content.trailingAnchor.constraint(equalTo: trailingAnchor, constant: trailing).isActive = true
+        
+        // 复制content的属性
+        let attribute = Attribute.attribute(from: content)
+        Attribute.attribute(from: self).attrs.append(contentsOf: attribute.attrs)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 

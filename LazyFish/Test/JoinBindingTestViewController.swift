@@ -35,6 +35,13 @@ class JoinBindingTestViewController: UIViewController {
                         .property(\.textColor, binding: $text1.map({ s in
                             s.isEmpty ? .red : .green
                         }))
+                        .padding(4)
+                        .backgroundColor(.blue)
+                        .cornerRadius(4)
+                        .padding(top: 4, bottom: 8)
+                        .padding(horizontal: 4)
+                        .backgroundColor(.red)
+                        .cornerRadius(8)
                     
                     // 这里的label.text是optional的，但编译器却允许传入binding<String> ？？
                     UILabel()
@@ -44,6 +51,7 @@ class JoinBindingTestViewController: UIViewController {
                             return s
                         })
                         .numberOfLines(0)
+                        .padding(horizontal: 4, vertical: 3)
                         .border(width: 1, color: .black)
                     UITextField().text(binding: $text1, changed: { [weak self] t in
                         self?.text1 = t
