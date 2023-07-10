@@ -28,4 +28,21 @@ public struct SwiftUIViewPresent: UIViewRepresentable {
     }
 }
 
+@available(iOS 13.0, *)
+public struct SwiftUIViewControllerPresent: UIViewControllerRepresentable {
+    public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
+    }
+    
+    let viewController: UIViewController
+    
+    public init(viewController: UIViewController) {
+        self.viewController = viewController
+    }
+    
+    public func makeUIViewController(context: Context) -> some UIViewController {
+        return viewController
+    }
+}
+
 #endif
