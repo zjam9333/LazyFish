@@ -114,7 +114,11 @@ public class Binding<Element>: CustomStringConvertible, CustomDebugStringConvert
     
     private weak var wrapper: State<Element>?
     
-    init(wrapper: State<Element>?, currentValue: @escaping @autoclosure () -> Element) {
+    public static func constant(value: Element) -> Binding<Element> {
+        return .init(wrapper: nil, currentValue: value)
+    }
+    
+    fileprivate init(wrapper: State<Element>?, currentValue: @escaping @autoclosure () -> Element) {
         self.wrapper = wrapper
         self._currentValueGetter = currentValue
     }

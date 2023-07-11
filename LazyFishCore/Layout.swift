@@ -8,14 +8,13 @@
 import Foundation
 import UIKit
 
-public enum ValueBinding<T> {
-    case constant(T)
-    case binding(Binding<T>)
+public extension Binding where Element == CGFloat {
+    static let zero: Binding<CGFloat> = .constant(value: 0)
 }
 
 internal class Attribute {
     enum _Attribute {
-        case alignment([Edge: CGFloat])
+        case alignment([Edge: Binding<CGFloat>])
         case onAppear(OnAppearBlock?)
     }
     var attrs: [_Attribute] = []
@@ -38,7 +37,7 @@ internal enum SizeFill {
     }
     
     case unknown
-    case equal(_ size: ValueBinding<CGFloat>)
+    case equal(_ size: Binding<CGFloat>)
     // 更多规则未完待续
 }
 
@@ -72,38 +71,34 @@ public extension UIView {
         return self
     }
     
-    func frame(width: CGFloat, height: CGFloat) -> Self {
-        Layout.sizeFill(self, width: .equal(.constant(width)), height: .equal(.constant(height)))
-        return self
-    }
-    
     func frame(width: CGFloat) -> Self {
-        Layout.sizeFill(self, width: .equal(.constant(width)), height: nil)
-        return self
+        return frame(width: .constant(value: width), height: nil)
     }
     
     func frame(height: CGFloat) -> Self {
-        Layout.sizeFill(self, width: nil, height: .equal(.constant(height)))
+        return frame(width: nil, height: .constant(value: height))
+    }
+    
+    func frame(width: CGFloat, height: CGFloat) -> Self {
+        return frame(width: .constant(value: width), height: .constant(value: height))
+    }
+    
+    func frame(width: Binding<CGFloat>?, height: Binding<CGFloat>?) -> Self {
+        Layout.sizeFill(self, width: width.map({ w in
+            return .equal(w)
+        }), height: height.map({ h in
+            return .equal(h)
+        }))
         return self
     }
     
-    func frame(width: Binding<CGFloat>) -> Self {
-        Layout.sizeFill(self, width: .equal(.binding(width)), height: nil)
-        return self
+    /// 不写value会调用下面带binding的方法
+    func alignment(_ edges: Alignment, value: CGFloat) -> Self {
+        return alignment(edges, value: .constant(value: value))
     }
     
-    func frame(height: Binding<CGFloat>) -> Self {
-        Layout.sizeFill(self, width: nil, height: .equal(.binding(height)))
-        return self
-    }
-    
-    func frame(width: Binding<CGFloat>, height: Binding<CGFloat>) -> Self {
-        Layout.sizeFill(self, width: .equal(.binding(width)), height: .equal(.binding(height)))
-        return self
-    }
-    
-    func alignment(_ edges: Alignment, value: CGFloat? = 0) -> Self {
-        var align = [Edge: CGFloat]()
+    func alignment(_ edges: Alignment, value: Binding<CGFloat> = .zero) -> Self {
+        var align = [Edge: Binding<CGFloat>]()
         if edges.contains(.centerY) {
             align[.centerY] = value
         }
@@ -167,25 +162,48 @@ public extension UIView {
 }
 
 internal struct Layout {
-    static func alignSubview(_ view: UIView, subview: UIView, alignment: [Edge: CGFloat]) {
-        // 对齐
+    static func alignSubview(_ view: UIView, subview: UIView, alignment: [Edge: Binding<CGFloat>]) {
         if let const = alignment[.centerY] {
-            subview.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: const).isActive = true
+            let constraint = subview.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: const.currentValue())
+            constraint.isActive = true
+            const.addObserver(target: view) { [weak constraint] change in
+                constraint?.constant = change.new
+            }
         }
         if let const = alignment[.centerX] {
-            subview.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: const).isActive = true
+            let constraint = subview.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: const.currentValue())
+            constraint.isActive = true
+            const.addObserver(target: view) { [weak constraint] change in
+                constraint?.constant = change.new
+            }
         }
         if let const = alignment[.leading] {
-            subview.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: const).isActive = true
+            let constraint = subview.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: const.currentValue())
+            constraint.isActive = true
+            const.addObserver(target: view) { [weak constraint] change in
+                constraint?.constant = change.new
+            }
         }
         if let const = alignment[.trailing] {
-            subview.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: const).isActive = true
+            let constraint = subview.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: const.currentValue())
+            constraint.isActive = true
+            const.addObserver(target: view) { [weak constraint] change in
+                constraint?.constant = change.new
+            }
         }
         if let const = alignment[.top] {
-            subview.topAnchor.constraint(equalTo: view.topAnchor, constant: const).isActive = true
+            let constraint = subview.topAnchor.constraint(equalTo: view.topAnchor, constant: const.currentValue())
+            constraint.isActive = true
+            const.addObserver(target: view) { [weak constraint] change in
+                constraint?.constant = change.new
+            }
         }
         if let const = alignment[.bottom] {
-            subview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: const).isActive = true
+            let constraint = subview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: const.currentValue())
+            constraint.isActive = true
+            const.addObserver(target: view) { [weak constraint] change in
+                constraint?.constant = change.new
+            }
         }
     }
     
@@ -208,16 +226,11 @@ internal struct Layout {
             switch sizefill {
             case .unknown:
                 break
-            case .equal(let valueBind):
-                switch valueBind {
-                case .constant(let value):
-                    dimensionAnchor(view: view, di: di).constraint(equalToConstant: value).isActive = true
-                case .binding(let bind):
-                    let constraint = dimensionAnchor(view: view, di: di).constraint(equalToConstant: 0)
-                    constraint.isActive = true
-                    bind.addObserver(target: view) { [weak constraint] change in
-                        constraint?.constant = change.new
-                    }
+            case .equal(let bind):
+                let constraint = dimensionAnchor(view: view, di: di).constraint(equalToConstant: bind.currentValue())
+                constraint.isActive = true
+                bind.addObserver(target: view) { [weak constraint] change in
+                    constraint?.constant = change.new
                 }
             }
         }
@@ -239,7 +252,7 @@ public extension UIView {
         
         for view in views {
             let attribute = Attribute.attribute(from: view)
-            var alignment: [Edge: CGFloat] = [:]
+            var alignment: [Edge: Binding<CGFloat>] = [:]
             for i in attribute.attrs {
                 switch i {
                 case .alignment(let ali):
@@ -264,7 +277,7 @@ public extension UIView {
                 addSubview(container)
                 if alignment.isEmpty {
                     // 默认
-                    alignment = [.top: 0, .leading: 0, .trailing: 0, .bottom: 0]
+                    alignment = [.top: .zero, .leading: .zero, .trailing: .zero, .bottom: .zero]
                 }
                 Layout.alignSubview(self, subview: container, alignment: alignment)
             }

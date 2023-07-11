@@ -23,10 +23,9 @@ class GeoTestViewController: UIViewController {
                     .action {
                         print("button")
                     }
-                    .frame(width: geo.size.width / 2, height: geo.size.height - 30 * 2)
+                    .frame(width: geo.size.width / 2, height: geo.size.height / 3)
                     .backgroundColor(.red)
-//                    .alignment([.center])
-                    .alignment([.top, .leading], value: 100)
+                    .alignment([.top, .leading], value: geo.size.width + geo.size.width * 0.2)
             }
             .frame(width: bi, height: bi)
             .backgroundColor(.blue)
