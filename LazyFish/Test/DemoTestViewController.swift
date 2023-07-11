@@ -45,14 +45,12 @@ class DemoTestViewController: UIViewController {
                                 .padding(trailing: 10)
                         }
                     }
-                    .alignment(.allEdges)
             } action: { [weak self] item in
                 let vc = UIViewController()
                 self?.navigationController?.pushViewController(vc, animated: true)
                 vc.navigationItem.title = "nothing title"
                 vc.view.backgroundColor = randomColor()
             }
-            .alignment(.allEdges)
         }
         
         // Do any additional setup after loading the view.

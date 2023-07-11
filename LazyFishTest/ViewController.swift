@@ -20,7 +20,7 @@ class ViewController: UIViewController {
             ("Geometry Test", GeoTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
             ("Join Binding Test", JoinBindingTestViewController.self),
-            ("Product Detail Test", ProductDetailTestViewController.self),
+//            ("Product Detail Test", ProductDetailTestViewController.self),
             ("Container Cover Test", ContainerCoverTestViewController.self),
 //            ("Observe Remove Test", ObserveRemoveTestViewController.self),
             ("PPT Test", PPTTestViewController.self),
@@ -40,7 +40,6 @@ class ViewController: UIViewController {
             UITableView(style: .plain, array: testClasses) { item in
                 let title = item.name
                 UILabel().text(binding: title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                    .alignment(.allEdges)
                     .padding(20)
             } action: { [weak self] item in
                 let vc = item.classType.init()
@@ -48,7 +47,6 @@ class ViewController: UIViewController {
                 vc.navigationItem.title = item.name
                 self?.navigationController?.pushViewController(vc, animated: true)
             }
-            .alignment(.allEdges)
         }
     }
 }

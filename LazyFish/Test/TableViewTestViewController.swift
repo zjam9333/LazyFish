@@ -36,7 +36,6 @@ class TableViewTestViewController: UIViewController {
                                 .alignment(.centerY)
                         }
                     }
-                    .alignment(.allEdges)
                 }
                 // header footer 展示
                 .headerViews {
@@ -47,12 +46,10 @@ class TableViewTestViewController: UIViewController {
                         UILabel().text("Some Section Header").font(UIFont.systemFont(ofSize: 24, weight: .bold))
                     }
                     .padding(5)
-                    .alignment(.allEdges)
                 }
                 .footerViews {
                     UILabel().text("some footer").backgroundColor(.red)
                         .padding(5)
-                        .alignment(.allEdges)
                 }
                 
                 // 静态section
@@ -68,7 +65,7 @@ class TableViewTestViewController: UIViewController {
                 .footerTitle {
                     return "section footer using Title"
                 }
-            }.alignment(.allEdges)
+            }
         }
         // Do any additional setup after loading the view.
         

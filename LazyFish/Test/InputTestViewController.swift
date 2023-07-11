@@ -23,8 +23,7 @@ class InputTestViewController: UIViewController {
                         self?.text = t
                     }).borderStyle(.roundedRect)
                 }
-                .padding(top: 10, leading: 10, bottom: 10, trailing: 10)
-                .alignment(.allEdges)
+                .padding(10)
             }
             .borderWidth(1)
             .borderColor(.black)

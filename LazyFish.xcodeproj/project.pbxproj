@@ -26,24 +26,17 @@
 		1C2B6D062790354B00535498 /* MarginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF82790354B00535498 /* MarginTestViewController.swift */; };
 		1C2B6D072790354B00535498 /* ForEachTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF92790354B00535498 /* ForEachTestViewController.swift */; };
 		1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFA2790354B00535498 /* StateTestViewController.swift */; };
-		1C2B6D092790354B00535498 /* ProductDetailTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFB2790354B00535498 /* ProductDetailTestViewController.swift */; };
 		1C2B6D0A2790354B00535498 /* PPTTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */; };
 		1C3113512797BC1000CF4973 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 1C3113502797BC1000CF4973 /* Readme.md */; };
 		1C45313E2791219400C72757 /* LazyFishCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; platformFilter = ios; };
 		1C45313F2791219400C72757 /* LazyFishCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
 		1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F6274F69CE00DF13A4 /* Section.swift */; };
-		1C4981F9274F6AF200DF13A4 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F8274F6AF200DF13A4 /* CollectionView.swift */; };
 		1C7D7C41279698F400912FE3 /* GeoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */; };
-		1C7D7C432796C8E500912FE3 /* GeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7D7C422796C8E500912FE3 /* GeometryReader.swift */; };
-		1C9C6DFB27993571000F4A70 /* BindingExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9C6DFA27993571000F4A70 /* BindingExtension.swift */; };
-		1CA9E99E2A5BFB8700B8F73D /* SwiftUIViewControllerPresent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E99D2A5BFB8700B8F73D /* SwiftUIViewControllerPresent.swift */; };
-		1CE634A92726A8C70051BF9F /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE2C27102EE100FE41E8 /* Views.swift */; };
-		1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */; };
+		1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* UIView+Extension.swift */; };
 		1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */; };
 		1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE20270FEE0700FE41E8 /* Layout.swift */; };
-		1CE634AD2726A8C70051BF9F /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF72722B3BF009CFCDD /* State.swift */; };
-		1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1EF7827041776007CE1F3 /* Attributes.swift */; };
+		1CE634AD2726A8C70051BF9F /* StateBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9CF72722B3BF009CFCDD /* StateBinding.swift */; };
 		1CFBC27F272B95D100AE64C4 /* Containers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFBC27E272B95D100AE64C4 /* Containers.swift */; };
 /* End PBXBuildFile section */
 
@@ -93,22 +86,15 @@
 		1C2B6CF82790354B00535498 /* MarginTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarginTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF92790354B00535498 /* ForEachTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForEachTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CFA2790354B00535498 /* StateTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
-		1C2B6CFB2790354B00535498 /* ProductDetailTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductDetailTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPTTestViewController.swift; sourceTree = "<group>"; };
 		1C3113502797BC1000CF4973 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
-		1C4981F8274F6AF200DF13A4 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoTestViewController.swift; sourceTree = "<group>"; };
-		1C7D7C422796C8E500912FE3 /* GeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryReader.swift; sourceTree = "<group>"; };
-		1C9C6DFA27993571000F4A70 /* BindingExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtension.swift; sourceTree = "<group>"; };
-		1CA9E99D2A5BFB8700B8F73D /* SwiftUIViewControllerPresent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIViewControllerPresent.swift; sourceTree = "<group>"; };
-		1CAD9CF72722B3BF009CFCDD /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
-		1CB1EF7827041776007CE1F3 /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
+		1CAD9CF72722B3BF009CFCDD /* StateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBinding.swift; sourceTree = "<group>"; };
 		1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBuilder.swift; sourceTree = "<group>"; };
-		1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
+		1CD8FE1E270FEC7400FE41E8 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		1CD8FE20270FEE0700FE41E8 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
-		1CD8FE2C27102EE100FE41E8 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LazyFishCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CFBC27E272B95D100AE64C4 /* Containers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Containers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -162,7 +148,6 @@
 				1C2B6CCB279034B900535498 /* LaunchScreen.storyboard */,
 				1C2B6CCE279034B900535498 /* Info.plist */,
 				1C0F54BB28F2774F001C4048 /* SwiftUIView.swift */,
-				1CA9E99D2A5BFB8700B8F73D /* SwiftUIViewControllerPresent.swift */,
 			);
 			path = LazyFishTest;
 			sourceTree = "<group>";
@@ -181,7 +166,6 @@
 				1C2B6CF52790354B00535498 /* ObserveRemoveTestViewController.swift */,
 				1C2B6CF72790354B00535498 /* PageTestViewController.swift */,
 				1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */,
-				1C2B6CFB2790354B00535498 /* ProductDetailTestViewController.swift */,
 				1C2B6CFA2790354B00535498 /* StateTestViewController.swift */,
 				1C2B6CEF2790354A00535498 /* TableViewTestViewController.swift */,
 				1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */,
@@ -201,18 +185,13 @@
 			isa = PBXGroup;
 			children = (
 				1C2B6CB5278C3AC700535498 /* Animation.swift */,
-				1CB1EF7827041776007CE1F3 /* Attributes.swift */,
-				1C4981F8274F6AF200DF13A4 /* CollectionView.swift */,
 				1CFBC27E272B95D100AE64C4 /* Containers.swift */,
 				1CD8FE20270FEE0700FE41E8 /* Layout.swift */,
-				1CD8FE1E270FEC7400FE41E8 /* Modifier.swift */,
+				1CD8FE1E270FEC7400FE41E8 /* UIView+Extension.swift */,
 				1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */,
+				1CAD9CF72722B3BF009CFCDD /* StateBinding.swift */,
 				1C4981F6274F69CE00DF13A4 /* Section.swift */,
-				1CAD9CF72722B3BF009CFCDD /* State.swift */,
 				1C4981F4274F693200DF13A4 /* TableView.swift */,
-				1CD8FE2C27102EE100FE41E8 /* Views.swift */,
-				1C7D7C422796C8E500912FE3 /* GeometryReader.swift */,
-				1C9C6DFA27993571000F4A70 /* BindingExtension.swift */,
 				1C0F54BD28F2785E001C4048 /* Preview.swift */,
 			);
 			path = LazyFishCore;
@@ -331,11 +310,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C2B6D022790354B00535498 /* InputTestViewController.swift in Sources */,
-				1CA9E99E2A5BFB8700B8F73D /* SwiftUIViewControllerPresent.swift in Sources */,
 				1C2B6D002790354B00535498 /* ContainerCoverTestViewController.swift in Sources */,
 				1C0F54BC28F2774F001C4048 /* SwiftUIView.swift in Sources */,
 				1C2B6CFF2790354B00535498 /* ForEachScrollTestViewController.swift in Sources */,
-				1C2B6D092790354B00535498 /* ProductDetailTestViewController.swift in Sources */,
 				1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */,
 				1C2B6D072790354B00535498 /* ForEachTestViewController.swift in Sources */,
 				1C2B6CC5279034B700535498 /* ViewController.swift in Sources */,
@@ -358,17 +335,12 @@
 			files = (
 				1C2B6CB6278C3AC700535498 /* Animation.swift in Sources */,
 				1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */,
-				1C7D7C432796C8E500912FE3 /* GeometryReader.swift in Sources */,
-				1CE634A92726A8C70051BF9F /* Views.swift in Sources */,
 				1C0F54BE28F2785E001C4048 /* Preview.swift in Sources */,
 				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
-				1CE634AD2726A8C70051BF9F /* State.swift in Sources */,
+				1CE634AD2726A8C70051BF9F /* StateBinding.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
-				1CE634AA2726A8C70051BF9F /* Modifier.swift in Sources */,
-				1C4981F9274F6AF200DF13A4 /* CollectionView.swift in Sources */,
+				1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */,
 				1C4981F5274F693200DF13A4 /* TableView.swift in Sources */,
-				1CE634AE2726A8C70051BF9F /* Attributes.swift in Sources */,
-				1C9C6DFB27993571000F4A70 /* BindingExtension.swift in Sources */,
 				1CFBC27F272B95D100AE64C4 /* Containers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

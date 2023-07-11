@@ -24,7 +24,7 @@ class ForEachTestViewController: UIViewController {
                     UILabel().text("Header").backgroundColor(.lightGray)
                     
                     ForEach($section1) { str in
-                        UILabel().text(str).alignment(.allEdges).backgroundColor(.yellow)
+                        UILabel().text(str).backgroundColor(.yellow)
                     }
                     .border(width: 1, color: .red)
                     
@@ -36,7 +36,7 @@ class ForEachTestViewController: UIViewController {
                 UILabel().text("Header2").backgroundColor(.lightGray)
                 
                 ForEach($section2) { str in
-                    UILabel().text(str).alignment(.allEdges).backgroundColor(.cyan)
+                    UILabel().text(str).backgroundColor(.cyan)
                 }.border(width: 1, color: .green)
                 
                 UILabel().text("Footer2").backgroundColor(.lightGray)

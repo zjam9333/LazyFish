@@ -66,8 +66,7 @@ fileprivate class AlertViewShow: UIView {
                                 .textColor(.darkGray)
                                 .font(UIFont.systemFont(ofSize: 14, weight: .regular))
                         }
-                        .alignment(.allEdges)
-                        .padding(top: 20, leading: 20, bottom: 20, trailing: 20)
+                        .padding(20)
                         
                         UIView()
                             .backgroundColor(.lightGray)
@@ -92,7 +91,6 @@ fileprivate class AlertViewShow: UIView {
                             }
                         }.frame(height: 48)
                     }
-                    .alignment(.allEdges)
                 }
                 .backgroundColor(.white)
                 .cornerRadius(10).clipped()
@@ -113,7 +111,6 @@ fileprivate class AlertViewShow: UIView {
                 }
             }
             .property(\.alpha, binding: $alertAlpha)
-            .alignment(.allEdges)
             .backgroundColor(.black.withAlphaComponent(0.3))
         }
     }

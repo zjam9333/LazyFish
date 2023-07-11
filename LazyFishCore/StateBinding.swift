@@ -210,3 +210,76 @@ private class JoinBinding<S1, S2>: Binding<(S1, S2)> {
 /// The Zip 要求全部元素都变化才打包发送
 private class ZipBinding<S1, S2>: JoinBinding<S1, S2> {
 }
+
+// MARK: Bool
+
+extension Binding where Element: Equatable {
+    public static func == (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Bool> {
+        return lhs.join(rhs) { ele, ele2 in
+            return ele == ele2
+        }
+    }
+    
+    public static func == (lhs: Binding<Element>, rhs: Element) -> Binding<Bool> {
+        return lhs.map { ele in
+            return ele == rhs
+        }
+    }
+    
+    public static func != (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Bool> {
+        return lhs.join(rhs) { ele, ele2 in
+            return ele != ele2
+        }
+    }
+    
+    public static func != (lhs: Binding<Element>, rhs: Element) -> Binding<Bool> {
+        return lhs.map { ele in
+            return ele != rhs
+        }
+    }
+}
+
+// MARK: math
+
+extension Binding where Element == CGFloat {
+    public static func + (lhs: Binding<Element>, rhs: Element) -> Binding<Element> {
+        return lhs.map { a in
+            return a + rhs
+        }
+    }
+    public static func - (lhs: Binding<Element>, rhs: Element) -> Binding<Element> {
+        return lhs.map { a in
+            return a - rhs
+        }
+    }
+    public static func * (lhs: Binding<Element>, rhs: Element) -> Binding<Element> {
+        return lhs.map { a in
+            return a * rhs
+        }
+    }
+    public static func / (lhs: Binding<Element>, rhs: Element) -> Binding<Element> {
+        return lhs.map { a in
+            return a / rhs
+        }
+    }
+    public static func + (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Element> {
+        return lhs.join(rhs)  { a, b in
+            return a + b
+        }
+    }
+    public static func - (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Element> {
+        return lhs.join(rhs)  { a, b in
+            return a - b
+        }
+    }
+    public static func * (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Element> {
+        return lhs.join(rhs)  { a, b in
+            return a * b
+        }
+    }
+    public static func / (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Element> {
+        return lhs.join(rhs)  { a, b in
+            return a / b
+        }
+    }
+}

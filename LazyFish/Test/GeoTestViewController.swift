@@ -39,7 +39,9 @@ class GeoTestViewController: UIViewController {
                     self?.view.layoutIfNeeded()
                 }
             }
-            .frame(width: 100).alignment([.centerX, .bottom])
+            .frame(width: 100)
+            .alignment([.centerX, .bottom])
+            .alignment(.bottom, value: -20)
         }
         // Do any additional setup after loading the view.
     }

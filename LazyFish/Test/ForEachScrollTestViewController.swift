@@ -29,10 +29,10 @@ class ForEachScrollTestViewController: UIViewController {
                     ForEach(self?.$section1) { str in
                         if str == "bird" {
                             IfBlock(self?.$showBirds) {
-                                UILabel().text(str).alignment(.allEdges).backgroundColor(.cyan)
+                                UILabel().text(str).backgroundColor(.cyan)
                             }
                         } else {
-                        UILabel().text(str).alignment(.allEdges).backgroundColor(.yellow)
+                        UILabel().text(str).backgroundColor(.yellow)
                         }
                     }
                     .border(width: 1, color: .red)
@@ -44,7 +44,6 @@ class ForEachScrollTestViewController: UIViewController {
                 .frame(width: geo.size.width * 0.5, height: geo.size.height)
                 .bounce(.vertical)
             }
-            .alignment(.allEdges)
             
             UIStackView(axis: .horizontal, alignment: .fill, spacing: 10) {
                 UIStackView(axis: .horizontal) {

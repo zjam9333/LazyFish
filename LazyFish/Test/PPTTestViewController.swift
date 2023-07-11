@@ -27,7 +27,7 @@ class PPTTestViewController: UIViewController {
                             .font(.systemFont(ofSize: 16, weight: .regular))
                     }
                 }
-                .padding(16).alignment(.allEdges)
+                .padding(16)
                 .cornerRadius(6)
                 .backgroundColor(.init(white: 0.9, alpha: 1))
                 
@@ -36,11 +36,10 @@ class PPTTestViewController: UIViewController {
                         .font(.systemFont(ofSize: 16, weight: .regular))
                         .numberOfLines(0)
                 }
-                .padding(16).alignment(.allEdges)
+                .padding(16)
                 .cornerRadius(6)
                 .backgroundColor(.init(white: 0.9, alpha: 1))
             }
-            .alignment(.allEdges)
             .bounce(.vertical)
             .padding(20)
 //            .alignment(.center).alignment(.leading, value: 10)

@@ -39,7 +39,6 @@ class PageTestViewController: UIViewController {
                         }
                     }
                     .frame(width: 240, height: 240)
-                    .alignment(.allEdges)
                     .pageEnabled(true)
                     .pageObserve { [weak self] page in
                         self?.currentPage = page

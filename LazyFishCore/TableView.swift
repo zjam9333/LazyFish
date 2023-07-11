@@ -44,9 +44,6 @@ public extension UITableView {
             Section(array, cellContent: content, action: action)
         }
     }
-}
-
-extension UITableView {
     
     private enum DelegateKey {
         static var attributeKey: Int = 0

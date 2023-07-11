@@ -52,7 +52,7 @@ extension FakeInternalContainer {
             view.arrangeViews {
                 InternalLayoutStackView(axis: superStack.axis, distribution: superStack.distribution, alignment: superStack.alignment, spacing: superStack.spacing) {
                     userCreatedContents
-                }.alignment(.allEdges)
+                }
             }
         }
     }
@@ -114,7 +114,6 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
 
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
     let container = ForEachView()
-        .alignment(.allEdges)
     models?.addObserver(target: container) { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
     }
@@ -175,10 +174,8 @@ public func IfBlock(_ present: Binding<Bool>?, @ViewBuilder contentIf: ViewBuild
 
 // new ifblock using container
 private func _View_IfBlock(_ observe: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
-    let ifview = IfBlockView(conditionContents: contentIf)?
-        .alignment(.allEdges)
-    let elseview = ElseBlockView(conditionContents: contentElse)?
-        .alignment(.allEdges)
+    let ifview = IfBlockView(conditionContents: contentIf)
+    let elseview = ElseBlockView(conditionContents: contentElse)
     if ifview == nil && elseview == nil {
         return []
     }
@@ -273,7 +270,7 @@ private func _View_IfBlock_UsingOneContainer(_ observe: Binding<Bool>?, @ViewBui
     let ifview = IfElseBlockView {
         ifContents
         elseContents
-    }?.alignment(.allEdges)
+    }
     observe?.addObserver(target: ifview) { [weak ifview] changed in
         guard let ifview = ifview else {
             return
@@ -320,5 +317,45 @@ internal class IfElseBlockView: TouchIgnoreContainerView, FakeInternalContainer 
     
     func setHiddenDependOnChildren() {
         isHidden = hasNoSubviewShown(userCreatedContents)
+    }
+}
+
+public struct GeometryProxy {
+    public var size: CGSize = .zero
+}
+
+public func GeometryReader(@ViewBuilder contentBuilder: (Binding<GeometryProxy>) -> [UIView]) -> UIView {
+    let obj = GeometryReaderView(contentBuilder: contentBuilder)
+    return obj
+}
+
+internal class GeometryReaderView: TouchIgnoreContainerView {
+    var userCreatedContents: [UIView] = []
+    
+    override var viewsAcceptedTouches: [UIView] {
+        return userCreatedContents
+    }
+    
+    @State var proxy = GeometryProxy()
+    
+    override var bounds: CGRect {
+        set {
+            super.bounds = newValue
+            DispatchQueue.main.async {
+                self.proxy.size = newValue.size
+            }
+        }
+        get {
+            super.bounds
+        }
+    }
+    
+    convenience init(@ViewBuilder contentBuilder: (Binding<GeometryProxy>) -> [UIView]) {
+        self.init()
+        let contents = contentBuilder(self.$proxy)
+        userCreatedContents = contents
+        arrangeViews {
+            contents
+        }
     }
 }
