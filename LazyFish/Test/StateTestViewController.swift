@@ -29,16 +29,20 @@ class StateTestViewController: UIViewController {
             UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
                 .textColor(.black)
                 .textColor(.gray, for: .highlighted)
-                .action {
-                    action()
+                .onAction { b in
+                    ActionWithAnimation {
+                        action()
+                    }
                 }
         }
         let buttonForTitleBinding: (Binding<String>?, @escaping () -> Void) -> UIButton = { str, action in
             UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
                 .textColor(.black)
                 .textColor(.gray, for: .highlighted)
-                .action {
-                    action()
+                .onAction { b in
+                    ActionWithAnimation {
+                        action()
+                    }
                 }
         }
         
@@ -93,7 +97,9 @@ class StateTestViewController: UIViewController {
                 buttonForTitle("Toggle Animals 🙊") { [weak self] in
                     self?.showAnimals.toggle()
                 }
-                buttonForTitleBinding($sayWhat) { [weak self] in
+                buttonForTitleBinding($sayWhat.map({ s in
+                    return "Say \(s)"
+                })) { [weak self] in
                     self?.addNum += 1
                     if self?.sayWhat == "Hello" {
                         self?.sayWhat = "World"

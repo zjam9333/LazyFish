@@ -64,7 +64,7 @@ public struct GeometryProxy {
 
 GeometryReader { geo: Binding<GeometryProxy> in
     UIButton("ABC")
-        .action {
+        .onAction {
             print("button")
         }
         .frame(width: geo.size.width / 2, height: geo.size.height - 30 * 2)
@@ -515,7 +515,7 @@ Our `GeometryReader` is a UIView, it passes a `Binding<GeometryProxy>` object in
 ```swift
 GeometryReader { geo: Binding<GeometryProxy> in
     UIButton("ABC")
-        .action {
+        .onAction {
             print("button")
         }
         .frame(width: geo.size.width / 2, height: geo.size.height - 30 * 2)

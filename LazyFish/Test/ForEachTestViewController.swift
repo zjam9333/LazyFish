@@ -44,13 +44,13 @@ class ForEachTestViewController: UIViewController {
             
             UIStackView(axis: .horizontal, alignment: .fill, spacing: 10) {
                 UIStackView(axis: .horizontal) {
-                    UIButton().text("-").textColor(.black).action { [weak self] in
+                    UIButton().text("-").textColor(.black).onAction { [weak self] b in
                         if self?.section1.isEmpty == false {
                             self?.section1.removeFirst()
                         }
                     }
                     UILabel().text("section1").textColor(.black)
-                    UIButton().text("+").textColor(.black).action { [weak self] in
+                    UIButton().text("+").textColor(.black).onAction { [weak self] b in
                         if let ran = self?.animals.randomElement() {
                             self?.section1.append(ran)
                         }
@@ -58,13 +58,13 @@ class ForEachTestViewController: UIViewController {
                 }
                 
                 UIStackView(axis: .horizontal) {
-                    UIButton().text("-").textColor(.black).action { [weak self] in
+                    UIButton().text("-").textColor(.black).onAction { [weak self] b in
                         if self?.section2.isEmpty == false {
                             self?.section2.removeFirst()
                         }
                     }
                     UILabel().text("section2").textColor(.black)
-                    UIButton().text("+").textColor(.black).action { [weak self] in
+                    UIButton().text("+").textColor(.black).onAction { [weak self] b in
                         if let ran = self?.colors.randomElement() {
                             self?.section2.append(ran)
                         }

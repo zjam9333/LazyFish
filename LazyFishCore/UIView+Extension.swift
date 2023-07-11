@@ -15,13 +15,7 @@ import UIKit
 ///
 ///
 
-public protocol KeyPathBinding {
-}
-
-extension UIView: KeyPathBinding {
-}
-
-public extension KeyPathBinding where Self: UIView {
+public extension ModifySelfProtocol where Self: UIView {
     func property<Value>(_ keyPath: WritableKeyPath<Self, Value>, binding: Binding<Value>?) -> Self {
         binding?.addObserver(target: self, observer: { [weak self] change in
             self?[keyPath: keyPath] = change.new
@@ -34,6 +28,11 @@ public extension KeyPathBinding where Self: UIView {
         // 收到警告？？？Cannot assign through subscript: 'self' is immutable
         var weakself = self as Self?
         weakself?[keyPath: keyPath] = newValue
+        return self
+    }
+    
+    func propertyModifing(action: (Self) -> Void) -> Self {
+        action(self)
         return self
     }
 }
@@ -121,6 +120,18 @@ public extension UILabel {
     }
 }
 
+public extension ModifySelfProtocol where Self: UIControl {
+    func onAction(forEvent event: UIControl.Event = .touchUpInside, _ action: @escaping (Self) -> Void) -> Self {
+        zk_actionBlock = { [weak self] in
+            if let self = self {
+                action(self)
+            }
+        }
+        addTarget(self, action: #selector(zk_selfTapAction), for: event)
+        return self
+    }
+}
+
 public extension UIControl {
     
     typealias ActionBlock = () -> Void
@@ -129,13 +140,7 @@ public extension UIControl {
         static var blockKey: Int = 0
     }
     
-    func action(for event: Event = .touchUpInside, _ action: @escaping ActionBlock) -> Self {
-        zk_actionBlock = action
-        addTarget(self, action: #selector(zk_selfTapAction), for: event)
-        return self
-    }
-    
-    private var zk_actionBlock: ActionBlock? {
+    fileprivate var zk_actionBlock: ActionBlock? {
         set {
             let n = newValue
             objc_setAssociatedObject(self, &AssociatedKey.blockKey, n, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -146,7 +151,7 @@ public extension UIControl {
         }
     }
     
-    @objc private func zk_selfTapAction() {
+    @objc fileprivate func zk_selfTapAction() {
         zk_actionBlock?()
     }
     
@@ -351,7 +356,7 @@ public extension UISwitch {
         binding?.addObserver(target: self) { [weak self] changed in
             self?.isOn = changed.new
         }
-        let _ = self.action(for: .valueChanged) { [weak self] in
+        let _ = self.onAction(forEvent: .valueChanged) { [weak self] b in
             toggle(self?.isOn ?? false)
         }
         return self

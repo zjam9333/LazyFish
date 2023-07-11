@@ -24,18 +24,18 @@ class PageTestViewController: UIViewController {
                 GeometryReader { geo in
                     UIScrollView(.horizontal) {
                         ForEachEnumerated($pages) { i, name in
-                            let lab = UILabel()
+                            UILabel()
                                 .text(name)
                                 .textAlignment(.center)
                                 .textColor(.black)
                                 .border(width: 1, color: .black)
                                 .frame(width: geo.size.width, height: geo.size.height)
                                 .backgroundColor(UIColor(hue: .random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
-                            if name == "page2" {
-                                lab.border(width: 3, color: .red).backgroundColor(.yellow)
-                            } else {
-                                lab
-                            }
+                                .propertyModifing { lab in
+                                    if i == 1 {
+                                        _ = lab.border(width: 3, color: .red).backgroundColor(.yellow).property(\.isHidden, binding: self.$showPage1 != true)
+                                    }
+                                }
                         }
                     }
                     .frame(width: 240, height: 240)
@@ -63,16 +63,12 @@ class PageTestViewController: UIViewController {
                 }
                 
                 UIButton()
-                    .textColor(.black).font(.systemFont(ofSize: 17, weight: .bold))
-                    .action(for: .touchUpInside) { [weak self] in
-                        self?.showPage1.toggle()
-                        var arr = Array(0..<5).map { i in
-                            "page\(i)"
+                    .textColor(.black)
+                    .font(.systemFont(ofSize: 17, weight: .bold))
+                    .onAction(forEvent: .touchUpInside) { [weak self] b in
+                        ActionWithAnimation {
+                            self?.showPage1.toggle()
                         }
-                        if self?.showPage1 == false {
-                            arr.remove(at: 2)
-                        }
-                        self?.pages = arr
                     }
                     .text("toggle page 2")
             }

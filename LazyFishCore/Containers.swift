@@ -341,9 +341,8 @@ internal class GeometryReaderView: TouchIgnoreContainerView {
     override var bounds: CGRect {
         set {
             super.bounds = newValue
-            DispatchQueue.main.async {
-                self.proxy.size = newValue.size
-            }
+            // 要不要dispatch
+            self.proxy.size = newValue.size
         }
         get {
             super.bounds

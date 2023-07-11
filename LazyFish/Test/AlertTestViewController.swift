@@ -37,7 +37,7 @@ fileprivate struct AlertAction {
 
 fileprivate typealias AlertActionBuilder = ArrayBuilder<AlertAction>
 
-fileprivate class AlertViewShow: UIView {
+fileprivate class AlertView: UIView {
     
     let alertActions: [AlertAction]
     let title: String
@@ -46,7 +46,7 @@ fileprivate class AlertViewShow: UIView {
     @State var alertAlpha: CGFloat = 0
     @State var alertScale: CGFloat = 0.1
     
-    @discardableResult init(inView view: UIView?,title: String, message: String, @AlertActionBuilder actions: () -> [AlertAction]) {
+    @discardableResult init(showInView view: UIView?,title: String, message: String, @AlertActionBuilder actions: () -> [AlertAction]) {
         self.title = title
         self.message = message
         self.alertActions = actions()
@@ -63,6 +63,7 @@ fileprivate class AlertViewShow: UIView {
                             
                             UILabel()
                                 .text(message)
+                                .numberOfLines(0)
                                 .textColor(.darkGray)
                                 .font(UIFont.systemFont(ofSize: 14, weight: .regular))
                         }
@@ -79,7 +80,7 @@ fileprivate class AlertViewShow: UIView {
                                     .textColor(i.style.color, for: .normal)
                                     .textColor(i.style.color.withAlphaComponent(0.5), for: .highlighted)
                                     .font(i.style.font)
-                                    .action { [weak self] in
+                                    .onAction { [weak self] b in
                                         i.action()
                                         ActionWithAnimation(.default) {
                                             self?.alertScale = 0.1
@@ -93,7 +94,7 @@ fileprivate class AlertViewShow: UIView {
                     }
                 }
                 .backgroundColor(.white)
-                .cornerRadius(10).clipped()
+                .cornerRadius(5).clipped()
                 .frame(width: 300)
                 .alignment(.center)
                 .property(\.transform, binding: $alertScale.map {
@@ -130,8 +131,8 @@ class AlertTestViewController: UIViewController {
                 .text("Show an Alert", for: .normal)
                 .textColor(.black)
                 .font(UIFont.systemFont(ofSize: 28, weight: .black))
-                .action { [weak self] in
-                    AlertViewShow(inView: self?.view, title: "Logout", message: "Are you sure?") {
+                .onAction { [weak self] b in
+                    AlertView(showInView: self?.view, title: "Logout", message: "Are you sure? Are you sure? Are you sure? Are you sure? Are you sure? Are you sure? Are you sure?") {
                         AlertAction(name: "Cancel", style: .cancel) {
                             print("cancelled")
                         }

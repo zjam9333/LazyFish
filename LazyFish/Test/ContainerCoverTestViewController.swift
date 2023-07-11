@@ -43,13 +43,13 @@ class ContainerCoverTestViewController: UIViewController {
                 IfBlock($condition) {
                     UIButton("ButtonOnStackIf")
                         .textColor(.magenta)
-                        .action {
+                        .onAction { b in
                             print("StackIf Button Click")
                         }
                     IfBlock($condition) {
                         UIButton("ButtonOnStackIfIf")
                             .textColor(.red)
-                            .action {
+                            .onAction { b in
                                 print("StackIfIf Button Click")
                             }
                     }
@@ -59,7 +59,7 @@ class ContainerCoverTestViewController: UIViewController {
                 ForEachEnumerated($array) { index, obj in
                     UIButton("ButtonOnStackForEach \(index)")
                         .textColor(.magenta)
-                        .action {
+                        .onAction { b in
                             print("StackForEach Button Click \(index)")
                         }
                 }
@@ -71,7 +71,7 @@ class ContainerCoverTestViewController: UIViewController {
                 .textColor(.red)
                 .alignment([.leading], value: 100)
                 .alignment([.top], value: 100)
-                .action {
+                .onAction { b in
                     print("BG Button Click")
                 }
             
@@ -80,7 +80,7 @@ class ContainerCoverTestViewController: UIViewController {
                     .textColor(.green)
                     .alignment([.leading], value: 100)
                     .alignment([.top], value: 140)
-                    .action {
+                    .onAction { b in
                         print("If Button Click")
                     }
             }
@@ -90,7 +90,7 @@ class ContainerCoverTestViewController: UIViewController {
                     .textColor(.blue)
                     .alignment([.leading], value: 100)
                     .alignment([.top], value: 180)
-                    .action {
+                    .onAction { b in
                         print("ForEach Button Click")
                     }
             }

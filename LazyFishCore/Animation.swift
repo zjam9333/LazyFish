@@ -13,60 +13,24 @@ public enum Animation {
 }
 
 extension Animation {
-    internal struct Options: OptionSet, Hashable {
-        public func hash(into hasher: inout Hasher) {
-            hasher.combine(rawValue)
-        }
-        
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-        
-        public var rawValue: UInt
-        
-        public typealias RawValue = UInt
-        
-        // curve
-        static let curveEaseInOut = Options(rawValue: 1 << 0)
-        static let curveEaseIn = Options(rawValue: 1 << 1)
-        static let curveEaseOut = Options(rawValue: 1 << 2)
-        static let curveLinear = Options(rawValue: 1 << 3)
-        
-        // actions
-        static let layoutSubviews = Options(rawValue: 1 << 4)
-        static let allowUserInteraction = Options(rawValue: 1 << 5)
-        static let beginFromCurrentState = Options(rawValue: 1 << 6)
-        
-        var toUIViewAnimationOptions: UIView.AnimationOptions {
-            var options = UIView.AnimationOptions.init(rawValue: 0)
-            let map: [Options: UIView.AnimationOptions] = [
-                .curveEaseInOut: .curveEaseInOut,
-                .curveEaseIn: .curveEaseIn,
-                .curveEaseOut: .curveEaseOut,
-                .curveLinear: .curveLinear,
-                .layoutSubviews: .layoutSubviews,
-                .allowUserInteraction: .allowUserInteraction,
-                .beginFromCurrentState: .beginFromCurrentState,
-            ]
-            for i in map {
-                if self.contains(i.key) {
-                    options.formUnion(i.value)
-                }
-            }
-            return options
-        }
-    }
     public struct Arguments {
         internal var duration: TimeInterval = 0.25
         internal var delay: TimeInterval = 0
-        internal var options: Options = .curveEaseInOut
+        internal var options: UIView.AnimationOptions = []
         
         public static let `default` = Self()
         
         public static func curveEaseInOut(duration: TimeInterval) -> Self {
-            var obj = self.default
+            var obj = Self()
             obj.duration = duration
             obj.options = .curveEaseInOut
+            return obj
+        }
+        
+        public static func curveLinear(duration: TimeInterval) -> Self {
+            var obj = Self()
+            obj.duration = duration
+            obj.options = .curveLinear
             return obj
         }
         
@@ -127,7 +91,7 @@ extension Animation {
 extension Animation {
     public class Runner {
         internal func performAnimation(option: Animation.Arguments, animation: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-            UIView.animate(withDuration: option.duration, delay: option.delay, options: option.options.toUIViewAnimationOptions) {
+            UIView.animate(withDuration: option.duration, delay: option.delay, options: option.options) {
                 animation()
             } completion: { fi in
                 completion?(fi)

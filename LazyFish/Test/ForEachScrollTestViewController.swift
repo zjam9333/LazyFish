@@ -47,18 +47,18 @@ class ForEachScrollTestViewController: UIViewController {
             
             UIStackView(axis: .horizontal, alignment: .fill, spacing: 10) {
                 UIStackView(axis: .horizontal) {
-                    UIButton().text("-").textColor(.black).action { [weak self] in
+                    UIButton().text("-").textColor(.black).onAction { [weak self] b in
                         if self?.section1.isEmpty == false {
                             self?.section1.removeFirst()
                         }
                     }
                     UILabel().text("section1").textColor(.black)
-                    UIButton().text("+").textColor(.black).action { [weak self] in
+                    UIButton().text("+").textColor(.black).onAction { [weak self] b in
                         if let ran = self?.animals.randomElement() {
                             self?.section1.append(ran)
                         }
                     }
-                    UIButton().text("toggleBirds").textColor(.red).font(.systemFont(ofSize: 20, weight: .bold)).action { [weak self] in
+                    UIButton().text("toggleBirds").textColor(.red).font(.systemFont(ofSize: 20, weight: .bold)).onAction { [weak self] b in
                         self?.showBirds.toggle()
                     }
                 }

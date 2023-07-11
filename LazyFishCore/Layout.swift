@@ -15,7 +15,7 @@ public extension Binding where Element == CGFloat {
 internal class Attribute {
     enum _Attribute {
         case alignment([Edge: Binding<CGFloat>])
-        case onAppear(OnAppearBlock?)
+        case onAppear(OnAppearBlock)
     }
     var attrs: [_Attribute] = []
     
@@ -41,7 +41,7 @@ internal enum SizeFill {
     // 更多规则未完待续
 }
 
-public typealias OnAppearBlock = (UIView) -> Void
+public typealias OnAppearBlock = () -> Void
 
 public struct Alignment: OptionSet {
     public typealias RawValue = Int
@@ -64,12 +64,18 @@ internal enum Edge {
     case top, leading, bottom, trailing, centerX, centerY
 }
 
-public extension UIView {
-    
-    func onAppear(_ action: @escaping OnAppearBlock) -> Self {
-        Attribute.attribute(from: self).attrs.append(.onAppear(action))
+public extension ModifySelfProtocol where Self: UIView {
+    func onAppear(_ action: @escaping (Self) -> Void) -> Self {
+        Attribute.attribute(from: self).attrs.append(.onAppear({ [weak self] in
+            if let self = self {
+                action(self)
+            }
+        }))
         return self
     }
+}
+
+public extension UIView {
     
     func frame(width: CGFloat) -> Self {
         return frame(width: .constant(value: width), height: nil)
@@ -260,9 +266,7 @@ public extension UIView {
                         alignment[k] = v
                     }
                 case .onAppear(let block):
-                    allActionsOnAppear.append {
-                        block?(view)
-                    }
+                    allActionsOnAppear.append(block)
                 }
             }
             let container = view // Layout.containerPaddingIfNeed(view, padding: padding, offset: offset)

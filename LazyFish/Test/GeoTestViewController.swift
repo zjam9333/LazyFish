@@ -10,34 +10,34 @@ import LazyFishCore
 
 class GeoTestViewController: UIViewController {
 
-    @State var textValue: String = "100"
+    @State var slideValue: CGFloat = 0.5
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.view.arrangeViews {
-            let bi = $textValue.map { str in
-                return CGFloat(Int(str) ?? 0)
-            }
             GeometryReader { geo in
                 UIButton("ABC")
-                    .action {
+                    .onAction { b in
                         print("button")
                     }
                     .frame(width: geo.size.width / 2, height: geo.size.height / 3)
                     .backgroundColor(.red)
                     .alignment([.top, .leading], value: geo.size.width + geo.size.width * 0.2)
             }
-            .frame(width: bi, height: bi)
+            .frame(width: $slideValue * 200, height: $slideValue * 300)
             .backgroundColor(.blue)
             .alignment(.top, value: 100)
             .alignment(.leading, value: 10)
             
-            UITextField().borderStyle(.roundedRect).text(binding: $textValue) { [weak self] tt in
-                ActionWithAnimation(.curveEaseInOut(duration: 0.25)) {
-                    self?.textValue = tt
-                    self?.view.layoutIfNeeded()
+            UISlider()
+                .property(\.value, value: Float(slideValue))
+//                .property(\.isContinuous, value: false)
+                .onAction(forEvent: .valueChanged) { [weak self] sli in
+                    ActionWithAnimation(.curveLinear(duration: 0.25)) {
+                        self?.slideValue = CGFloat(sli.value)
+                        self?.view.layoutIfNeeded()
+                    }
                 }
-            }
             .frame(width: 100)
             .alignment([.centerX, .bottom])
             .alignment(.bottom, value: -20)

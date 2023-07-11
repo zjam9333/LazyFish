@@ -32,14 +32,14 @@ class ObserveRemoveTestViewController: UIViewController {
                         }
 //                    }
                 }
-                UIButton("Change Random").textColor(.blue).action { [weak self] in
+                UIButton("Change Random").textColor(.blue).onAction { [weak self] b in
                     if self?.random ?? 0 >= 5 {
                         self?.random = 0
                     } else {
                         self?.random += 1
                     }
                 }
-                UIButton("Change Objects").textColor(.red).action { [weak self] in
+                UIButton("Change Objects").textColor(.red).onAction { [weak self] b in
                     if self?.objects.count ?? 0 >= 5 {
                         self?.objects = [1]
                     } else {
