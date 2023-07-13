@@ -12,6 +12,7 @@ public extension UITableView {
     // 若干个section
     convenience init(style: Style, @ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
         self.init(frame: .zero, style: style)
+        self.separatorStyle = .none
         let delegate = DataSourceDelegate()
         self.delegate = delegate
         self.dataSource = delegate
@@ -24,25 +25,10 @@ public extension UITableView {
                 }
             }
         }
-//        if #available(iOS 15.0, *) {
-//            sectionHeaderTopPadding = 0
-//        }
-        
+        if #available(iOS 15.0, *) {
+            sectionHeaderTopPadding = 0
+        }
         estimatedRowHeight = 44
-    }
-    
-    // 一个动态section
-    convenience init<T>(style: Style, binding: Binding<[T]>?, @ViewBuilder content: @escaping (Binding<T>) -> [UIView], action: ((T) -> Void)? = nil) {
-        self.init(style: style) {
-            Section(binding: binding, cellContent: content, action: action)
-        }
-    }
-    
-    // 一个静态section
-    convenience init<T>(style: Style, array: [T], @ViewBuilder content: @escaping (Binding<T>) -> [UIView], action: ((T) -> Void)? = nil) {
-        self.init(style: style) {
-            Section(array, cellContent: content, action: action)
-        }
     }
     
     private enum DelegateKey {
@@ -63,18 +49,13 @@ public extension UITableView {
     }
     
     internal class LazyFishTableViewCell: UITableViewCell {
-        @State var model: Any
-        
-        init(model: Any, reuseIdentifier: String?, viewContent: (Binding<Any>) -> [UIView]) {
-            self._model = State<Any>.init(wrappedValue: model)
-            super.init(style: .default, reuseIdentifier: reuseIdentifier)
-            self.contentView.arrangeViews {
-                viewContent($model)
+        func updateContents(views: [UIView]) {
+            for i in contentView.subviews {
+                i.removeFromSuperview()
             }
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
+            contentView.arrangeViews {
+                views
+            }
         }
     }
     
@@ -93,13 +74,11 @@ public extension UITableView {
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cellId = "section:\(indexPath.section)"
+            let cellId = "LazyFishTableViewCell"
             let section = sections[indexPath.section]
-            let model = section.array[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? LazyFishTableViewCell ?? LazyFishTableViewCell(model: model, reuseIdentifier: cellId, viewContent: { anyBinding in
-                return section.content?(anyBinding) ?? []
-            })
-            cell.model = model
+            let row = indexPath.row
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? LazyFishTableViewCell ?? LazyFishTableViewCell(style: .default, reuseIdentifier: cellId)
+            cell.updateContents(views: section.content?(row) ?? [])
             return cell
         }
         
@@ -115,32 +94,20 @@ public extension UITableView {
         }
         
         func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            if let _ = sections[section].headerTitleGetter {
-                return UITableView.automaticDimension
-            } else if let _ = sections[section].headerViewsGetter {
+            if let _ = sections[section].headerViewsGetter {
                 return UITableView.automaticDimension
             }
             return tableView.style == .plain ? 0 : UITableView.automaticDimension
         }
         
         func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-            if let _ = sections[section].headerTitleGetter {
-                return UITableView.automaticDimension
-            } else if let _ = sections[section].headerViewsGetter {
+            if let _ = sections[section].headerViewsGetter {
                 return UITableView.automaticDimension
             }
             return tableView.style == .plain ? 0 : UITableView.automaticDimension
         }
         
         // MARK: Header Footer
-        
-        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-            return sections[section].headerTitleGetter?()
-        }
-        
-        func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-            return sections[section].footerTitleGetter?()
-        }
         
         func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
             if let getter = sections[section].headerViewsGetter {

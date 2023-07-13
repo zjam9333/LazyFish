@@ -58,9 +58,11 @@ extension FakeInternalContainer {
     }
 }
 
-internal class PaddingContainerView: UIView, ObserveContainer {
+internal class PaddingContainerView: TouchIgnoreContainerView, ObserveContainer {
     var observeSubviewTokens: [NSKeyValueObservation] = []
-    
+    override var viewsAcceptedTouches: [UIView] {
+        return subviews
+    }
     init(_ content: UIView, padding: [Edge: CGFloat] = [:], offset: CGPoint = .zero) {
         super.init(frame: .zero)
         addSubview(content)

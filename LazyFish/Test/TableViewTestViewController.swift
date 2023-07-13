@@ -18,24 +18,28 @@ class TableViewTestViewController: UIViewController {
             UITableView(style: .grouped) {
                 // 动态section
                 Section(binding: $arr) { str in
-                    UIView {
-                        UIStackView(axis: .horizontal, spacing: 10) {
-                            if #available(iOS 13.0, *) {
-                                UIImageView(image: UIImage(systemName: "person.fill.checkmark"))
-//                                    .frame(width: 32, height: 32)
-                            }
-                            UILabel()
-                                .text("row: \(str)")
-                        }
-                        .alignment(.leading, value: 20)
-                        .alignment(.centerY)
-                        
+                    UIStackView(axis: .horizontal, spacing: 10) {
                         if #available(iOS 13.0, *) {
-                            UIImageView(image: UIImage(systemName: "chevron.right"))
-                                .alignment(.trailing, value: -10)
-                                .alignment(.centerY)
+                            UIImageView(image: UIImage(systemName: "person.fill.checkmark"))
+//                                    .frame(width: 32, height: 32)
                         }
+                        UILabel()
+                            .text("row: \(str)")
                     }
+                    .alignment(.leading, value: 20)
+                    .alignment(.centerY)
+                    
+                    if #available(iOS 13.0, *) {
+                        UIImageView(image: UIImage(systemName: "chevron.right"))
+                            .alignment(.trailing, value: -10)
+                            .alignment(.centerY)
+                    }
+                    
+                    UIView()
+                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .frame(height: 0.5)
+                        .alignment([.bottom, .trailing])
+                        .alignment(.leading, value: 20)
                 }
                 // header footer 展示
                 .headerViews {
@@ -48,8 +52,10 @@ class TableViewTestViewController: UIViewController {
                     .padding(5)
                 }
                 .footerViews {
-                    UILabel().text("some footer").backgroundColor(.red)
+                    UILabel().text("Some footer")
+                        .frame(height: 30)
                         .padding(5)
+                        .backgroundColor(.red)
                 }
                 
                 // 静态section
@@ -58,12 +64,12 @@ class TableViewTestViewController: UIViewController {
                         .text("row: \(str)")
                         .alignment(.leading, value: 20)
                         .alignment(.centerY)
-                }
-                .headerTitle {
-                    return "section header using Title"
-                }
-                .footerTitle {
-                    return "section footer using Title"
+                    
+                    UIView()
+                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .frame(height: 0.5)
+                        .alignment([.bottom, .trailing])
+                        .alignment(.leading, value: 20)
                 }
             }
         }

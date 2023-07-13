@@ -34,6 +34,8 @@
 		1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F6274F69CE00DF13A4 /* Section.swift */; };
 		1C7D7C41279698F400912FE3 /* GeoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */; };
 		1CA9E9A02A5D319800B8F73D /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E99F2A5D319800B8F73D /* Protocols.swift */; };
+		1CA9E9A22A5E52EA00B8F73D /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */; };
+		1CA9E9A42A5E55B100B8F73D /* CollectionViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */; };
 		1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* UIView+Extension.swift */; };
 		1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */; };
 		1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE20270FEE0700FE41E8 /* Layout.swift */; };
@@ -93,6 +95,8 @@
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoTestViewController.swift; sourceTree = "<group>"; };
 		1CA9E99F2A5D319800B8F73D /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
+		1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF72722B3BF009CFCDD /* StateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBinding.swift; sourceTree = "<group>"; };
 		1CD8FE1C270FE71F00FE41E8 /* ResultBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBuilder.swift; sourceTree = "<group>"; };
 		1CD8FE1E270FEC7400FE41E8 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 				1C2B6CF32790354B00535498 /* DemoTestViewController.swift */,
 				1C2B6CF12790354B00535498 /* ForEachScrollTestViewController.swift */,
 				1C2B6CF92790354B00535498 /* ForEachTestViewController.swift */,
+				1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */,
 				1C2B6CF42790354B00535498 /* InputTestViewController.swift */,
 				1C2B6CF62790354B00535498 /* JoinBindingTestViewController.swift */,
 				1C2B6CF82790354B00535498 /* MarginTestViewController.swift */,
@@ -170,7 +175,7 @@
 				1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */,
 				1C2B6CFA2790354B00535498 /* StateTestViewController.swift */,
 				1C2B6CEF2790354A00535498 /* TableViewTestViewController.swift */,
-				1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */,
+				1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */,
 			);
 			name = Test;
 			path = LazyFish/Test;
@@ -196,6 +201,7 @@
 				1C4981F4274F693200DF13A4 /* TableView.swift */,
 				1C0F54BD28F2785E001C4048 /* Preview.swift */,
 				1CA9E99F2A5D319800B8F73D /* Protocols.swift */,
+				1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */,
 			);
 			path = LazyFishCore;
 			sourceTree = "<group>";
@@ -329,6 +335,7 @@
 				1C2B6D0A2790354B00535498 /* PPTTestViewController.swift in Sources */,
 				1C2B6D032790354B00535498 /* ObserveRemoveTestViewController.swift in Sources */,
 				1C2B6D042790354B00535498 /* JoinBindingTestViewController.swift in Sources */,
+				1CA9E9A42A5E55B100B8F73D /* CollectionViewTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +352,7 @@
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
 				1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */,
 				1C4981F5274F693200DF13A4 /* TableView.swift in Sources */,
+				1CA9E9A22A5E52EA00B8F73D /* CollectionView.swift in Sources */,
 				1CFBC27F272B95D100AE64C4 /* Containers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

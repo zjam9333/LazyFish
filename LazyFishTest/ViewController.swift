@@ -25,27 +25,34 @@ class ViewController: UIViewController {
 //            ("Observe Remove Test", ObserveRemoveTestViewController.self),
             ("PPT Test", PPTTestViewController.self),
             ("TableView Test", TableViewTestViewController.self),
+            ("CollectionView Test", CollectionViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
             ("Page Test", PageTestViewController.self),
             ("Demo Test", DemoTestViewController.self),
             ("State Test", StateTestViewController.self),
-            ("Input Test", InputTestViewController.self),
+//            ("Input Test", InputTestViewController.self),
 //            ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
         testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 200))
         
         view.arrangeViews {
-            UITableView(style: .plain, array: testClasses) { item in
-                let title = item.name
-                UILabel().text(binding: title).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                    .padding(20)
-            } action: { [weak self] item in
-                let vc = item.classType.init()
-                vc.view.backgroundColor = .white
-                vc.navigationItem.title = item.name
-                self?.navigationController?.pushViewController(vc, animated: true)
+            UITableView(style: .plain) {
+                Section(testClasses) { item in
+                    UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                        .padding(10)
+                    UIView()
+                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .frame(height: 0.5)
+                        .alignment([.bottom, .trailing])
+                        .alignment(.leading, value: 10)
+                } action: { [weak self] item in
+                    let vc = item.classType.init()
+                    vc.view.backgroundColor = .white
+                    vc.navigationItem.title = item.name
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
             }
         }
     }
