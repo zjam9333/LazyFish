@@ -18,15 +18,18 @@ class CollectionViewTestViewController: UIViewController {
             UICollectionView {
                 // 动态section
                 Section(binding: $arr) { str in
-                    UIStackView(axis: .horizontal, spacing: 10) {
+                    UIStackView(axis: .vertical, spacing: 10) {
                         if #available(iOS 13.0, *) {
                             UIImageView(image: UIImage(systemName: "person.fill.checkmark"))
                                 .property(\.contentMode, value: .center)
+                                .frame(width: 65, height: 65)
                         }
                         UILabel()
                             .text("row: \(str)")
                             .backgroundColor(.white)
                     }
+                    .padding(5)
+                    .border(width: 1, color: .white)
                     .padding(5 + CGFloat(str * 2))
                     .backgroundColor(.lightGray)
                     .cornerRadius(5)
@@ -34,24 +37,41 @@ class CollectionViewTestViewController: UIViewController {
                     print(str)
                 }
                 .headerViews {
-                    UIView().frame(width: 100, height: 40).backgroundColor(.red)
+                    UILabel("TEST headder")
+                        .padding(10).backgroundColor(.red)
+                }
+                .footerViews {
+                    UILabel("TEST footer")
+                        .padding(10).backgroundColor(.blue)
                 }
                 .contentInset {
                     return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                 }
                 
-                // 静态section
-                Section(Array(0...50)) { str in
-                    UILabel()
-                        .text("row: \(str)")
-                        .padding(10)
-                        .backgroundColor(.lightGray)
-                        .cornerRadius(5)
-                } action: { str in
-                    print(str)
-                }
-                .contentInset {
-                    return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                for i in 0...5 {
+                    // 静态section
+                    Section(Array(0...50)) { str in
+                        UILabel()
+                            .text("row: \(str)")
+                            .padding(4 + CGFloat(abs(str.hashValue) % 5))
+                            .backgroundColor(.lightGray)
+                            .cornerRadius(5)
+                    } action: { str in
+                        print(str)
+                    }
+                    .headerViews {
+                        UILabel("TEST headder 2 + \(i)")
+                            .padding(10)
+                            .backgroundColor(.green)
+                    }
+                    .footerViews {
+                        UILabel("TEST footer 2 + \(i)")
+                            .padding(10)
+                            .backgroundColor(.yellow)
+                    }
+                    .contentInset {
+                        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                    }
                 }
             }
         }

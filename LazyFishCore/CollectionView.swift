@@ -12,18 +12,27 @@ public extension UICollectionView {
     // 若干个section
     convenience init(@ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
         let flowLayout = SLCollectionViewGridLayout()
+        // 设置sectionHeadersPinToVisibleBounds有bug
+//        flowLayout.sectionHeadersPinToVisibleBounds = true
+//        flowLayout.sectionFootersPinToVisibleBounds = true
         flowLayout.estimatedItemSize = CGSize(width: 40, height: 40)
         self.init(frame: .zero, collectionViewLayout: flowLayout)
         self.alwaysBounceVertical = true
         self.register(LazyFishCollectionViewCell.self, forCellWithReuseIdentifier: "LazyFishCollectionViewCell")
+        self.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "LazyFishCollectionViewHeader")
+        self.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "LazyFishCollectionViewHeader")
         let delegate = DataSourceDelegate()
         self.delegate = delegate
         self.dataSource = delegate
         zk_collectionViewViewDelegate = delegate
         delegate.sections = sectionBuilder()
-        for (_, element) in delegate.sections.enumerated() {
-            element.didUpdate = { [weak self] in
-                self?.reloadData()
+        for (index, element) in delegate.sections.enumerated() {
+            element.didUpdate = { [weak self, weak delegate] in
+                delegate?.removeHeaderCaches(section: index)
+                // 直接reloadData有bug
+                UIView.performWithoutAnimation {
+                    self?.reloadSections([index])
+                }
             }
         }
     }
@@ -56,7 +65,18 @@ public extension UICollectionView {
         }
     }
     
-    private class DataSourceDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SLCollectionViewDelegateGridLayout {
+    internal class LazyFishCollectionViewHeader: UICollectionReusableView {
+        func updateContents(views: [UIView]) {
+            for i in subviews {
+                i.removeFromSuperview()
+            }
+            arrangeViews {
+                views
+            }
+        }
+    }
+    
+    private class DataSourceDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
         
         var sections: [Section] = []
         
@@ -88,19 +108,44 @@ public extension UICollectionView {
             collectionView.deselectItem(at: indexPath, animated: true)
         }
         
-        func collectionView(_ collectionView: UICollectionView, shouldAlignSameRowCellHeight indexPath: IndexPath) -> Bool {
-            return false
+        // MARK: HEADERS
+        private var lastRequestHeaders: [String: [Int: UICollectionReusableView]] = [:]
+        
+        func removeHeaderCaches(section: Int) {
+            lastRequestHeaders.removeAll() // removeAll保险一点点
+//            lastRequestHeaders[UICollectionView.elementKindSectionHeader]?[section] = nil
+//            lastRequestHeaders[UICollectionView.elementKindSectionFooter]?[section] = nil
         }
         
-        func collectionView(_ collectionView: UICollectionView, shouldAlignSameRowCellLeft indexPath: IndexPath) -> Bool {
-            return true
+        private func myCacheCollectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+            if let cac = lastRequestHeaders[kind]?[indexPath.section] {
+                return cac
+            }
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "LazyFishCollectionViewHeader", for: indexPath) as? LazyFishCollectionViewHeader ?? LazyFishCollectionViewHeader()
+            if kind == UICollectionView.elementKindSectionHeader {
+                header.updateContents(views: sections[indexPath.section].headerViewsGetter?() ?? [])
+                lastRequestHeaders[kind, default: [:]][indexPath.section] = header
+            } else {
+                header.updateContents(views: sections[indexPath.section].footerViewsGetter?() ?? [])
+                lastRequestHeaders[kind, default: [:]][indexPath.section] = header
+            }
+            return header
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+            return myCacheCollectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+            let headerView = myCacheCollectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: .init(row: 0, section: section))
+            return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width, height: UIView.layoutFittingExpandedSize.height),withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+            let footerView = myCacheCollectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionFooter, at: .init(row: 0, section: section))
+            return footerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width, height: UIView.layoutFittingExpandedSize.height),withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
         }
     }
-}
-
-protocol SLCollectionViewDelegateGridLayout: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, shouldAlignSameRowCellHeight indexPath: IndexPath) -> Bool
-    func collectionView(_ collectionView: UICollectionView, shouldAlignSameRowCellLeft indexPath: IndexPath) -> Bool
 }
 
 class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
@@ -139,15 +184,11 @@ class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
         rowsAttrs.append(sameRows)
         
         for rows in rowsAttrs {
-            alignCellLeftForSameRow(rows)
-            alignCellHeightForSameRow(rows)
+            alignRow(rows)
         }
     }
     
-    private func alignCellHeightForSameRow(_ attributes: [UICollectionViewLayoutAttributes]) {
-        guard let collectionView = collectionView, let delegate = collectionView.delegate as? SLCollectionViewDelegateGridLayout else {
-            return
-        }
+    private func alignRow(_ attributes: [UICollectionViewLayoutAttributes]) {
         var maxHeight: CGFloat = 0
         var minY: CGFloat = .infinity
         
@@ -163,18 +204,16 @@ class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
         }
         
         for attr in attributes {
-            let shouldAlignHeight = delegate.collectionView(collectionView, shouldAlignSameRowCellHeight: attr.indexPath)
-            if shouldAlignHeight {
-                var frame = attr.frame
-                frame.origin.y = minY
-                frame.size.height = maxHeight
-                attr.frame = frame
-            }
+            var frame = attr.frame
+            frame.origin.y = minY
+            attr.frame = frame
         }
+        
+        alignCellLeftForSameRow(attributes)
     }
     
     private func alignCellLeftForSameRow(_ attributes: [UICollectionViewLayoutAttributes]) {
-        guard let collectionView = collectionView, let delegate = collectionView.delegate as? SLCollectionViewDelegateGridLayout else {
+        guard let collectionView = collectionView, let delegate = collectionView.delegate as? UICollectionViewDelegateFlowLayout else {
             return
         }
         guard var last = attributes.first else {
@@ -194,12 +233,9 @@ class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
         }
         for i in 1..<attributes.count {
             let thisAttr = attributes[i]
-            let shouldAlignLeft = delegate.collectionView(collectionView, shouldAlignSameRowCellLeft: thisAttr.indexPath)
-            if shouldAlignLeft {
-                var fr = thisAttr.frame
-                fr.origin.x = last.frame.maxX + minSpace
-                thisAttr.frame = fr
-            }
+            var fr = thisAttr.frame
+            fr.origin.x = last.frame.maxX + minSpace
+            thisAttr.frame = fr
             last = thisAttr
         }
     }
