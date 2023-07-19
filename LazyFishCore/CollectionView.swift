@@ -10,7 +10,7 @@ import UIKit
 public extension UICollectionView {
     
     // 若干个section
-    convenience init(@ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
+    convenience init(@ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
         let flowLayout = SLCollectionViewGridLayout()
         // 设置sectionHeadersPinToVisibleBounds有bug
 //        flowLayout.sectionHeadersPinToVisibleBounds = true

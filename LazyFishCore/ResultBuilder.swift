@@ -12,7 +12,6 @@ public typealias ViewBuilder = ArrayBuilder<UIView>
 public typealias LayoutBuilder = ArrayBuilder<NSLayoutConstraint>
 
 @_functionBuilder public struct ArrayBuilder<MyReturnType> {
-    public typealias ContentBlock = () -> [MyReturnType]
     // MARK: 组合全部表达式的返回值
     public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
         let res = components.flatMap { r in

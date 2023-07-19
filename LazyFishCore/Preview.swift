@@ -13,7 +13,7 @@ import SwiftUI
 public struct SwiftUIViewPresent: UIViewRepresentable {
     let views: [UIView]
     
-    public init(@ViewBuilder content: ViewBuilder.ContentBlock) {
+    public init(@ViewBuilder content: (() -> [UIView])) {
         views = content()
     }
     

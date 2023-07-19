@@ -10,7 +10,7 @@ import UIKit
 public extension UITableView {
     
     // 若干个section
-    convenience init(style: Style, @ArrayBuilder<Section> sectionBuilder: ArrayBuilder<Section>.ContentBlock) {
+    convenience init(style: Style, @ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
         self.init(frame: .zero, style: style)
         self.separatorStyle = .none
         let delegate = DataSourceDelegate()

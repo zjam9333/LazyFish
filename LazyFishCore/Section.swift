@@ -10,7 +10,7 @@ import UIKit
 public struct SectionCellContent {
     let contents: () -> [UIView]
     let action: () -> Void
-    public init(@ViewBuilder contents: @escaping ViewBuilder.ContentBlock, action: @escaping () -> Void) {
+    public init(@ViewBuilder contents: @escaping (() -> [UIView]), action: @escaping () -> Void) {
         self.action = action
         self.contents = contents
     }
@@ -23,7 +23,7 @@ public class Section {
     var didClick: ((Int) -> Void)?
     var content: ((Int) -> [UIView])?
     
-    public init(@ArrayBuilder<SectionCellContent> content: ArrayBuilder<SectionCellContent>.ContentBlock) {
+    public init(@ArrayBuilder<SectionCellContent> content: () -> [SectionCellContent]) {
         let contents = content()
         self.rowCount = contents.count
         self.content = { index in
@@ -59,15 +59,15 @@ public class Section {
     }
     
     // MARK: header footer
-    var headerViewsGetter: (ViewBuilder.ContentBlock)?
-    var footerViewsGetter: (ViewBuilder.ContentBlock)?
+    var headerViewsGetter: ((() -> [UIView]))?
+    var footerViewsGetter: ((() -> [UIView]))?
     
-    public func headerViews(@ViewBuilder getter: @escaping ViewBuilder.ContentBlock) -> Self {
+    public func headerViews(@ViewBuilder getter: @escaping (() -> [UIView])) -> Self {
         headerViewsGetter = getter
         return self
     }
     
-    public func footerViews(@ViewBuilder getter: @escaping ViewBuilder.ContentBlock) -> Self {
+    public func footerViews(@ViewBuilder getter: @escaping (() -> [UIView])) -> Self {
         footerViewsGetter = getter
         return self
     }

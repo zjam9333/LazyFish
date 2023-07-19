@@ -169,13 +169,13 @@ internal class ForEachView: TouchIgnoreContainerView, FakeInternalContainer {
 
 // MARK: IF
 
-public func IfBlock(_ present: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+public func IfBlock(_ present: Binding<Bool>?, @ViewBuilder contentIf: (() -> [UIView]), @ViewBuilder contentElse: (() -> [UIView]) = { [] }) -> [UIView] {
 //    _View_IfBlock(present, contentIf: contentIf, contentElse: contentElse)
     _View_IfBlock_UsingOneContainer(present, contentIf: contentIf, contentElse: contentElse)
 }
 
 // new ifblock using container
-private func _View_IfBlock(_ observe: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+private func _View_IfBlock(_ observe: Binding<Bool>?, @ViewBuilder contentIf: (() -> [UIView]), @ViewBuilder contentElse: (() -> [UIView]) = { [] }) -> [UIView] {
     let ifview = IfBlockView(conditionContents: contentIf)
     let elseview = ElseBlockView(conditionContents: contentElse)
     if ifview == nil && elseview == nil {
@@ -211,7 +211,7 @@ internal class IfBlockView: TouchIgnoreContainerView, FakeInternalContainer {
         return userCreatedContents
     }
     
-    convenience init?(@ViewBuilder conditionContents: ViewBuilder.ContentBlock) {
+    convenience init?(@ViewBuilder conditionContents: (() -> [UIView])) {
         let contents = conditionContents()
         if contents.isEmpty {
             return nil
@@ -266,7 +266,7 @@ internal class TouchIgnoreContainerView: UIView {
     }
 }
 
-private func _View_IfBlock_UsingOneContainer(_ observe: Binding<Bool>?, @ViewBuilder contentIf: ViewBuilder.ContentBlock, @ViewBuilder contentElse: ViewBuilder.ContentBlock = { [] }) -> [UIView] {
+private func _View_IfBlock_UsingOneContainer(_ observe: Binding<Bool>?, @ViewBuilder contentIf: (() -> [UIView]), @ViewBuilder contentElse: (() -> [UIView]) = { [] }) -> [UIView] {
     let ifContents = contentIf()
     let elseContents = contentElse()
     let ifview = IfElseBlockView {
@@ -305,7 +305,7 @@ internal class IfElseBlockView: TouchIgnoreContainerView, FakeInternalContainer 
         return userCreatedContents
     }
     
-    convenience init?(@ViewBuilder conditionContents: ViewBuilder.ContentBlock) {
+    convenience init?(@ViewBuilder conditionContents: (() -> [UIView])) {
         let contents = conditionContents()
         if contents.isEmpty {
             return nil

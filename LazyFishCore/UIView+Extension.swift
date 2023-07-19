@@ -38,7 +38,7 @@ public extension ModifySelfProtocol where Self: UIView {
 }
 
 public extension UIView {
-    convenience init(_ comment: String = "nothing", @ViewBuilder content: ViewBuilder.ContentBlock) {
+    convenience init(_ comment: String = "nothing", @ViewBuilder content: (() -> [UIView])) {
         self.init()
         arrangeViews(content)
     }
@@ -208,7 +208,7 @@ public extension UIScrollView {
         }
     }
     
-    convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, @ViewBuilder content: ViewBuilder.ContentBlock) {
+    convenience init(_ direction: NSLayoutConstraint.Axis = .vertical, spacing: CGFloat = 0, @ViewBuilder content: (() -> [UIView])) {
         self.init()
         
         let views = content()
@@ -364,7 +364,7 @@ public extension UISwitch {
 }
 
 public extension UIStackView {
-    convenience init(axis: NSLayoutConstraint.Axis, distribution: Distribution = .fill, alignment: Alignment = .fill, spacing: CGFloat = 0, @ViewBuilder content: ViewBuilder.ContentBlock) {
+    convenience init(axis: NSLayoutConstraint.Axis, distribution: Distribution = .fill, alignment: Alignment = .fill, spacing: CGFloat = 0, @ViewBuilder content: (() -> [UIView])) {
         self.init()
         self.axis = axis
         self.distribution = distribution

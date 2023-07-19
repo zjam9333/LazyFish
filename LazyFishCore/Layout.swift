@@ -252,7 +252,7 @@ internal struct Layout {
 
 public extension UIView {
     
-    @discardableResult func arrangeViews(@ViewBuilder _ content: ViewBuilder.ContentBlock) -> Self {
+    @discardableResult func arrangeViews(@ViewBuilder _ content: (() -> [UIView])) -> Self {
         let views = content()
         var allActionsOnAppear = [() -> Void]()
         
