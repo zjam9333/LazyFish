@@ -9,10 +9,10 @@ import Foundation
 
 public struct Changed<T> {
     internal typealias ValueGetter = () -> T
-    var old: T {
+    public var old: T {
         _oldGetter()
     }
-    var new: T {
+    public var new: T {
         _newGetter()
     }
     let _oldGetter: ValueGetter
@@ -284,6 +284,32 @@ extension Binding where Element == CGFloat {
     public static func / (lhs: Binding<Element>, rhs: Binding<Element>) -> Binding<Element> {
         return lhs.join(rhs)  { a, b in
             return a / b
+        }
+    }
+}
+
+extension Binding where Element: Comparable {
+    public static func < (lhs: Binding, rhs: Element) -> Binding<Bool> {
+        return lhs.map { ele in
+            return ele < rhs
+        }
+    }
+    
+    public  static func < (lhs: Binding, rhs: Binding) -> Binding<Bool> {
+        return lhs.join(rhs) { ele1, ele2 in
+            return ele1 < ele2
+        }
+    }
+    
+    public static func > (lhs: Binding, rhs: Element) -> Binding<Bool> {
+        return lhs.map { ele in
+            return ele > rhs
+        }
+    }
+    
+    public static func > (lhs: Binding, rhs: Binding) -> Binding<Bool> {
+        return lhs.join(rhs) { ele1, ele2 in
+            return ele1 > ele2
         }
     }
 }
