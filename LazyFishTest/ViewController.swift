@@ -15,8 +15,7 @@ class ViewController: UIViewController {
         
         navigationItem.title = "Some Tests"
         
-        typealias VCModel = (name: String, classType: UIViewController.Type)
-        var testClasses: [VCModel] = [
+        let arr: [(name: String, classType: UIViewController.Type)] = [
             ("Geometry Test", GeoTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
             ("Join Binding Test", JoinBindingTestViewController.self),
@@ -35,7 +34,26 @@ class ViewController: UIViewController {
 //            ("Stack Test", StackTestViewController.self),
             ("Margin Test", MarginTestViewController.self),
         ]
-        testClasses.append(contentsOf: Array<VCModel>(repeating: ("Ram", ViewController.self), count: 200))
+        
+        struct VCModel: Hashable {
+            let id = UUID()
+            static func == (lhs: VCModel, rhs: VCModel) -> Bool {
+                return lhs.id == rhs.id
+            }
+            
+            let name: String
+            let classType: UIViewController.Type
+            init(_ name: String, _ classType: UIViewController.Type) {
+                self.name = name
+                self.classType = classType
+            }
+            func hash(into hasher: inout Hasher) {
+                hasher.combine(id)
+            }
+        }
+        let testClasses = arr.map { c in
+            return VCModel(c.name, c.classType)
+        }
         
         view.arrangeViews {
             UITableView(style: .plain) {
@@ -52,6 +70,33 @@ class ViewController: UIViewController {
                     vc.view.backgroundColor = .white
                     vc.navigationItem.title = item.name
                     self?.navigationController?.pushViewController(vc, animated: true)
+                }.headerViews {
+                    UILabel().text("Test Classes")
+                        .padding(10)
+                        .backgroundColor(.gray)
+                }
+                
+                Section(Array(0..<200).map({ i in
+                    VCModel("Ram", ViewController.self)
+                })) { item in
+                    UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
+                        .padding(10)
+                    UIView()
+                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .frame(height: 0.5)
+                        .alignment([.bottom, .trailing])
+                        .alignment(.leading, value: 10)
+                } action: { [weak self] item in
+                    let vc = item.classType.init()
+                    vc.view.backgroundColor = .white
+                    vc.navigationItem.title = item.name
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }.headerViews {
+                    UILabel().text("Random Section")
+                        .padding(10)
+                        .backgroundColor(.gray)
+                }.footerViews {
+                    
                 }
             }
         }

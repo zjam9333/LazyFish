@@ -13,18 +13,10 @@ public extension UITableView {
     convenience init(style: Style, @ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
         self.init(frame: .zero, style: style)
         self.separatorStyle = .none
-        let delegate = DataSourceDelegate()
+        let sections = sectionBuilder()
+        let delegate = DataSourceDelegate(sections: sections, tableView: self)
         self.delegate = delegate
-        self.dataSource = delegate
         zk_tableViewViewDelegate = delegate
-        delegate.sections = sectionBuilder()
-        for (offset, element) in delegate.sections.enumerated() {
-            element.didUpdate = { [weak self] in
-                UIView.performWithoutAnimation {
-                    self?.reloadSections(IndexSet(integer: offset), with: .none)
-                }
-            }
-        }
         if #available(iOS 15.0, *) {
             sectionHeaderTopPadding = 0
         }
@@ -61,7 +53,49 @@ public extension UITableView {
     
     private class DataSourceDelegate: NSObject, UITableViewDataSource, UITableViewDelegate {
         
-        var sections: [Section] = []
+        var sections: [Section]
+        var diffableDataSource: UITableViewDataSource?
+        
+        init(sections: [Section], tableView: UITableView) {
+            self.sections = sections
+            super.init()
+            if #available(iOS 13.0, *) {
+                let dataSource = UITableViewDiffableDataSource<Section, Section.Item>(tableView: tableView) { [weak self] tableView, indexPath, itemIdentifier in
+                    return self?.tableView(tableView, cellForRowAt: indexPath) ?? UITableViewCell()
+                }
+                self.diffableDataSource = dataSource
+                
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Section.Item>()
+                snapshot.appendSections(sections)
+                for section in sections {
+                    snapshot.appendItems(section.items, toSection: section)
+                }
+                dataSource.apply(snapshot)
+                tableView.dataSource = dataSource
+                for (element) in sections {
+                    element.didUpdate = { [weak element, weak dataSource] in
+                        if let element = element, let dataSource = dataSource {
+                            var snap = dataSource.snapshot()
+                            let allItemsInSection = snap.itemIdentifiers(inSection: element)
+                            snap.deleteItems(allItemsInSection)
+                            snap.appendItems(element.items, toSection: element)
+                            dataSource.apply(snap, animatingDifferences: true)
+                        }
+                    }
+                }
+            } else {
+                tableView.dataSource = self
+                for (index, element) in sections.enumerated() {
+                    element.didUpdate = { [weak tableView] in
+                        UIView.performWithoutAnimation {
+                            tableView?.reloadSections([index], with: .none)
+                        }
+                    }
+                }
+            }
+            
+            
+        }
         
         // MARK: ROWS
         
@@ -78,12 +112,12 @@ public extension UITableView {
             let section = sections[indexPath.section]
             let row = indexPath.row
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? LazyFishTableViewCell ?? LazyFishTableViewCell(style: .default, reuseIdentifier: cellId)
-            cell.updateContents(views: section.content?(row) ?? [])
+            cell.updateContents(views: section.items[row].content())
             return cell
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            sections[indexPath.section].didClick?(indexPath.row)
+            sections[indexPath.section].items[indexPath.row].didClick()
             tableView.deselectRow(at: indexPath, animated: true)
         }
         

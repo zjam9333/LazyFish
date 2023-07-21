@@ -18,23 +18,10 @@ public extension UICollectionView {
         flowLayout.estimatedItemSize = CGSize(width: 40, height: 40)
         self.init(frame: .zero, collectionViewLayout: flowLayout)
         self.alwaysBounceVertical = true
-        self.register(LazyFishCollectionViewCell.self, forCellWithReuseIdentifier: "LazyFishCollectionViewCell")
-        self.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "LazyFishCollectionViewHeader")
-        self.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "LazyFishCollectionViewHeader")
-        let delegate = DataSourceDelegate()
+        let sections = sectionBuilder()
+        let delegate = DataSourceDelegate(sections: sections, collectionView: self)
         self.delegate = delegate
-        self.dataSource = delegate
         zk_collectionViewViewDelegate = delegate
-        delegate.sections = sectionBuilder()
-        for (index, element) in delegate.sections.enumerated() {
-            element.didUpdate = { [weak self, weak delegate] in
-                delegate?.removeHeaderCaches(section: index)
-                // 直接reloadData有bug
-                UIView.performWithoutAnimation {
-                    self?.reloadSections([index])
-                }
-            }
-        }
     }
     
     private enum DelegateKey {
@@ -78,7 +65,56 @@ public extension UICollectionView {
     
     private class DataSourceDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
         
-        var sections: [Section] = []
+        var sections: [Section]
+        var diffableDataSource: UICollectionViewDataSource?
+        init(sections: [Section], collectionView: UICollectionView) {
+            self.sections = sections
+            super.init()
+            
+            collectionView.register(LazyFishCollectionViewCell.self, forCellWithReuseIdentifier: "LazyFishCollectionViewCell")
+            collectionView.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "LazyFishCollectionViewHeader")
+            collectionView.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "LazyFishCollectionViewHeader")
+            
+            if #available(iOS 13.0, *) {
+                let dataSource = UICollectionViewDiffableDataSource<Section, Section.Item>(collectionView: collectionView) { [weak self] tableView, indexPath, itemIdentifier in
+                    return self?.collectionView(collectionView, cellForItemAt: indexPath)
+                }
+                dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+                    return self?.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
+                }
+                self.diffableDataSource = dataSource
+                
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Section.Item>()
+                snapshot.appendSections(sections)
+                for section in sections {
+                    snapshot.appendItems(section.items, toSection: section)
+                }
+                dataSource.apply(snapshot)
+                collectionView.dataSource = dataSource
+                for (element) in sections {
+                    element.didUpdate = { [weak element, weak dataSource] in
+                        if let element = element, let dataSource = dataSource {
+                            var snap = dataSource.snapshot()
+                            let allItemsInSection = snap.itemIdentifiers(inSection: element)
+                            snap.deleteItems(allItemsInSection)
+                            snap.appendItems(element.items, toSection: element)
+                            dataSource.apply(snap, animatingDifferences: true)
+                        }
+                    }
+                }
+            } else {
+                collectionView.dataSource = self
+                for (index, element) in sections.enumerated() {
+                    element.didUpdate = { [weak self, weak collectionView] in
+                        self?.removeHeaderCaches(section: index)
+                        // 直接reloadData有bug
+                        UIView.performWithoutAnimation {
+                            collectionView?.reloadSections([index])
+                        }
+                    }
+                }
+            }
+        }
         
         // MARK: ROWS
         
@@ -99,12 +135,12 @@ public extension UICollectionView {
             let section = sections[indexPath.section]
             let row = indexPath.row
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? LazyFishCollectionViewCell ?? LazyFishCollectionViewCell()
-            cell.updateContents(views: section.content?(row) ?? [])
+            cell.updateContents(views: section.items[row].content())
             return cell
         }
         
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            sections[indexPath.section].didClick?(indexPath.row)
+            sections[indexPath.section].items[indexPath.row].didClick()
             collectionView.deselectItem(at: indexPath, animated: true)
         }
         

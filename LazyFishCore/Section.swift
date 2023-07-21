@@ -16,29 +16,53 @@ public struct SectionCellContent {
     }
 }
 
-public class Section {
+public class Section: Hashable {
+    public static func == (lhs: Section, rhs: Section) -> Bool {
+        lhs.id == rhs.id
+    }
     
-    var rowCount: Int = 0
+    let id = UUID()
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    var rowCount: Int {
+        return items.count
+    }
     var didUpdate: (() -> Void)?
-    var didClick: ((Int) -> Void)?
-    var content: ((Int) -> [UIView])?
+    var items: [Item] = []
+    
+    struct Item: Hashable {
+        static func == (lhs: Item, rhs: Item) -> Bool {
+            return lhs.anyHashable == rhs.anyHashable
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(anyHashable)
+        }
+        
+        let anyHashable: AnyHashable
+        
+        var didClick: () -> Void
+        var content: () -> [UIView]
+    }
     
     public init(@ArrayBuilder<SectionCellContent> content: () -> [SectionCellContent]) {
         let contents = content()
-        self.rowCount = contents.count
-        self.content = { index in
-            return contents[index].contents()
-        }
-        self.didClick = { index in
-            contents[index].action()
+        items = contents.map { ele in
+            return Item(anyHashable: UUID()) {
+                ele.action()
+            } content: {
+                ele.contents()
+            }
         }
     }
     
-    public init<T>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    public init<T: Hashable>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
         resetArray(array, cellContent: cellContent, action: action)
     }
     
-    public init<T>(binding: Binding<[T]>?, @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    public init<T: Hashable>(binding: Binding<[T]>?, @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
         binding?.addObserver(target: self) { [weak self] changed in
             // binding的array发生变化，则更新datasource
             let arr = changed.new
@@ -47,14 +71,13 @@ public class Section {
         }
     }
     
-    private func resetArray<T>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
-        content = { index in
-            return cellContent(array[index])
-        }
-        rowCount = array.count
-        didClick = { row in
-            let obj = array[row]
-            action?(obj)
+    private func resetArray<T: Hashable>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+        items = array.map { ele in
+            return Item(anyHashable: ele) {
+                action?(ele)
+            } content: {
+                cellContent(ele)
+            }
         }
     }
     
@@ -71,7 +94,7 @@ public class Section {
         footerViewsGetter = getter
         return self
     }
-
+    
     // MARK: contentInset
     var contentInset: UIEdgeInsets = .zero
     public func contentInset(getter: () -> UIEdgeInsets) -> Self {

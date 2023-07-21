@@ -9,8 +9,15 @@ import UIKit
 import LazyFishCore
 
 class TableViewTestViewController: UIViewController {
-
-    @State var arr = Array((0...4))
+    struct Model: Hashable {
+        let id = UUID()
+        let value: Int
+    }
+    
+    @State var arr: [Model] = Array((0...4).map({ i in
+        return Model(value: i)
+    }))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +31,7 @@ class TableViewTestViewController: UIViewController {
 //                                    .frame(width: 32, height: 32)
                         }
                         UILabel()
-                            .text("row: \(str)")
+                            .text("row: \(str.value)")
                     }
                     .alignment(.leading, value: 20)
                     .alignment(.centerY)
@@ -40,6 +47,10 @@ class TableViewTestViewController: UIViewController {
                         .frame(height: 0.5)
                         .alignment([.bottom, .trailing])
                         .alignment(.leading, value: 20)
+                } action: { [weak self] it in
+                    self?.arr.removeAll { e in
+                        e == it
+                    }
                 }
                 // header footer 展示
                 .headerViews {
@@ -82,7 +93,7 @@ class TableViewTestViewController: UIViewController {
     }
     
     @objc func addNewObject() {
-        arr.append(Int.random(in: 0...255))
+        arr.append(.init(value: Int.random(in: 0...255)))
     }
     
     @objc func cleanObjects() {

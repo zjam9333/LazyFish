@@ -9,8 +9,15 @@ import UIKit
 import LazyFishCore
 
 class CollectionViewTestViewController: UIViewController {
+    struct Model: Hashable {
+        let id = UUID()
+        let value: Int
+    }
     
-    @State var arr = Array((0...4))
+    @State var arr: [Model] = Array((0...4).map({ i in
+        return Model(value: i)
+    }))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -18,23 +25,19 @@ class CollectionViewTestViewController: UIViewController {
             UICollectionView {
                 // 动态section
                 Section(binding: $arr) { str in
-                    UIStackView(axis: .vertical, spacing: 10) {
-                        if #available(iOS 13.0, *) {
-                            UIImageView(image: UIImage(systemName: "person.fill.checkmark"))
-                                .property(\.contentMode, value: .center)
-                                .frame(width: 65, height: 65)
-                        }
-                        UILabel()
-                            .text("row: \(str)")
-                            .backgroundColor(.white)
-                    }
+                    UILabel()
+                        .text("row: \(str.value)\(Array.init(repeating: ".", count: str.value % 20 + 1).joined())")
+                        .backgroundColor(.white)
                     .padding(5)
                     .border(width: 1, color: .white)
-                    .padding(5 + CGFloat(str * 2))
+                    .padding(5)
                     .backgroundColor(.lightGray)
                     .cornerRadius(5)
-                } action: { str in
-                    print(str)
+                } action: { [weak self] str in
+                    print("delete", str)
+                    self?.arr.removeAll { e in
+                        return str == e
+                    }
                 }
                 .headerViews {
                     UILabel("TEST headder")
@@ -84,7 +87,7 @@ class CollectionViewTestViewController: UIViewController {
     }
     
     @objc func addNewObject() {
-        arr.append(Int.random(in: 0...10))
+        arr.append(.init(value: Int.random(in: 0...10)))
     }
     
     @objc func cleanObjects() {
