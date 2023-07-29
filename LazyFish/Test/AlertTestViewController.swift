@@ -74,7 +74,7 @@ fileprivate class AlertView: UIView {
                             .frame(height: 0.5)
                         
                         UIStackView(axis: .horizontal, distribution: .fillEqually, alignment: .fill, spacing: 0) {
-                            for i in alertActions {
+                            ForEach(alertActions) { i in
                                 UIButton()
                                     .text(i.name)
                                     .textColor(i.style.color, for: .normal)
@@ -99,7 +99,7 @@ fileprivate class AlertView: UIView {
                 .alignment(.center)
                 .property(\.transform, binding: $alertScale.map {
                     scale -> CGAffineTransform in
-                    return .identity.scaledBy(x: scale, y: scale)
+                    return CGAffineTransform.identity.scaledBy(x: scale, y: scale)
                 })
                 .property(\.alpha, binding: $alertAlpha)
                 .onAppear { [weak self] someview in
@@ -112,7 +112,7 @@ fileprivate class AlertView: UIView {
                 }
             }
             .property(\.alpha, binding: $alertAlpha)
-            .backgroundColor(.black.withAlphaComponent(0.3))
+            .backgroundColor(UIColor.black.withAlphaComponent(0.3))
         }
     }
     

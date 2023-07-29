@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 public struct Changed<T> {
     internal typealias ValueGetter = () -> T

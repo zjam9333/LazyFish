@@ -8,6 +8,25 @@
 import UIKit
 import LazyFishCore
 
+class VCModel: Hashable {
+    static func == (lhs: VCModel, rhs: VCModel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    
+    let id = UUID()
+    
+    let name: String
+    let classType: UIViewController.Type
+    init(_ name: String, _ classType: UIViewController.Type) {
+        self.name = name
+        self.classType = classType
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -35,22 +54,7 @@ class ViewController: UIViewController {
             ("Margin Test", MarginTestViewController.self),
         ]
         
-        struct VCModel: Hashable {
-            let id = UUID()
-            static func == (lhs: VCModel, rhs: VCModel) -> Bool {
-                return lhs.id == rhs.id
-            }
-            
-            let name: String
-            let classType: UIViewController.Type
-            init(_ name: String, _ classType: UIViewController.Type) {
-                self.name = name
-                self.classType = classType
-            }
-            func hash(into hasher: inout Hasher) {
-                hasher.combine(id)
-            }
-        }
+        
         let testClasses = arr.map { c in
             return VCModel(c.name, c.classType)
         }
@@ -61,7 +65,7 @@ class ViewController: UIViewController {
                     UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
                         .padding(10)
                     UIView()
-                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
                         .frame(height: 0.5)
                         .alignment([.bottom, .trailing])
                         .alignment(.leading, value: 10)
@@ -82,7 +86,7 @@ class ViewController: UIViewController {
                     UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
                         .padding(10)
                     UIView()
-                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
                         .frame(height: 0.5)
                         .alignment([.bottom, .trailing])
                         .alignment(.leading, value: 10)

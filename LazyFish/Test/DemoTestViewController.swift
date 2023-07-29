@@ -47,7 +47,7 @@ class DemoTestViewController: UIViewController {
                     }
                     
                     UIView()
-                        .backgroundColor(.lightGray.withAlphaComponent(0.5))
+                        .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
                         .frame(height: 0.5)
                         .alignment([.bottom, .trailing])
                         .alignment(.leading, value: 12)

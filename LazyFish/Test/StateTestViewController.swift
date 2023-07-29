@@ -64,7 +64,7 @@ class StateTestViewController: UIViewController {
                 foodForTitle("Pizza 🍕")
                 
                 IfBlock($showAnimals) {
-                    for i in animalNames {
+                    ForEach(animalNames) { i in
                         foodForTitle(i)
                             .borderColor(.lightGray).borderWidth(1)
                     }

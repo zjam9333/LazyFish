@@ -27,7 +27,7 @@ class ContainerCoverTestViewController: UIViewController {
                 .frame(width: 200)
             
             UIScrollView(.vertical, spacing: 5) {
-                for i in 0...50 {
+                ForEach(Array(0...50)) { i in
                     UILabel("\(i)")
                         .textAlignment(.center)
                         .border(width: 2, color: .black)

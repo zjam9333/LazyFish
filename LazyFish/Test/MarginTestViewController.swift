@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LazyFishCore
 
 class MarginTestViewController: UIViewController {
 
@@ -16,7 +17,7 @@ class MarginTestViewController: UIViewController {
                 UIView {
                     UIView {
                         UIStackView(axis: .vertical, distribution: .fillEqually) {
-                            for _ in 0...10 {
+                            ForEach(Array(0...10)) { i in
                                 UIView()
                                     .backgroundColor(UIColor(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
                                     .borderColor(.black)

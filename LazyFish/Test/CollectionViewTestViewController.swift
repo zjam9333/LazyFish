@@ -22,7 +22,9 @@ class CollectionViewTestViewController: UIViewController {
         super.viewDidLoad()
         
         view.arrangeViews {
-            UICollectionView {
+            let layout = SLCollectionViewGridLayout()
+            layout.estimatedItemSize = CGSize(width: 40, height: 40)
+            UICollectionView(layout: layout) {
                 // 动态section
                 Section(binding: $arr) { str in
                     UILabel()
@@ -51,7 +53,7 @@ class CollectionViewTestViewController: UIViewController {
                     return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                 }
                 
-                for i in 0...5 {
+                ForEach(Array(0...5)) { i in
                     // 静态section
                     Section(Array(0...50)) { str in
                         UILabel()

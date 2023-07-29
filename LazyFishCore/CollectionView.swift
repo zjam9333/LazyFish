@@ -10,13 +10,13 @@ import UIKit
 public extension UICollectionView {
     
     // 若干个section
-    convenience init(@ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
-        let flowLayout = SLCollectionViewGridLayout()
+    convenience init(layout: UICollectionViewLayout = SLCollectionViewGridLayout(), @ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
         // 设置sectionHeadersPinToVisibleBounds有bug
 //        flowLayout.sectionHeadersPinToVisibleBounds = true
 //        flowLayout.sectionFootersPinToVisibleBounds = true
-        flowLayout.estimatedItemSize = CGSize(width: 40, height: 40)
-        self.init(frame: .zero, collectionViewLayout: flowLayout)
+//        flowLayout.estimatedItemSize = CGSize(width: 40, height: 40)
+        self.init(frame: .zero, collectionViewLayout: layout)
+        self.backgroundColor = UIColor.white
         self.alwaysBounceVertical = true
         let sections = sectionBuilder()
         let delegate = DataSourceDelegate(sections: sections, collectionView: self)
@@ -89,7 +89,9 @@ public extension UICollectionView {
                 for section in sections {
                     snapshot.appendItems(section.items, toSection: section)
                 }
-                dataSource.apply(snapshot)
+                dataSource.apply(snapshot, animatingDifferences: false) {
+                    // 这个才能在iOS13运行
+                }
                 collectionView.dataSource = dataSource
                 for (element) in sections {
                     element.didUpdate = { [weak element, weak dataSource] in
@@ -184,8 +186,8 @@ public extension UICollectionView {
     }
 }
 
-class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+public class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
+    public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let superAttrs = super.layoutAttributesForElements(in: rect) ?? []
         let cellsAttrs = superAttrs.filter { attr in
             return attr.representedElementCategory == .cell

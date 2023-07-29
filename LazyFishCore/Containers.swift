@@ -114,6 +114,14 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
     }
 }
 
+public func ForEach<T, R>(_ models: [T], @ArrayBuilder<R> contents: @escaping (T) -> [R]) -> [R] {
+    return models.map { i in
+        return contents(i)
+    }.flatMap { r in
+        r
+    }
+}
+
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
     let container = ForEachView()
     models?.addObserver(target: container) { [weak container] changed in
