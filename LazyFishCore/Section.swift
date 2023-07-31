@@ -34,14 +34,16 @@ public class Section: Hashable {
     
     struct Item: Hashable {
         static func == (lhs: Item, rhs: Item) -> Bool {
-            return lhs.anyHashable == rhs.anyHashable
+            return lhs.anyHashable == rhs.anyHashable && lhs.offset == rhs.offset
         }
         
         func hash(into hasher: inout Hasher) {
             hasher.combine(anyHashable)
+            hasher.combine(offset)
         }
         
         let anyHashable: AnyHashable
+        let offset: AnyHashable
         
         var didClick: () -> Void
         var content: () -> [UIView]
@@ -49,8 +51,9 @@ public class Section: Hashable {
     
     public init(@ArrayBuilder<SectionCellContent> content: () -> [SectionCellContent]) {
         let contents = content()
+        let offset = UUID()
         items = contents.map { ele in
-            return Item(anyHashable: UUID()) {
+            return Item(anyHashable: UUID(), offset: self.id) {
                 ele.action()
             } content: {
                 ele.contents()
@@ -73,7 +76,7 @@ public class Section: Hashable {
     
     private func resetArray<T: Hashable>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
         items = array.map { ele in
-            return Item(anyHashable: ele) {
+            return Item(anyHashable: ele, offset: self.id) {
                 action?(ele)
             } content: {
                 cellContent(ele)

@@ -7,6 +7,8 @@
 
 import UIKit
 
+let LazyFishCollectionViewHeaderIdentifier: String = "LazyFishCollectionViewHeader"
+
 public extension UICollectionView {
     
     // 若干个section
@@ -72,8 +74,8 @@ public extension UICollectionView {
             super.init()
             
             collectionView.register(LazyFishCollectionViewCell.self, forCellWithReuseIdentifier: "LazyFishCollectionViewCell")
-            collectionView.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "LazyFishCollectionViewHeader")
-            collectionView.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "LazyFishCollectionViewHeader")
+            collectionView.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: LazyFishCollectionViewHeaderIdentifier)
+            collectionView.register(LazyFishCollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LazyFishCollectionViewHeaderIdentifier)
             
             if #available(iOS 13.0, *) {
                 let dataSource = UICollectionViewDiffableDataSource<Section, Section.Item>(collectionView: collectionView) { [weak self] tableView, indexPath, itemIdentifier in

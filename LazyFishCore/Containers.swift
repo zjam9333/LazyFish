@@ -115,11 +115,12 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
 }
 
 public func ForEach<T, R>(_ models: [T], @ArrayBuilder<R> contents: @escaping (T) -> [R]) -> [R] {
-    return models.map { i in
+    let m = models.map { i in
         return contents(i)
     }.flatMap { r in
         r
     }
+    return m
 }
 
 public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
