@@ -65,12 +65,12 @@ public extension ArrayBuilder {
 //    }
     
     // MARK: 处理for循环
-    static func buildArray(_ components: [[MyReturnType]]) -> [MyReturnType] {
-        let res = components.flatMap { r in
-            return r
-        }
-        return res
-    }
+//    static func buildArray(_ components: [[MyReturnType]]) -> [MyReturnType] {
+//        let res = components.flatMap { r in
+//            return r
+//        }
+//        return res
+//    }
     
     // MARK: 处理if...else...（必须包含else)
     static func buildEither(first component: [MyReturnType]) -> [MyReturnType] {

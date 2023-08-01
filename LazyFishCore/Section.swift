@@ -51,7 +51,6 @@ public class Section: Hashable {
     
     public init(@ArrayBuilder<SectionCellContent> content: () -> [SectionCellContent]) {
         let contents = content()
-        let offset = UUID()
         items = contents.map { ele in
             return Item(anyHashable: UUID(), offset: self.id) {
                 ele.action()

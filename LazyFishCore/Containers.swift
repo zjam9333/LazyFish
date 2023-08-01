@@ -114,7 +114,8 @@ public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping
     }
 }
 
-public func ForEach<T, R>(_ models: [T], @ArrayBuilder<R> contents: @escaping (T) -> [R]) -> [R] {
+// How about using .map directly?
+public func ForEach<C: Sequence, R>(_ models: C, @ArrayBuilder<R> contents: @escaping (C.Element) -> [R]) -> [R] {
     let m = models.map { i in
         return contents(i)
     }.flatMap { r in

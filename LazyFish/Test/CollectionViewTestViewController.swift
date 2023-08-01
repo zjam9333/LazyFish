@@ -18,42 +18,39 @@ class CollectionViewTestViewController: UIViewController {
         return Model(value: i)
     }))
     
+    var layout: UICollectionViewLayout {
+        if #available(iOS 13.0, *) {
+            let config = UICollectionViewCompositionalLayoutConfiguration()
+            config.interSectionSpacing = 10
+            config.scrollDirection = .vertical
+            
+            return UICollectionViewCompositionalLayout(sectionProvider: { section, sectionEnv in
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(40)), subitems: [
+                    .init(layoutSize: .init(widthDimension: .estimated(40), heightDimension: .fractionalHeight(1)))
+                ])
+                group.interItemSpacing = .fixed(10)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 10
+                section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
+                section.boundarySupplementaryItems = [
+                    NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top),
+                    NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottomTrailing),
+                ]
+                return section
+            }, configuration: config)
+        } else {
+            let layout = UICollectionViewFlowLayout()
+            layout.estimatedItemSize = CGSize(width: 40, height: 40)
+            return layout
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.arrangeViews {
-            let layout: UICollectionViewLayout
-            if #available(iOS 13.0, *) {
-                let config = UICollectionViewCompositionalLayoutConfiguration()
-                config.interSectionSpacing = 10
-                config.scrollDirection = .vertical
-                
-                layout = UICollectionViewCompositionalLayout(sectionProvider: { section, sectionEnv in
-                    let group = NSCollectionLayoutGroup.custom(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.5))) { groupEnv in
-                        let groupSize = groupEnv.container.effectiveContentSize
-                        // 返回多少个，每group就排多少个
-                        return [
-                            NSCollectionLayoutGroupCustomItem(frame: .init(x: 0, y: 0, width: groupSize.height - 20, height: groupSize.height - 20)),
-                            NSCollectionLayoutGroupCustomItem(frame: .init(x: groupSize.width / 2 - 10, y: 0, width: groupSize.width / 2 - 30, height: groupSize.height / 2 - 10)),
-                            NSCollectionLayoutGroupCustomItem(frame: .init(x: groupSize.width / 2 - 10, y: groupSize.height / 2, width: groupSize.width / 2 - 30, height: groupSize.height / 2 - 20)),
-                        ]
-                    }
-                    
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.interGroupSpacing = 10
-                    section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
-                    section.boundarySupplementaryItems = [
-                        NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top),
-                        NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottomTrailing),
-                    ]
-                    return section
-                }, configuration: config)
-            } else {
-                layout = SLCollectionViewGridLayout()
-                if let layout = layout as? SLCollectionViewGridLayout {
-                    layout.estimatedItemSize = CGSize(width: 40, height: 40)
-                }
-            }
+            
             UICollectionView(layout: layout) {
                 // 动态section
                 Section(binding: $arr) { str in
@@ -83,7 +80,7 @@ class CollectionViewTestViewController: UIViewController {
                     return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                 }
                 
-                ForEach(Array(0...5)) { i in
+                ForEach(0...5) { i in
                     // 静态section
                     Section(Array(0...(i + 5))) { str in
                         UILabel()

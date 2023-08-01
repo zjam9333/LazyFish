@@ -17,7 +17,7 @@ class MarginTestViewController: UIViewController {
                 UIView {
                     UIView {
                         UIStackView(axis: .vertical, distribution: .fillEqually) {
-                            ForEach(Array(0...10)) { i in
+                            ForEach(0...10) { i in
                                 UIView()
                                     .backgroundColor(UIColor(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1, alpha: 1))
                                     .borderColor(.black)

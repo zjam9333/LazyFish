@@ -80,7 +80,7 @@ class ViewController: UIViewController {
                         .backgroundColor(.gray)
                 }
                 
-                Section(Array(0..<200).map({ i in
+                Section((0..<100).map({ i in
                     VCModel("Ram", ViewController.self)
                 })) { item in
                     UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)

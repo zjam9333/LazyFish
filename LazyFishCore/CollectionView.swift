@@ -12,7 +12,7 @@ let LazyFishCollectionViewHeaderIdentifier: String = "LazyFishCollectionViewHead
 public extension UICollectionView {
     
     // 若干个section
-    convenience init(layout: UICollectionViewLayout = SLCollectionViewGridLayout(), @ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
+    convenience init(layout: UICollectionViewLayout, @ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
         // 设置sectionHeadersPinToVisibleBounds有bug
 //        flowLayout.sectionHeadersPinToVisibleBounds = true
 //        flowLayout.sectionFootersPinToVisibleBounds = true
@@ -187,97 +187,3 @@ public extension UICollectionView {
         }
     }
 }
-
-public class SLCollectionViewGridLayout: UICollectionViewFlowLayout {
-    public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        let superAttrs = super.layoutAttributesForElements(in: rect) ?? []
-        let cellsAttrs = superAttrs.filter { attr in
-            return attr.representedElementCategory == .cell
-        }
-        balanceCells(attributes: cellsAttrs)
-        return superAttrs
-    }
-    
-    private func balanceCells(attributes: [UICollectionViewLayoutAttributes]) {
-        var rowsAttrs = [[UICollectionViewLayoutAttributes]]()
-        var sameRows = [UICollectionViewLayoutAttributes]()
-        var lastAttr: UICollectionViewLayoutAttributes? = nil
-        
-        for attr in attributes {
-            if lastAttr == nil {
-                lastAttr = attr
-                sameRows.append(attr)
-                continue
-            }
-            
-            var lastFrame = lastAttr?.frame ?? .zero
-            var thisFrame = attr.frame
-            lastFrame.origin.x = 0
-            thisFrame.origin.x = 0
-            if lastFrame.intersects(thisFrame) == false {
-                rowsAttrs.append(sameRows)
-                sameRows.removeAll()
-            }
-            lastAttr = attr
-            sameRows.append(attr)
-        }
-        rowsAttrs.append(sameRows)
-        
-        for rows in rowsAttrs {
-            alignRow(rows)
-        }
-    }
-    
-    private func alignRow(_ attributes: [UICollectionViewLayoutAttributes]) {
-        var maxHeight: CGFloat = 0
-        var minY: CGFloat = .infinity
-        
-        for attr in attributes {
-            let testHeight = attr.frame.size.height
-            let testY = attr.frame.origin.y
-            if testHeight > maxHeight {
-                maxHeight = testHeight
-            }
-            if testY < minY {
-                minY = testY
-            }
-        }
-        
-        for attr in attributes {
-            var frame = attr.frame
-            frame.origin.y = minY
-            attr.frame = frame
-        }
-        
-        alignCellLeftForSameRow(attributes)
-    }
-    
-    private func alignCellLeftForSameRow(_ attributes: [UICollectionViewLayoutAttributes]) {
-        guard let collectionView = collectionView, let delegate = collectionView.delegate as? UICollectionViewDelegateFlowLayout else {
-            return
-        }
-        guard var last = attributes.first else {
-            return
-        }
-        let sectionLeft = delegate.collectionView?(collectionView, layout: self, insetForSectionAt: last.indexPath.section).left ?? sectionInset.left
-        
-        var firstFrame = last.frame
-        firstFrame.origin.x = sectionLeft
-        last.frame = firstFrame
-        
-        
-        let minSpace = delegate.collectionView?(collectionView, layout: self, minimumInteritemSpacingForSectionAt: last.indexPath.section) ?? minimumInteritemSpacing
-        
-        guard attributes.count > 1 else {
-            return
-        }
-        for i in 1..<attributes.count {
-            let thisAttr = attributes[i]
-            var fr = thisAttr.frame
-            fr.origin.x = last.frame.maxX + minSpace
-            thisAttr.frame = fr
-            last = thisAttr
-        }
-    }
-}
-

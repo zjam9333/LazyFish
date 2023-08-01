@@ -74,7 +74,7 @@ fileprivate class AlertView: UIView {
                             .frame(height: 0.5)
                         
                         UIStackView(axis: .horizontal, distribution: .fillEqually, alignment: .fill, spacing: 0) {
-                            ForEach(alertActions) { i in
+                            ForEach(.constant(value: alertActions)) { i in
                                 UIButton()
                                     .text(i.name)
                                     .textColor(i.style.color, for: .normal)

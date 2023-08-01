@@ -134,7 +134,12 @@ public class Binding<Element>: CustomStringConvertible, CustomDebugStringConvert
     }
     
     public func addObserver(target: AnyObject?, observer: @escaping Changed<Element>.ObserverHandler) {
-        wrapper?.addObserver(target: target) { changed in
+        guard let wrapper = wrapper else {
+            let currentVal = currentValue()
+            observer(.init(old: currentVal, new: currentVal))
+            return
+        }
+        wrapper.addObserver(target: target) { changed in
             observer(changed)
         }
     }
