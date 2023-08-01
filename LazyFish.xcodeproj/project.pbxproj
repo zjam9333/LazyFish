@@ -16,17 +16,12 @@
 		1C2B6CCD279034B900535498 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C2B6CCB279034B900535498 /* LaunchScreen.storyboard */; };
 		1C2B6CFD2790354B00535498 /* TableViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CEF2790354A00535498 /* TableViewTestViewController.swift */; };
 		1C2B6CFE2790354B00535498 /* AlertTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF02790354A00535498 /* AlertTestViewController.swift */; };
-		1C2B6CFF2790354B00535498 /* ForEachScrollTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF12790354B00535498 /* ForEachScrollTestViewController.swift */; };
 		1C2B6D002790354B00535498 /* ContainerCoverTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF22790354B00535498 /* ContainerCoverTestViewController.swift */; };
-		1C2B6D012790354B00535498 /* DemoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF32790354B00535498 /* DemoTestViewController.swift */; };
-		1C2B6D022790354B00535498 /* InputTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF42790354B00535498 /* InputTestViewController.swift */; };
 		1C2B6D032790354B00535498 /* ObserveRemoveTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF52790354B00535498 /* ObserveRemoveTestViewController.swift */; };
 		1C2B6D042790354B00535498 /* JoinBindingTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF62790354B00535498 /* JoinBindingTestViewController.swift */; };
 		1C2B6D052790354B00535498 /* PageTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF72790354B00535498 /* PageTestViewController.swift */; };
-		1C2B6D062790354B00535498 /* MarginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF82790354B00535498 /* MarginTestViewController.swift */; };
 		1C2B6D072790354B00535498 /* ForEachTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CF92790354B00535498 /* ForEachTestViewController.swift */; };
 		1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFA2790354B00535498 /* StateTestViewController.swift */; };
-		1C2B6D0A2790354B00535498 /* PPTTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */; };
 		1C3113512797BC1000CF4973 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 1C3113502797BC1000CF4973 /* Readme.md */; };
 		1C45313E2791219400C72757 /* LazyFishCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; platformFilter = ios; };
 		1C45313F2791219400C72757 /* LazyFishCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -79,17 +74,12 @@
 		1C2B6CCE279034B900535498 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C2B6CEF2790354A00535498 /* TableViewTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF02790354A00535498 /* AlertTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertTestViewController.swift; sourceTree = "<group>"; };
-		1C2B6CF12790354B00535498 /* ForEachScrollTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForEachScrollTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF22790354B00535498 /* ContainerCoverTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerCoverTestViewController.swift; sourceTree = "<group>"; };
-		1C2B6CF32790354B00535498 /* DemoTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTestViewController.swift; sourceTree = "<group>"; };
-		1C2B6CF42790354B00535498 /* InputTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF52790354B00535498 /* ObserveRemoveTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserveRemoveTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF62790354B00535498 /* JoinBindingTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinBindingTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF72790354B00535498 /* PageTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageTestViewController.swift; sourceTree = "<group>"; };
-		1C2B6CF82790354B00535498 /* MarginTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarginTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CF92790354B00535498 /* ForEachTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForEachTestViewController.swift; sourceTree = "<group>"; };
 		1C2B6CFA2790354B00535498 /* StateTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateTestViewController.swift; sourceTree = "<group>"; };
-		1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PPTTestViewController.swift; sourceTree = "<group>"; };
 		1C3113502797BC1000CF4973 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
@@ -163,16 +153,11 @@
 			children = (
 				1C2B6CF02790354A00535498 /* AlertTestViewController.swift */,
 				1C2B6CF22790354B00535498 /* ContainerCoverTestViewController.swift */,
-				1C2B6CF32790354B00535498 /* DemoTestViewController.swift */,
-				1C2B6CF12790354B00535498 /* ForEachScrollTestViewController.swift */,
 				1C2B6CF92790354B00535498 /* ForEachTestViewController.swift */,
 				1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */,
-				1C2B6CF42790354B00535498 /* InputTestViewController.swift */,
 				1C2B6CF62790354B00535498 /* JoinBindingTestViewController.swift */,
-				1C2B6CF82790354B00535498 /* MarginTestViewController.swift */,
 				1C2B6CF52790354B00535498 /* ObserveRemoveTestViewController.swift */,
 				1C2B6CF72790354B00535498 /* PageTestViewController.swift */,
-				1C2B6CFC2790354B00535498 /* PPTTestViewController.swift */,
 				1C2B6CFA2790354B00535498 /* StateTestViewController.swift */,
 				1C2B6CEF2790354A00535498 /* TableViewTestViewController.swift */,
 				1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */,
@@ -318,21 +303,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C2B6D022790354B00535498 /* InputTestViewController.swift in Sources */,
 				1C2B6D002790354B00535498 /* ContainerCoverTestViewController.swift in Sources */,
 				1C0F54BC28F2774F001C4048 /* SwiftUIView.swift in Sources */,
-				1C2B6CFF2790354B00535498 /* ForEachScrollTestViewController.swift in Sources */,
 				1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */,
 				1C2B6D072790354B00535498 /* ForEachTestViewController.swift in Sources */,
 				1C2B6CC5279034B700535498 /* ViewController.swift in Sources */,
 				1C7D7C41279698F400912FE3 /* GeoTestViewController.swift in Sources */,
-				1C2B6D012790354B00535498 /* DemoTestViewController.swift in Sources */,
 				1C2B6CFE2790354B00535498 /* AlertTestViewController.swift in Sources */,
 				1C2B6CC1279034B700535498 /* AppDelegate.swift in Sources */,
 				1C2B6D052790354B00535498 /* PageTestViewController.swift in Sources */,
 				1C2B6CFD2790354B00535498 /* TableViewTestViewController.swift in Sources */,
-				1C2B6D062790354B00535498 /* MarginTestViewController.swift in Sources */,
-				1C2B6D0A2790354B00535498 /* PPTTestViewController.swift in Sources */,
 				1C2B6D032790354B00535498 /* ObserveRemoveTestViewController.swift in Sources */,
 				1C2B6D042790354B00535498 /* JoinBindingTestViewController.swift in Sources */,
 				1CA9E9A42A5E55B100B8F73D /* CollectionViewTestViewController.swift in Sources */,

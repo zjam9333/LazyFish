@@ -108,7 +108,7 @@ internal class InternalLayoutStackView: UIStackView, FakeInternalContainer {
 
 // MARK: FOR_EACH
 
-public func ForEach<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (T) -> [UIView]) -> UIView {
+public func ForEach<S: Sequence>(_ models: Binding<S>?, @ViewBuilder contents: @escaping (S.Element) -> [UIView]) -> UIView {
     return ForEachEnumerated(models) { index, model in
         contents(model)
     }
@@ -124,7 +124,7 @@ public func ForEach<C: Sequence, R>(_ models: C, @ArrayBuilder<R> contents: @esc
     return m
 }
 
-public func ForEachEnumerated<T>(_ models: Binding<[T]>?, @ViewBuilder contents: @escaping (Int, T) -> [UIView]) -> UIView {
+public func ForEachEnumerated<S: Sequence>(_ models: Binding<S>?, @ViewBuilder contents: @escaping (Int, S.Element) -> [UIView]) -> UIView {
     let container = ForEachView()
     models?.addObserver(target: container) { [weak container] changed in
         container?.reloadSubviews(changed.new, contentBuilder: contents)
@@ -140,7 +140,7 @@ internal class ForEachView: TouchIgnoreContainerView, FakeInternalContainer {
         return userCreatedContents
     }
     
-    func reloadSubviews<T>(_ models: [T], contentBuilder: ((Int, T) -> [UIView])?) {
+    func reloadSubviews<S: Sequence>(_ models: S, contentBuilder: ((Int, S.Element) -> [UIView])?) {
         let allSubviews = subviews
         for i in allSubviews {
             i.removeFromSuperview()

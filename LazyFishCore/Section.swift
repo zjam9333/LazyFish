@@ -60,11 +60,11 @@ public class Section: Hashable {
         }
     }
     
-    public init<T: Hashable>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    public init<S: RandomAccessCollection>(_ array: S, @ViewBuilder cellContent: @escaping (S.Element) -> [UIView], action: ((S.Element) -> Void)? = nil) where S.Element: Hashable {
         resetArray(array, cellContent: cellContent, action: action)
     }
     
-    public init<T: Hashable>(binding: Binding<[T]>?, @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    public init<S: RandomAccessCollection>(binding: Binding<S>?, @ViewBuilder cellContent: @escaping (S.Element) -> [UIView], action: ((S.Element) -> Void)? = nil) where S.Element: Hashable {
         binding?.addObserver(target: self) { [weak self] changed in
             // binding的array发生变化，则更新datasource
             let arr = changed.new
@@ -73,7 +73,7 @@ public class Section: Hashable {
         }
     }
     
-    private func resetArray<T: Hashable>(_ array: [T], @ViewBuilder cellContent: @escaping (T) -> [UIView], action: ((T) -> Void)? = nil) {
+    private func resetArray<S: RandomAccessCollection>(_ array: S, @ViewBuilder cellContent: @escaping (S.Element) -> [UIView], action: ((S.Element) -> Void)? = nil) where S.Element: Hashable {
         items = array.map { ele in
             return Item(anyHashable: ele, offset: self.id) {
                 action?(ele)

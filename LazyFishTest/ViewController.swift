@@ -35,23 +35,15 @@ class ViewController: UIViewController {
         navigationItem.title = "Some Tests"
         
         let arr: [(name: String, classType: UIViewController.Type)] = [
-            ("Geometry Test", GeoTestViewController.self),
+//            ("Geometry Test", GeoTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
             ("Join Binding Test", JoinBindingTestViewController.self),
-//            ("Product Detail Test", ProductDetailTestViewController.self),
             ("Container Cover Test", ContainerCoverTestViewController.self),
-//            ("Observe Remove Test", ObserveRemoveTestViewController.self),
-            ("PPT Test", PPTTestViewController.self),
             ("TableView Test", TableViewTestViewController.self),
             ("CollectionView Test", CollectionViewTestViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
-            ("ForEach In Scroll Test", ForEachScrollTestViewController.self),
             ("Page Test", PageTestViewController.self),
-            ("Demo Test", DemoTestViewController.self),
             ("State Test", StateTestViewController.self),
-//            ("Input Test", InputTestViewController.self),
-//            ("Stack Test", StackTestViewController.self),
-            ("Margin Test", MarginTestViewController.self),
         ]
         
         
