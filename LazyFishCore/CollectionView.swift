@@ -9,19 +9,12 @@ import UIKit
 
 public protocol LazyCollectionViewConfigProtocol {
     associatedtype Item1
-    associatedtype CellType: UICollectionViewCell
-    var cellRegister: LazyCollectionView.CellRegister<CellType, Item1> { get }
-    
     associatedtype Item2
-    associatedtype CellType2: UICollectionReusableView
-    var headerRegister: LazyCollectionView.SupplymentRegister<CellType2, Item2> { get }
-    
-    
-    associatedtype Item3
-    associatedtype CellType3: UICollectionReusableView
-    var footerRegister: LazyCollectionView.SupplymentRegister<CellType3, Item3> { get }
     
     var collectionViewLayout: UICollectionViewLayout { get }
+    
+    func cellFor(collectionView: UICollectionView, indexPath: IndexPath, item: Item1) -> UICollectionViewCell
+    func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: Item2) -> UICollectionReusableView
 }
 
 public extension UICollectionView {
@@ -31,7 +24,7 @@ public extension UICollectionView {
     }
     
     // 若干个section
-    convenience init<ConfigType: LazyCollectionViewConfigProtocol>(config: ConfigType, @ArrayBuilder<Section> sectionBuilder: () -> [Section]) where ConfigType.Item1 == Section.Item, ConfigType.Item2 == Section, ConfigType.Item3 == Section {
+    convenience init<ConfigType: LazyCollectionViewConfigProtocol>(config: ConfigType, @ArrayBuilder<Section> sectionBuilder: () -> [Section]) where ConfigType.Item1 == Section.Item, ConfigType.Item2 == Section {
         self.init(frame: .zero, collectionViewLayout: config.collectionViewLayout)
         self.backgroundColor = UIColor.white
         self.alwaysBounceVertical = true
@@ -59,10 +52,11 @@ public extension UICollectionView {
     }
 }
 
-public enum LazyCollectionView {
+enum LazyCollectionView {
     
-    public class CollectionViewCell: UICollectionViewCell {
+    class CollectionViewCell: UICollectionViewCell {
         func updateContents(views: [UIView]) {
+            self.selectedBackgroundView = UIView().backgroundColor(.lightGray)
             for i in contentView.subviews {
                 i.removeFromSuperview()
             }
@@ -72,7 +66,7 @@ public enum LazyCollectionView {
         }
     }
     
-    public class CollectionViewHeader: UICollectionReusableView {
+    class CollectionViewHeader: UICollectionReusableView {
         func updateContents(views: [UIView]) {
             for i in subviews {
                 i.removeFromSuperview()
@@ -83,7 +77,7 @@ public enum LazyCollectionView {
         }
     }
     
-    public class CellRegister<CellType: UICollectionViewCell, Item> {
+    class CellRegister<CellType: UICollectionViewCell, Item> {
         var didRegisted = false
         let id = UUID().uuidString
         
@@ -106,7 +100,7 @@ public enum LazyCollectionView {
         }
     }
     
-    public class SupplymentRegister<CellType: UICollectionReusableView, Item> {
+    class SupplymentRegister<CellType: UICollectionReusableView, Item> {
         var didRegistedKinds = Set<String>()
         let kind: String
         let id = UUID().uuidString
@@ -132,19 +126,32 @@ public enum LazyCollectionView {
     }
     
     struct DefaultConfig: LazyCollectionViewConfigProtocol {
-        public let cellRegister = LazyCollectionView.CellRegister<LazyCollectionView.CollectionViewCell, Section.Item>.init { cell, item in
+        func cellFor(collectionView: UICollectionView, indexPath: IndexPath, item: Section.Item) -> UICollectionViewCell {
+            cellRegister.cellFor(collectionView: collectionView, indexPath: indexPath, item: item)
+        }
+        
+        func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: Section) -> UICollectionReusableView {
+            if kind == headerRegister.kind {
+                return headerRegister.cellFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: item)
+            } else if kind == footerRegister.kind {
+                return footerRegister.cellFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: item)
+            }
+            return UICollectionReusableView()
+        }
+        
+        let cellRegister = CellRegister<CollectionViewCell, Section.Item>.init { cell, item in
             cell.updateContents(views: item.content())
         }
         
-        public let headerRegister = LazyCollectionView.SupplymentRegister<LazyCollectionView.CollectionViewHeader, Section>.init(kind: UICollectionView.elementKindSectionHeader) { header, section in
+        let headerRegister = SupplymentRegister<CollectionViewHeader, Section>.init(kind: UICollectionView.elementKindSectionHeader) { header, section in
             header.updateContents(views: section.headerViewsGetter?() ?? [])
         }
         
-        public let footerRegister = LazyCollectionView.SupplymentRegister<LazyCollectionView.CollectionViewHeader, Section>.init(kind: UICollectionView.elementKindSectionFooter) { header, section in
+        let footerRegister = SupplymentRegister<CollectionViewHeader, Section>.init(kind: UICollectionView.elementKindSectionFooter) { header, section in
             header.updateContents(views: section.footerViewsGetter?() ?? [])
         }
         
-        public var collectionViewLayout: UICollectionViewLayout {
+        var collectionViewLayout: UICollectionViewLayout {
             if #available(iOS 13.0, *) {
                 let config = UICollectionViewCompositionalLayoutConfiguration()
                 config.interSectionSpacing = 10
@@ -176,7 +183,7 @@ public enum LazyCollectionView {
         }
     }
     
-    class DataSource<ConfigType: LazyCollectionViewConfigProtocol>: NSObject, UICollectionViewDelegate, UICollectionViewDataSource where ConfigType.Item1 == Section.Item, ConfigType.Item2 == Section, ConfigType.Item3 == Section {
+    class DataSource<ConfigType: LazyCollectionViewConfigProtocol>: NSObject, UICollectionViewDelegate, UICollectionViewDataSource where ConfigType.Item1 == Section.Item, ConfigType.Item2 == Section {
         
         var sections: [Section]
         var diffableDataSource: UICollectionViewDataSource?
@@ -187,7 +194,7 @@ public enum LazyCollectionView {
             super.init()
             
             if #available(iOS 13.0, *) {
-                let dataSource = UICollectionViewDiffableDataSource<Section, Section.Item>(collectionView: collectionView) { [weak self] tableView, indexPath, itemIdentifier in
+                let dataSource = UICollectionViewDiffableDataSource<Section, Section.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, itemIdentifier in
                     return self?.collectionView(collectionView, cellForItemAt: indexPath)
                 }
                 dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
@@ -240,7 +247,7 @@ public enum LazyCollectionView {
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let item = sections[indexPath.section].items[indexPath.row]
-            let cell = config.cellRegister.cellFor(collectionView: collectionView, indexPath: indexPath, item: item)
+            let cell = config.cellFor(collectionView: collectionView, indexPath: indexPath, item: item)
             return cell
         }
         
@@ -253,12 +260,7 @@ public enum LazyCollectionView {
         
         func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
             let section = sections[indexPath.section]
-            if kind == config.headerRegister.kind {
-                return config.headerRegister.cellFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: section)
-            } else if kind == config.footerRegister.kind {
-                return config.footerRegister.cellFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: section)
-            }
-            return UICollectionReusableView()
+            return config.supplymentFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: section)
         }
     }
 }

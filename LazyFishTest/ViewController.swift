@@ -70,7 +70,11 @@ class ViewController: UIViewController {
                 }.headerViews {
                     UILabel().text("Test Classes")
                         .padding(10)
-                        .backgroundColor(.gray)
+                        .backgroundColor(.lightGray)
+                }.footerViews {
+                    UILabel().text("Test Classes Foot")
+                        .padding(10)
+                        .backgroundColor(.lightGray)
                 }
                 
                 Section((0..<35).map({ i in
@@ -91,9 +95,11 @@ class ViewController: UIViewController {
                 }.headerViews {
                     UILabel().text("Random Section")
                         .padding(10)
-                        .backgroundColor(.gray)
+                        .backgroundColor(.lightGray)
                 }.footerViews {
-                    
+                    UILabel().text("Random Section Foot")
+                        .padding(10)
+                        .backgroundColor(.lightGray)
                 }
             }
         }

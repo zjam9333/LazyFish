@@ -28,7 +28,6 @@
 		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
 		1C4981F7274F69CE00DF13A4 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F6274F69CE00DF13A4 /* Section.swift */; };
 		1C7D7C41279698F400912FE3 /* GeoTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */; };
-		1CA9E9A02A5D319800B8F73D /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E99F2A5D319800B8F73D /* Protocols.swift */; };
 		1CA9E9A22A5E52EA00B8F73D /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */; };
 		1CA9E9A42A5E55B100B8F73D /* CollectionViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */; };
 		1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD8FE1E270FEC7400FE41E8 /* UIView+Extension.swift */; };
@@ -84,7 +83,6 @@
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoTestViewController.swift; sourceTree = "<group>"; };
-		1CA9E99F2A5D319800B8F73D /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewTestViewController.swift; sourceTree = "<group>"; };
 		1CAD9CF72722B3BF009CFCDD /* StateBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateBinding.swift; sourceTree = "<group>"; };
@@ -185,7 +183,6 @@
 				1C4981F6274F69CE00DF13A4 /* Section.swift */,
 				1C4981F4274F693200DF13A4 /* TableView.swift */,
 				1C0F54BD28F2785E001C4048 /* Preview.swift */,
-				1CA9E99F2A5D319800B8F73D /* Protocols.swift */,
 				1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */,
 			);
 			path = LazyFishCore;
@@ -328,7 +325,6 @@
 				1C0F54BE28F2785E001C4048 /* Preview.swift in Sources */,
 				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
 				1CE634AD2726A8C70051BF9F /* StateBinding.swift in Sources */,
-				1CA9E9A02A5D319800B8F73D /* Protocols.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
 				1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */,
 				1C4981F5274F693200DF13A4 /* TableView.swift in Sources */,

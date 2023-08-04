@@ -15,6 +15,12 @@ import UIKit
 ///
 ///
 
+public protocol ModifySelfProtocol {
+}
+
+extension UIView: ModifySelfProtocol {
+}
+
 public extension ModifySelfProtocol where Self: UIView {
     func property<Value>(_ keyPath: WritableKeyPath<Self, Value>, binding: Binding<Value>?) -> Self {
         binding?.addObserver(target: self, observer: { [weak self] change in
@@ -38,7 +44,7 @@ public extension ModifySelfProtocol where Self: UIView {
 }
 
 public extension UIView {
-    convenience init(_ comment: String = "nothing", @ViewBuilder content: (() -> [UIView])) {
+    convenience init(comment: String = "nothing", @ViewBuilder content: (() -> [UIView])) {
         self.init()
         arrangeViews(content)
     }
