@@ -26,27 +26,27 @@ public class Section: Hashable {
         hasher.combine(id)
     }
     
-    var rowCount: Int {
+    public var rowCount: Int {
         return items.count
     }
     var didUpdate: (() -> Void)?
-    var items: [Item] = []
+    public private(set) var items: [Item] = []
     
-    struct Item: Hashable {
-        static func == (lhs: Item, rhs: Item) -> Bool {
+    public struct Item: Hashable {
+        public static func == (lhs: Item, rhs: Item) -> Bool {
             return lhs.anyHashable == rhs.anyHashable && lhs.offset == rhs.offset
         }
         
-        func hash(into hasher: inout Hasher) {
+        public func hash(into hasher: inout Hasher) {
             hasher.combine(anyHashable)
             hasher.combine(offset)
         }
         
-        let anyHashable: AnyHashable
+        public let anyHashable: AnyHashable
         let offset: AnyHashable
         
-        var didClick: () -> Void
-        var content: () -> [UIView]
+        public let didClick: () -> Void
+        public let content: () -> [UIView]
     }
     
     public init(@ArrayBuilder<SectionCellContent> content: () -> [SectionCellContent]) {
@@ -94,13 +94,6 @@ public class Section: Hashable {
     
     public func footerViews(@ViewBuilder getter: @escaping (() -> [UIView])) -> Self {
         footerViewsGetter = getter
-        return self
-    }
-    
-    // MARK: contentInset
-    var contentInset: UIEdgeInsets = .zero
-    public func contentInset(getter: () -> UIEdgeInsets) -> Self {
-        contentInset = getter()
         return self
     }
 }

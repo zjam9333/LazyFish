@@ -30,8 +30,7 @@ class TableViewTestViewController: UIViewController {
                             UIImageView(image: UIImage(systemName: "person.fill.checkmark"))
 //                                    .frame(width: 32, height: 32)
                         }
-                        UILabel()
-                            .text("row: \(str.value)")
+                        UILabel("row: \(str.value)")
                     }
                     .alignment(.leading, value: 20)
                     .alignment(.centerY)

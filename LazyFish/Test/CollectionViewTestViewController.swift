@@ -18,40 +18,12 @@ class CollectionViewTestViewController: UIViewController {
         return Model(value: i)
     }))
     
-    var layout: UICollectionViewLayout {
-        if #available(iOS 13.0, *) {
-            let config = UICollectionViewCompositionalLayoutConfiguration()
-            config.interSectionSpacing = 10
-            config.scrollDirection = .vertical
-            
-            return UICollectionViewCompositionalLayout(sectionProvider: { section, sectionEnv in
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(40)), subitems: [
-                    .init(layoutSize: .init(widthDimension: .estimated(40), heightDimension: .fractionalHeight(1)))
-                ])
-                group.interItemSpacing = .fixed(10)
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = 10
-                section.contentInsets = .init(top: 20, leading: 20, bottom: 20, trailing: 20)
-                section.boundarySupplementaryItems = [
-                    NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top),
-                    NSCollectionLayoutBoundarySupplementaryItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .absolute(44)), elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottomTrailing),
-                ]
-                return section
-            }, configuration: config)
-        } else {
-            let layout = UICollectionViewFlowLayout()
-            layout.estimatedItemSize = CGSize(width: 40, height: 40)
-            return layout
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.arrangeViews {
             
-            UICollectionView(layout: layout) {
+            UICollectionView {
                 // 动态section
                 Section(binding: $arr) { str in
                     UILabel()
@@ -76,9 +48,6 @@ class CollectionViewTestViewController: UIViewController {
                     UILabel("TEST footer")
                         .padding(10).backgroundColor(.blue)
                 }
-                .contentInset {
-                    return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-                }
                 
                 ForEach(0...5) { i in
                     // 静态section
@@ -100,9 +69,6 @@ class CollectionViewTestViewController: UIViewController {
                         UILabel("TEST footer 2 + \(i)")
                             .padding(10)
                             .backgroundColor(.yellow)
-                    }
-                    .contentInset {
-                        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                     }
                 }
             }

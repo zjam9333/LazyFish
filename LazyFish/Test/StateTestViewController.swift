@@ -25,16 +25,6 @@ class StateTestViewController: UIViewController {
         let foodForTitle: (String) -> UILabel = { str in
             UILabel().text(str).textColor(.black).font(.systemFont(ofSize: 30, weight: .black)).alignment(.center)
         }
-        let buttonForTitle: (String, @escaping () -> Void) -> UIButton = { str, action in
-            UIButton().text(str).font(.systemFont(ofSize: 20, weight: .black))
-                .textColor(.black)
-                .textColor(.gray, for: .highlighted)
-                .onAction { b in
-                    ActionWithAnimation {
-                        action()
-                    }
-                }
-        }
         let buttonForTitleBinding: (Binding<String>?, @escaping () -> Void) -> UIButton = { str, action in
             UIButton().text(binding: str).font(.systemFont(ofSize: 20, weight: .black))
                 .textColor(.black)
@@ -90,12 +80,18 @@ class StateTestViewController: UIViewController {
                 }
             }.alignment(.center)
             
-            UIStackView(axis: .vertical) {
-                buttonForTitle("Toggle Cake 🍰") { [weak self] in
-                    self?.showCake.toggle()
+            UIStackView(axis: .vertical, spacing: 10) {
+                UIStackView(axis: .horizontal) {
+                    UILabel("Toggle Cake 🍰")
+                    UISwitch().isOn(binding: $showCake) { [weak self] bo in
+                        self?.showCake = bo
+                    }
                 }
-                buttonForTitle("Toggle Animals 🙊") { [weak self] in
-                    self?.showAnimals.toggle()
+                UIStackView(axis: .horizontal) {
+                    UILabel("Toggle Animals 🙊")
+                    UISwitch().isOn(binding: $showAnimals) { [weak self] bo in
+                        self?.showAnimals = bo
+                    }
                 }
                 buttonForTitleBinding($sayWhat.map({ s in
                     return "Say \(s)"

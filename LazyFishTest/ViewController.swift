@@ -52,7 +52,8 @@ class ViewController: UIViewController {
         }
         
         view.arrangeViews {
-            UITableView(style: .plain) {
+            
+            UICollectionView {
                 Section(testClasses) { item in
                     UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
                         .padding(10)
@@ -72,7 +73,7 @@ class ViewController: UIViewController {
                         .backgroundColor(.gray)
                 }
                 
-                Section((0..<100).map({ i in
+                Section((0..<35).map({ i in
                     VCModel("Ram", ViewController.self)
                 })) { item in
                     UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
