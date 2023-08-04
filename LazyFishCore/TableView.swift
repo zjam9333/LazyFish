@@ -104,7 +104,7 @@ public extension UITableView {
         }
         
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return sections[section].rowCount
+            return sections[section].items.count
         }
         
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -117,7 +117,7 @@ public extension UITableView {
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            sections[indexPath.section].items[indexPath.row].didClick()
+            sections[indexPath.section].didClick(indexPath.row)
             tableView.deselectRow(at: indexPath, animated: true)
         }
         

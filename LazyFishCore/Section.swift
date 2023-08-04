@@ -16,7 +16,18 @@ public struct SectionCellContent {
     }
 }
 
-public class Section: Hashable {
+public protocol ItemProtocol: Hashable {
+}
+
+public protocol SectionProtocol: AnyObject, Hashable {
+    associatedtype ItemType: ItemProtocol
+    var didUpdate: () -> Void { get set }
+    var didClick: (Int) -> Void { get }
+    var items: [ItemType] { get }
+}
+
+public class Section: SectionProtocol {
+    
     public static func == (lhs: Section, rhs: Section) -> Bool {
         lhs.id == rhs.id
     }
@@ -26,13 +37,12 @@ public class Section: Hashable {
         hasher.combine(id)
     }
     
-    public var rowCount: Int {
-        return items.count
-    }
-    var didUpdate: (() -> Void)?
+    public var didUpdate: () -> Void = {}
+    public private(set) var didClick: (Int) -> Void = { _ in }
+    
     public private(set) var items: [Item] = []
     
-    public struct Item: Hashable {
+    public struct Item: ItemProtocol {
         public static func == (lhs: Item, rhs: Item) -> Bool {
             return lhs.anyHashable == rhs.anyHashable && lhs.offset == rhs.offset
         }
@@ -45,16 +55,16 @@ public class Section: Hashable {
         public let anyHashable: AnyHashable
         let offset: AnyHashable
         
-        public let didClick: () -> Void
         public let content: () -> [UIView]
     }
     
     public init(@ArrayBuilder<SectionCellContent> content: () -> [SectionCellContent]) {
         let contents = content()
+        didClick = { v in
+            contents[v].action()
+        }
         items = contents.map { ele in
             return Item(anyHashable: UUID(), offset: self.id) {
-                ele.action()
-            } content: {
                 ele.contents()
             }
         }
@@ -69,15 +79,23 @@ public class Section: Hashable {
             // binding的array发生变化，则更新datasource
             let arr = changed.new
             self?.resetArray(arr, cellContent: cellContent, action: action)
-            self?.didUpdate?()
+            self?.didUpdate()
         }
     }
     
     private func resetArray<S: RandomAccessCollection>(_ array: S, @ViewBuilder cellContent: @escaping (S.Element) -> [UIView], action: ((S.Element) -> Void)? = nil) where S.Element: Hashable {
+        if let action = action {
+            let mapActions = array.map { ele in
+                return {
+                    action(ele)
+                }
+            }
+            didClick = { i in
+                mapActions[i]()
+            }
+        }
         items = array.map { ele in
             return Item(anyHashable: ele, offset: self.id) {
-                action?(ele)
-            } content: {
                 cellContent(ele)
             }
         }

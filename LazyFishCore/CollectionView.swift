@@ -8,13 +8,12 @@
 import UIKit
 
 public protocol LazyCollectionViewConfigProtocol {
-    associatedtype Item1
-    associatedtype Item2
+    associatedtype SectionType: SectionProtocol
     
     var collectionViewLayout: UICollectionViewLayout { get }
     
-    func cellFor(collectionView: UICollectionView, indexPath: IndexPath, item: Item1) -> UICollectionViewCell
-    func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: Item2) -> UICollectionReusableView
+    func cellFor(collectionView: UICollectionView, indexPath: IndexPath, item: SectionType.ItemType) -> UICollectionViewCell
+    func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: SectionType) -> UICollectionReusableView
 }
 
 public extension UICollectionView {
@@ -24,31 +23,20 @@ public extension UICollectionView {
     }
     
     // 若干个section
-    convenience init<ConfigType: LazyCollectionViewConfigProtocol>(config: ConfigType, @ArrayBuilder<Section> sectionBuilder: () -> [Section]) where ConfigType.Item1 == Section.Item, ConfigType.Item2 == Section {
+    convenience init<LazyConfigType: LazyCollectionViewConfigProtocol>(config: LazyConfigType, @ArrayBuilder<LazyConfigType.SectionType> sectionBuilder: () -> [LazyConfigType.SectionType]) {
         self.init(frame: .zero, collectionViewLayout: config.collectionViewLayout)
         self.backgroundColor = UIColor.white
         self.alwaysBounceVertical = true
         let sections = sectionBuilder()
         let delegate = LazyCollectionView.DataSource(sections: sections, collectionView: self, config: config)
         self.delegate = delegate
-        zk_collectionViewViewDelegate = delegate
+        
+        // 仅仅是为了引用，不会读取
+        objc_setAssociatedObject(self, &DelegateKey.attributeKey, delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
     private enum DelegateKey {
         static var attributeKey: Int = 0
-    }
-    
-    private var zk_collectionViewViewDelegate: Any? {
-        set {
-            let obj = newValue
-            objc_setAssociatedObject(self, &DelegateKey.attributeKey, obj, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            if let obj = objc_getAssociatedObject(self, &DelegateKey.attributeKey) {
-                return obj
-            }
-            return nil
-        }
     }
 }
 
@@ -183,18 +171,18 @@ enum LazyCollectionView {
         }
     }
     
-    class DataSource<ConfigType: LazyCollectionViewConfigProtocol>: NSObject, UICollectionViewDelegate, UICollectionViewDataSource where ConfigType.Item1 == Section.Item, ConfigType.Item2 == Section {
+    class DataSource<LazyConfigType: LazyCollectionViewConfigProtocol>: NSObject, UICollectionViewDelegate, UICollectionViewDataSource {
         
-        var sections: [Section]
+        var sections: [LazyConfigType.SectionType]
         var diffableDataSource: UICollectionViewDataSource?
-        let config: ConfigType
-        init(sections: [Section], collectionView: UICollectionView, config: ConfigType) {
+        let config: LazyConfigType
+        init(sections: [LazyConfigType.SectionType], collectionView: UICollectionView, config: LazyConfigType) {
             self.config = config
             self.sections = sections
             super.init()
             
             if #available(iOS 13.0, *) {
-                let dataSource = UICollectionViewDiffableDataSource<Section, Section.Item>(collectionView: collectionView) { [weak self] collectionView, indexPath, itemIdentifier in
+                let dataSource = UICollectionViewDiffableDataSource<LazyConfigType.SectionType, LazyConfigType.SectionType.ItemType>(collectionView: collectionView) { [weak self] collectionView, indexPath, itemIdentifier in
                     return self?.collectionView(collectionView, cellForItemAt: indexPath)
                 }
                 dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
@@ -202,7 +190,7 @@ enum LazyCollectionView {
                 }
                 self.diffableDataSource = dataSource
                 
-                var snapshot = NSDiffableDataSourceSnapshot<Section, Section.Item>()
+                var snapshot = NSDiffableDataSourceSnapshot<LazyConfigType.SectionType, LazyConfigType.SectionType.ItemType>()
                 snapshot.appendSections(sections)
                 for section in sections {
                     snapshot.appendItems(section.items, toSection: section)
@@ -242,7 +230,7 @@ enum LazyCollectionView {
         }
         
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            return sections[section].rowCount
+            return sections[section].items.count
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -252,7 +240,7 @@ enum LazyCollectionView {
         }
         
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            sections[indexPath.section].items[indexPath.row].didClick()
+            sections[indexPath.section].didClick(indexPath.row)
             collectionView.deselectItem(at: indexPath, animated: true)
         }
         
