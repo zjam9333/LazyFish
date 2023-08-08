@@ -41,6 +41,7 @@ class ViewController: UIViewController {
             ("Container Cover Test", ContainerCoverTestViewController.self),
             ("TableView Test", TableViewTestViewController.self),
             ("CollectionView Test", CollectionViewTestViewController.self),
+            ("Custom Section Test", CustomSectionCollectionViewController.self),
             ("ForEach In Stack Test", ForEachTestViewController.self),
             ("Page Test", PageTestViewController.self),
             ("State Test", StateTestViewController.self),
@@ -56,12 +57,11 @@ class ViewController: UIViewController {
             UICollectionView {
                 Section(testClasses) { item in
                     UILabel().text(item.name).font(.systemFont(ofSize: 17, weight: .regular)).textColor(.black)
-                        .padding(10)
+                        .padding(horizontal: 5)
                     UIView()
                         .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
                         .frame(height: 0.5)
-                        .alignment([.bottom, .trailing])
-                        .alignment(.leading, value: 10)
+                        .alignment([.bottom, .trailing, .leading])
                 } action: { [weak self] item in
                     let vc = item.classType.init()
                     vc.view.backgroundColor = .white

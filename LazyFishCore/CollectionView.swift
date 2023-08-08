@@ -14,19 +14,21 @@ public protocol LazyCollectionViewConfigProtocol {
     
     func cellFor(collectionView: UICollectionView, indexPath: IndexPath, item: SectionType.ItemType) -> UICollectionViewCell
     func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: SectionType) -> UICollectionReusableView
+    func collectionViewConfig(_ collectionView: UICollectionView)
 }
 
 public extension UICollectionView {
     
     convenience init(@ArrayBuilder<Section> sectionBuilder: () -> [Section]) {
-        self.init(config: LazyCollectionView.DefaultConfig(), sectionBuilder: sectionBuilder)
+        self.init(customConfigure: LazyCollectionView.DefaultConfig(), sectionBuilder: sectionBuilder)
     }
     
     // 若干个section
-    convenience init<LazyConfigType: LazyCollectionViewConfigProtocol>(config: LazyConfigType, @ArrayBuilder<LazyConfigType.SectionType> sectionBuilder: () -> [LazyConfigType.SectionType]) {
+    convenience init<LazyConfigType: LazyCollectionViewConfigProtocol>(customConfigure config: LazyConfigType, @ArrayBuilder<LazyConfigType.SectionType> sectionBuilder: () -> [LazyConfigType.SectionType]) {
         self.init(frame: .zero, collectionViewLayout: config.collectionViewLayout)
         self.backgroundColor = UIColor.white
         self.alwaysBounceVertical = true
+        config.collectionViewConfig(self)
         let sections = sectionBuilder()
         let delegate = LazyCollectionView.DataSource(sections: sections, collectionView: self, config: config)
         self.delegate = delegate
@@ -44,7 +46,7 @@ enum LazyCollectionView {
     
     class CollectionViewCell: UICollectionViewCell {
         func updateContents(views: [UIView]) {
-            self.selectedBackgroundView = UIView().backgroundColor(.lightGray)
+//            self.selectedBackgroundView = UIView().backgroundColor(.lightGray)
             for i in contentView.subviews {
                 i.removeFromSuperview()
             }
@@ -100,7 +102,7 @@ enum LazyCollectionView {
             self.cellUpdate = cellUpdate
         }
         
-        func cellFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: Item) -> UICollectionReusableView {
+        func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: Item) -> UICollectionReusableView {
             if didRegistedKinds.contains(kind) == false {
                 collectionView.register(CellType.self, forSupplementaryViewOfKind: kind, withReuseIdentifier: id)
                 didRegistedKinds.insert(kind)
@@ -114,15 +116,19 @@ enum LazyCollectionView {
     }
     
     struct DefaultConfig: LazyCollectionViewConfigProtocol {
+        func collectionViewConfig(_ collectionView: UICollectionView) {
+            
+        }
+        
         func cellFor(collectionView: UICollectionView, indexPath: IndexPath, item: Section.Item) -> UICollectionViewCell {
             cellRegister.cellFor(collectionView: collectionView, indexPath: indexPath, item: item)
         }
         
         func supplymentFor(collectionView: UICollectionView, kind: String, indexPath: IndexPath, item: Section) -> UICollectionReusableView {
             if kind == headerRegister.kind {
-                return headerRegister.cellFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: item)
+                return headerRegister.supplymentFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: item)
             } else if kind == footerRegister.kind {
-                return footerRegister.cellFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: item)
+                return footerRegister.supplymentFor(collectionView: collectionView, kind: kind, indexPath: indexPath, item: item)
             }
             return UICollectionReusableView()
         }
