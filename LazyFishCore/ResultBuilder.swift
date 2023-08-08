@@ -11,17 +11,23 @@ import UIKit
 public typealias ViewBuilder = ArrayBuilder<UIView>
 public typealias LayoutBuilder = ArrayBuilder<NSLayoutConstraint>
 
+#if swift(>=5.4)
+@resultBuilder public struct ArrayBuilder<MyReturnType> {
+}
+#else
 @_functionBuilder public struct ArrayBuilder<MyReturnType> {
+}
+#endif
+
+public extension ArrayBuilder {
     // MARK: 组合全部表达式的返回值
-    public static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
+    static func buildBlock(_ components: [MyReturnType]...) -> [MyReturnType] {
         let res = components.flatMap { r in
             return r
         }
         return res
     }
-}
-
-public extension ArrayBuilder {
+    
     // MARK: 处理空白block
     static func buildOptional<T>(_ component: [T]?) -> [MyReturnType] {
         return []
