@@ -41,6 +41,9 @@ public struct Changed<T> {
     
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
+        if let observable = wrappedValue as? StateObject {
+            observable.prepareAllPublished(observer: self)
+        }
     }
     private var observers = [ObserverTargetAction]()
     
@@ -317,5 +320,16 @@ extension Binding where Element: Comparable {
         return lhs.join(rhs) { ele1, ele2 in
             return ele1 > ele2
         }
+    }
+}
+
+protocol StateProtocol: AnyObject {
+    func sendPropertyChanged()
+}
+
+extension State: StateProtocol {
+    func sendPropertyChanged() {
+        let old = wrappedValue
+        wrappedValue = old
     }
 }
