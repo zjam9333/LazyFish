@@ -25,6 +25,9 @@
 		1C3113512797BC1000CF4973 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 1C3113502797BC1000CF4973 /* Readme.md */; };
 		1C42A9DC2A8A08A700050FB6 /* ObservableObjectTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C42A9DB2A8A08A700050FB6 /* ObservableObjectTestViewController.swift */; };
 		1C42A9DE2A8A1C9F00050FB6 /* StateObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C42A9DD2A8A1C9F00050FB6 /* StateObject.swift */; };
+		1C42A9E02A8B764F00050FB6 /* NewBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C42A9DF2A8B764F00050FB6 /* NewBinding.swift */; };
+		1C42A9E22A8B7D2C00050FB6 /* NewBindingTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C42A9E12A8B7D2C00050FB6 /* NewBindingTestViewController.swift */; };
+		1C42A9E42A8C717C00050FB6 /* OldBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C42A9E32A8C717C00050FB6 /* OldBinding.swift */; };
 		1C45313E2791219400C72757 /* LazyFishCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; platformFilter = ios; };
 		1C45313F2791219400C72757 /* LazyFishCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE6349B2726A8A20051BF9F /* LazyFishCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C4981F5274F693200DF13A4 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4981F4274F693200DF13A4 /* TableView.swift */; };
@@ -85,6 +88,9 @@
 		1C3113502797BC1000CF4973 /* Readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		1C42A9DB2A8A08A700050FB6 /* ObservableObjectTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableObjectTestViewController.swift; sourceTree = "<group>"; };
 		1C42A9DD2A8A1C9F00050FB6 /* StateObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateObject.swift; sourceTree = "<group>"; };
+		1C42A9DF2A8B764F00050FB6 /* NewBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBinding.swift; sourceTree = "<group>"; };
+		1C42A9E12A8B7D2C00050FB6 /* NewBindingTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBindingTestViewController.swift; sourceTree = "<group>"; };
+		1C42A9E32A8C717C00050FB6 /* OldBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldBinding.swift; sourceTree = "<group>"; };
 		1C4981F4274F693200DF13A4 /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		1C4981F6274F69CE00DF13A4 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1C7D7C40279698F400912FE3 /* GeoTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoTestViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +173,7 @@
 				1CA9E9A32A5E55B100B8F73D /* CollectionViewTestViewController.swift */,
 				1C9FEB182A80C4E700C81E3F /* CustomSectionCollectionViewController.swift */,
 				1C42A9DB2A8A08A700050FB6 /* ObservableObjectTestViewController.swift */,
+				1C42A9E12A8B7D2C00050FB6 /* NewBindingTestViewController.swift */,
 			);
 			name = Test;
 			path = LazyFish/Test;
@@ -193,6 +200,8 @@
 				1C0F54BD28F2785E001C4048 /* Preview.swift */,
 				1CA9E9A12A5E52EA00B8F73D /* CollectionView.swift */,
 				1C42A9DD2A8A1C9F00050FB6 /* StateObject.swift */,
+				1C42A9E32A8C717C00050FB6 /* OldBinding.swift */,
+				1C42A9DF2A8B764F00050FB6 /* NewBinding.swift */,
 			);
 			path = LazyFishCore;
 			sourceTree = "<group>";
@@ -314,6 +323,7 @@
 				1C2B6D082790354B00535498 /* StateTestViewController.swift in Sources */,
 				1C9FEB192A80C4E700C81E3F /* CustomSectionCollectionViewController.swift in Sources */,
 				1C42A9DC2A8A08A700050FB6 /* ObservableObjectTestViewController.swift in Sources */,
+				1C42A9E22A8B7D2C00050FB6 /* NewBindingTestViewController.swift in Sources */,
 				1C2B6D072790354B00535498 /* ForEachTestViewController.swift in Sources */,
 				1C2B6CC5279034B700535498 /* ViewController.swift in Sources */,
 				1C7D7C41279698F400912FE3 /* GeoTestViewController.swift in Sources */,
@@ -338,10 +348,12 @@
 				1CE634AC2726A8C70051BF9F /* Layout.swift in Sources */,
 				1CE634AD2726A8C70051BF9F /* StateBinding.swift in Sources */,
 				1CE634AB2726A8C70051BF9F /* ResultBuilder.swift in Sources */,
+				1C42A9E02A8B764F00050FB6 /* NewBinding.swift in Sources */,
 				1CE634AA2726A8C70051BF9F /* UIView+Extension.swift in Sources */,
 				1C4981F5274F693200DF13A4 /* TableView.swift in Sources */,
 				1CA9E9A22A5E52EA00B8F73D /* CollectionView.swift in Sources */,
 				1CFBC27F272B95D100AE64C4 /* Containers.swift in Sources */,
+				1C42A9E42A8C717C00050FB6 /* OldBinding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

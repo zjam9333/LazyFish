@@ -36,6 +36,7 @@ class ViewController: UIViewController {
         
         let arr: [(name: String, classType: UIViewController.Type)] = [
 //            ("Geometry Test", GeoTestViewController.self),
+            ("New Binding test", NewBindingTestViewController.self),
             ("StateObject test", ObservableObjectTestViewController.self),
             ("Alert Test", AlertTestViewController.self),
             ("Join Binding Test", JoinBindingTestViewController.self),
